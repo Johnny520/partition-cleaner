@@ -2,13 +2,17 @@ package com.example.partitioncleaner;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.content.FileProvider;
 
 import com.google.android.material.chip.ChipGroup;
 
@@ -40,6 +44,8 @@ public class ScanResultActivity extends BaseActivity {
     private Button btnSelectAll;
     private Button btnDeselectAll;
     private TextView tvSelectedSize;
+    private com.google.android.material.floatingactionbutton.FloatingActionButton fabTop;
+    private com.google.android.material.floatingactionbutton.FloatingActionButton fabBottom;
 
     private List<JunkItem> items = new ArrayList<>();        // 全量扫描结果
     private List<JunkItem> displayItems = new ArrayList<>(); // 当前筛选后显示
@@ -72,7 +78,15 @@ public class ScanResultActivity extends BaseActivity {
         adapter = new JunkAdapter(displayItems);
         adapter.setOnItemClick(this::showJunkDetail);
         adapter.setOnSelectionChanged(this::updateSelectedSize);
+        adapter.setOnItemLongClick(this::openJunkFile);
         rv.setAdapter(adapter);
+
+        fabTop = findViewById(R.id.fab_top);
+        fabBottom = findViewById(R.id.fab_bottom);
+        fabTop.setOnClickListener(v -> rv.scrollToPosition(0));
+        fabBottom.setOnClickListener(v -> {
+            if (adapter.getItemCount() > 0) rv.scrollToPosition(adapter.getItemCount() - 1);
+        });
 
         pb = findViewById(R.id.pb);
         tvSummary = findViewById(R.id.tv_summary);
@@ -251,6 +265,32 @@ public class ScanResultActivity extends BaseActivity {
                 .setMessage(sb.toString())
                 .setPositiveButton(android.R.string.ok, null)
                 .show();
+    }
+
+    /** 长按扫描结果项：用系统查看器打开对应文件（视频/图片/文档等），完成“跳转”。 */
+    private boolean openJunkFile(JunkItem it) {
+        if (it == null || it.path == null) return false;
+        File f = new File(it.path);
+        if (!f.exists() || !f.isFile()) {
+            Toast.makeText(this, R.string.file_not_exist, Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        String ext = MimeTypeMap.getFileExtensionFromUrl(Uri.fromFile(f).toString());
+        String mime = (ext != null)
+                ? MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext.toLowerCase())
+                : null;
+        if (mime == null) mime = "*/*";
+        Uri uri = FileProvider.getUriForFile(this,
+                getApplicationContext().getPackageName() + ".fileprovider", f);
+        Intent vw = new Intent(Intent.ACTION_VIEW);
+        vw.setDataAndType(uri, mime);
+        vw.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        if (vw.resolveActivity(getPackageManager()) != null) {
+            startActivity(vw);
+        } else {
+            Toast.makeText(this, R.string.no_viewer, Toast.LENGTH_SHORT).show();
+        }
+        return true;
     }
 
     @Override

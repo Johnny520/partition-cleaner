@@ -25,9 +25,15 @@ public class JunkAdapter extends RecyclerView.Adapter<JunkAdapter.VH> {
         void onChanged();
     }
 
+    /** 长按某项时回调（用于打开/跳转文件）。返回 true 表示已消费事件。 */
+    interface OnItemLongClick {
+        boolean onLongClick(JunkItem item);
+    }
+
     private final List<JunkItem> data;
     private OnItemClick onItemClick;
     private OnSelectionChanged onSelectionChanged;
+    private OnItemLongClick onItemLongClick;
 
     public JunkAdapter(List<JunkItem> data) {
         this.data = data;
@@ -39,6 +45,10 @@ public class JunkAdapter extends RecyclerView.Adapter<JunkAdapter.VH> {
 
     public void setOnSelectionChanged(OnSelectionChanged l) {
         this.onSelectionChanged = l;
+    }
+
+    public void setOnItemLongClick(OnItemLongClick l) {
+        this.onItemLongClick = l;
     }
 
     @NonNull
@@ -55,6 +65,10 @@ public class JunkAdapter extends RecyclerView.Adapter<JunkAdapter.VH> {
         final JunkItem item = it;
         h.itemView.setOnClickListener(v -> {
             if (onItemClick != null) onItemClick.onItemClick(item);
+        });
+        h.itemView.setOnLongClickListener(v -> {
+            if (onItemLongClick != null) return onItemLongClick.onLongClick(item);
+            return false;
         });
         h.cb.setOnCheckedChangeListener(null);
         h.cb.setChecked(it.selected);

@@ -356,11 +356,15 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/stat_installed"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:padding="@dimen/space_sm">
+                        android:padding="@dimen/space_sm"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground">
 
                         <TextView
                             android:id="@+id/tv_apps"

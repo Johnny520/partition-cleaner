@@ -194,6 +194,12 @@
     <string name="extract_sub">备份/分享已安装应用的 APK</string>
     <string name="extract_hint">点击「提取」将应用的安装包（APK）复制到本地，便于备份或分享。公共目录不可写时自动保存到应用私有目录。</string>
     <string name="extract_action">提取</string>
+    <string name="filter_all">全部</string>
+    <string name="filter_user_app">用户应用</string>
+    <string name="filter_system_app">系统应用</string>
+    <string name="apk_loaded">已加载 %d 个应用</string>
+    <string name="fab_to_top">回到顶部</string>
+    <string name="fab_to_bottom">回到底部</string>
 
     <!-- ===== 自定义规则（CustomClean / CustomRuleEdit） ===== -->
     <string name="custom_title">自定义清理规则</string>
@@ -359,6 +365,10 @@
     <string name="home_screen_label">屏幕分辨率</string>
     <string name="nav_search_hint">搜索功能…</string>
     <string name="scan_item_detail">扫描项详情</string>
+    <string name="file_not_exist">文件不存在或已清理</string>
+    <string name="no_viewer">未找到可打开该文件的程序</string>
+    <string name="file_not_exist">文件不存在或已清理</string>
+    <string name="no_viewer">未找到可打开该文件的程序</string>
 
     <!-- Root / Shizuku 状态页 -->
     <string name="shizuku_status_label">Shizuku 免 Root</string>

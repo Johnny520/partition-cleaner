@@ -44,6 +44,15 @@ public class ApkExtractActivity extends BaseActivity {
     private ApkAdapter adapter;
     private RootShell rootShell;
     private File outDir;
+    private com.google.android.material.chip.ChipGroup chipFilter;
+
+    private static final int FILTER_ALL = 0;
+    private static final int FILTER_USER = 1;
+    private static final int FILTER_SYSTEM = 2;
+    private int filterMode = FILTER_ALL;
+
+    private List<AppEntry> allApps = new ArrayList<>();
+    private List<AppEntry> filteredApps = new ArrayList<>();
 
     static class AppEntry {
         String label;
@@ -54,6 +63,7 @@ public class ApkExtractActivity extends BaseActivity {
         long firstInstall;
         long lastUpdate;
         Drawable icon;
+        boolean isSystem;
     }
 
     @Override
@@ -82,6 +92,23 @@ public class ApkExtractActivity extends BaseActivity {
         adapter = new ApkAdapter();
         rv.setAdapter(adapter);
 
+        chipFilter = findViewById(R.id.chip_filter);
+        chipFilter.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.chip_user) filterMode = FILTER_USER;
+            else if (checkedId == R.id.chip_system) filterMode = FILTER_SYSTEM;
+            else filterMode = FILTER_ALL;
+            applyFilter();
+        });
+
+        com.google.android.material.floatingactionbutton.FloatingActionButton fabTop =
+                findViewById(R.id.fab_top);
+        com.google.android.material.floatingactionbutton.FloatingActionButton fabBottom =
+                findViewById(R.id.fab_bottom);
+        fabTop.setOnClickListener(v -> rv.scrollToPosition(0));
+        fabBottom.setOnClickListener(v -> {
+            if (adapter.getItemCount() > 0) rv.scrollToPosition(adapter.getItemCount() - 1);
+        });
+
         loadApps();
     }
 
@@ -106,6 +133,7 @@ public class ApkExtractActivity extends BaseActivity {
                 e.pkg = ai.packageName;
                 e.src = ai.publicSourceDir != null ? ai.publicSourceDir : ai.sourceDir;
                 e.size = (e.src != null) ? new File(e.src).length() : 0;
+                e.isSystem = (ai.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
                 try {
                     PackageInfo pi = pm.getPackageInfo(ai.packageName, 0);
                     e.version = pi.versionName;
@@ -120,9 +148,23 @@ public class ApkExtractActivity extends BaseActivity {
                 list.add(e);
             }
             Collections.sort(list, (a, b) -> a.label.compareToIgnoreCase(b.label));
-            final List<AppEntry> sorted = list;
-            runOnUiThread(() -> adapter.setItems(sorted));
+            allApps = list;
+            runOnUiThread(() -> {
+                applyFilter();
+                Toast.makeText(ApkExtractActivity.this,
+                        getString(R.string.apk_loaded, allApps.size()), Toast.LENGTH_SHORT).show();
+            });
         }).start();
+    }
+
+    private void applyFilter() {
+        filteredApps.clear();
+        for (AppEntry e : allApps) {
+            if (filterMode == FILTER_USER && e.isSystem) continue;
+            if (filterMode == FILTER_SYSTEM && !e.isSystem) continue;
+            filteredApps.add(e);
+        }
+        adapter.setItems(filteredApps);
     }
 
     private void extract(AppEntry e) {

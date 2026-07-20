@@ -351,6 +351,11 @@ public class MainActivity extends BaseActivity {
         items.add(new FeatureItem("📜", getString(R.string.feat_agreement), getString(R.string.feat_agreement_sub), () -> PolicyActivity.open(this, PolicyActivity.MODE_AGREEMENT)));
         rv.setAdapter(new FeatureAdapter(items, R.layout.item_home_feature));
 
+        View statInstalled = container.findViewById(R.id.stat_installed);
+        if (statInstalled != null) {
+            statInstalled.setOnClickListener(v -> go(ApkExtractActivity.class));
+        }
+
         loadDashboard();
     }
 
