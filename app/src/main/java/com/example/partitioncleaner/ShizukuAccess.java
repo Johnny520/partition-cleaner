@@ -89,8 +89,8 @@ public class ShizukuAccess {
     /** 以 shell 身份运行的 IShell 实现（镜像 RootShell 的 stdin/stdout + marker 机制）。 */
     private static class ShizukuShell implements IShell {
         private final Process process;
-        private final DataOutputStream os;
-        private final BufferedReader out;
+        private DataOutputStream os;
+        private BufferedReader out;
         private boolean available;
 
         ShizukuShell(Process p) {
