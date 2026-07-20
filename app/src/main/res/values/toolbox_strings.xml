@@ -12,4 +12,10 @@
     <string name="tool_random_sub">区间随机整数</string>
     <string name="tool_time_title">时间戳</string>
     <string name="tool_time_sub">时间 ⇄ 时间戳</string>
+    <string name="tool_compass_title">指南针</string>
+    <string name="tool_compass_sub">方向 · 方位角</string>
+    <string name="tool_decibel_title">分贝仪</string>
+    <string name="tool_decibel_sub">环境噪音检测</string>
+    <string name="tool_altitude_title">海拔测量</string>
+    <string name="tool_altitude_sub">气压 · GPS 海拔</string>
 </resources>

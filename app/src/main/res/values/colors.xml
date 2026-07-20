@@ -50,4 +50,7 @@
     <color name="tile_text">#FFF3E0</color>
     <color name="tile_random">#FCE4EC</color>
     <color name="tile_time">#E0F7FA</color>
+    <color name="tile_compass">#FFEBEE</color>
+    <color name="tile_decibel">#ECEFF1</color>
+    <color name="tile_altitude">#E8EAF6</color>
 </resources>

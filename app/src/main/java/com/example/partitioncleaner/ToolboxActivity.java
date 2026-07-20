@@ -62,6 +62,12 @@ public class ToolboxActivity extends BaseActivity {
                 "🎲", R.color.tile_random, RandomActivity.class));
         items.add(new ToolItem(getString(R.string.tool_time_title), getString(R.string.tool_time_sub),
                 "🕒", R.color.tile_time, TimestampActivity.class));
+        items.add(new ToolItem(getString(R.string.tool_compass_title), getString(R.string.tool_compass_sub),
+                "🧭", R.color.tile_compass, CompassActivity.class));
+        items.add(new ToolItem(getString(R.string.tool_decibel_title), getString(R.string.tool_decibel_sub),
+                "🔊", R.color.tile_decibel, DecibelActivity.class));
+        items.add(new ToolItem(getString(R.string.tool_altitude_title), getString(R.string.tool_altitude_sub),
+                "⛰️", R.color.tile_altitude, AltitudeActivity.class));
 
         rv.setAdapter(new ToolAdapter(items));
     }

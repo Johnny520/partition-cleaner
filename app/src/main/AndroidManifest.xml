@@ -13,6 +13,8 @@
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="moe.shizuku.manager.permission.API_V23" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <queries>
         <package android:name="moe.shizuku.manager" />
@@ -109,6 +111,16 @@
             android:exported="false" />
         <activity
             android:name=".PolicyActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".CompassActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DecibelActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AltitudeActivity"
             android:exported="false" />
 
         <!-- Shizuku：声明此 provider 后，本应用才会出现在 Shizuku 管理器“应用”列表中并可授予 API_V23 权限 -->

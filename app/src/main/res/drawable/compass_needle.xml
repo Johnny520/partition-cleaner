@@ -1,0 +1,27 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="160dp"
+    android:height="160dp"
+    android:viewportWidth="160"
+    android:viewportHeight="160">
+
+    <!-- 外圈 -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:strokeColor="#CFD8DC"
+        android:strokeWidth="2"
+        android:pathData="M80,8 a72,72 0 1,0 0.1,0 Z" />
+
+    <!-- 北（红） -->
+    <path
+        android:fillColor="#E53935"
+        android:pathData="M80,20 L96,84 L80,72 L64,84 Z" />
+    <!-- 南（灰） -->
+    <path
+        android:fillColor="#607D8B"
+        android:pathData="M80,140 L96,84 L80,72 L64,84 Z" />
+
+    <!-- 中心点 -->
+    <path
+        android:fillColor="#37474F"
+        android:pathData="M80,74 a6,6 0 1,0 0.1,0 Z" />
+</vector>
