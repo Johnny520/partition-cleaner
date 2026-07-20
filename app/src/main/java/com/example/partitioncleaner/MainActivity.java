@@ -2,6 +2,7 @@ package com.example.partitioncleaner;
 
 import android.app.ActivityManager;
 import android.content.Intent;
+import android.content.ActivityNotFoundException;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.hardware.SensorManager;
