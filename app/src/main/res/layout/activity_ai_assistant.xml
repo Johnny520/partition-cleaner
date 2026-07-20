@@ -50,7 +50,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            app:endIconMode="clearText"
+            app:endIconMode="clear_text"
             app:boxCornerRadiusTopStart="@dimen/card_radius"
             app:boxCornerRadiusTopEnd="@dimen/card_radius"
             app:boxCornerRadiusBottomStart="@dimen/card_radius"

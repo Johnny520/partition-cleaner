@@ -69,8 +69,8 @@
                 android:progress="0"
                 app:trackThickness="6dp"
                 app:indicatorColor="?attr/colorPrimary"
-                app:trackColor="?attr/colorSurfaceVariant"
-                app:indicatorCornerRadius="3dp" />
+                app:trackColor="?attr/colorSurfaceVariant" />
+
         </com.google.android.material.card.MaterialCardView>
 
         <!-- 运行内存 -->
@@ -130,8 +130,8 @@
                 android:progress="0"
                 app:trackThickness="6dp"
                 app:indicatorColor="?attr/colorTertiary"
-                app:trackColor="?attr/colorSurfaceVariant"
-                app:indicatorCornerRadius="3dp" />
+                app:trackColor="?attr/colorSurfaceVariant" />
+
         </com.google.android.material.card.MaterialCardView>
 
         <!-- 电池 -->
