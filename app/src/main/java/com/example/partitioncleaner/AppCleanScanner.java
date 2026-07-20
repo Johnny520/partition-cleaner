@@ -27,6 +27,7 @@ import java.util.Set;
 public class AppCleanScanner {
 
     // ===== 清理类型常量（别名指向 JunkItem，确保全局唯一值与标题一致） =====
+    public static final int TYPE_CACHE = JunkItem.TYPE_CACHE;
     public static final int TYPE_WECHAT = JunkItem.TYPE_WECHAT;
     public static final int TYPE_QQ = JunkItem.TYPE_QQ;
     public static final int TYPE_DOUYIN = JunkItem.TYPE_DOUYIN;
