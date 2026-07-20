@@ -20,6 +20,7 @@ import java.util.List;
 public class ScanResultActivity extends BaseActivity {
 
     public static final String EXTRA_EMPTY_ONLY = "empty_only";
+    public static final String EXTRA_CLEAN_TYPE = "clean_type";
 
     private static final int FILTER_ALL = 0;
     private static final int FILTER_CLEAN = 1;
@@ -37,6 +38,7 @@ public class ScanResultActivity extends BaseActivity {
     private List<JunkItem> displayItems = new ArrayList<>(); // 当前筛选后显示
     private RootShell rootShell;
     private boolean emptyOnly;
+    private int cleanType = -1;
     private int filterMode = FILTER_ALL;
 
     @Override
@@ -50,7 +52,9 @@ public class ScanResultActivity extends BaseActivity {
         }
 
         emptyOnly = getIntent().getBooleanExtra(EXTRA_EMPTY_ONLY, false);
-        setTitle(emptyOnly ? "空文件夹查询" : "垃圾扫描结果");
+        cleanType = getIntent().getIntExtra(EXTRA_CLEAN_TYPE, -1);
+        if (cleanType > 0) setTitle(getString(AppCleanScanner.getTitleRes(cleanType)));
+        else setTitle(emptyOnly ? "空文件夹查询" : "垃圾扫描结果");
 
         rv = findViewById(R.id.rv_junk);
         rv.setLayoutManager(new LinearLayoutManager(this));
@@ -84,7 +88,9 @@ public class ScanResultActivity extends BaseActivity {
             rootShell = new RootShell();
             boolean root = rootShell.requestRoot();
             final List<JunkItem> result = new ArrayList<>();
-            if (emptyOnly) {
+            if (cleanType > 0) {
+                result.addAll(AppCleanScanner.scan(this, cleanType, rootShell));
+            } else if (emptyOnly) {
                 String[] roots = {"/data", "/storage/emulated/0", "/cache", "/system", "/cust"};
                 result.addAll(JunkScanner.scanEmptyDirs(rootShell, roots));
             } else {

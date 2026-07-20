@@ -7,6 +7,13 @@ public class JunkItem {
     public static final int TYPE_TEMP = 2;
     public static final int TYPE_EMPTY_DIR = 3;
     public static final int TYPE_RESIDUAL = 4;
+    public static final int TYPE_APP_CACHE = 5;  // 社交/视频 App 缓存目录
+    public static final int TYPE_PHOTO = 6;      // 图片（微信图片/截图）
+    public static final int TYPE_VIDEO = 7;      // 视频
+    public static final int TYPE_APK = 8;        // 安装包
+    public static final int TYPE_LARGE = 9;      // 大文件
+    public static final int TYPE_THUMB = 10;     // 缩略图
+    public static final int TYPE_AD = 11;        // 广告残留
 
     // 清理建议
     public static final int ADVICE_CLEAN = 0; // 建议清理（默认勾选）
@@ -37,6 +44,20 @@ public class JunkItem {
                 return "临时文件";
             case TYPE_EMPTY_DIR:
                 return "空文件夹";
+            case TYPE_APP_CACHE:
+                return "应用缓存";
+            case TYPE_PHOTO:
+                return "图片";
+            case TYPE_VIDEO:
+                return "视频";
+            case TYPE_APK:
+                return "安装包";
+            case TYPE_LARGE:
+                return "大文件";
+            case TYPE_THUMB:
+                return "缩略图";
+            case TYPE_AD:
+                return "广告残留";
             default:
                 return "残留";
         }

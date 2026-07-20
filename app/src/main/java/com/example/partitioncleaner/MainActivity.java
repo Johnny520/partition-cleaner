@@ -118,6 +118,20 @@ public class MainActivity extends BaseActivity {
         items.add(new NavItem("📑", getString(R.string.feat_dup), getString(R.string.feat_dup_sub), () -> go(DuplicateActivity.class)));
         items.add(new NavItem("💽", getString(R.string.feat_partition), getString(R.string.feat_partition_sub), () -> go(PartitionActivity.class)));
 
+        items.add(new NavItem("💬", getString(R.string.clean_wechat), getString(R.string.clean_wechat_sub), () -> goClean(AppCleanScanner.TYPE_WECHAT)));
+        items.add(new NavItem("🐧", getString(R.string.clean_qq), getString(R.string.clean_qq_sub), () -> goClean(AppCleanScanner.TYPE_QQ)));
+        items.add(new NavItem("🎵", getString(R.string.clean_douyin), getString(R.string.clean_douyin_sub), () -> goClean(AppCleanScanner.TYPE_DOUYIN)));
+        items.add(new NavItem("🌐", getString(R.string.clean_browser), getString(R.string.clean_browser_sub), () -> goClean(AppCleanScanner.TYPE_BROWSER)));
+        items.add(new NavItem("📦", getString(R.string.clean_apk), getString(R.string.clean_apk_sub), () -> goClean(AppCleanScanner.TYPE_APK)));
+        items.add(new NavItem("🖼️", getString(R.string.clean_screenshot), getString(R.string.clean_screenshot_sub), () -> goClean(AppCleanScanner.TYPE_SCREENSHOT)));
+        items.add(new NavItem("📜", getString(R.string.clean_log), getString(R.string.clean_log_sub), () -> goClean(AppCleanScanner.TYPE_LOG)));
+        items.add(new NavItem("🗂️", getString(R.string.clean_temp), getString(R.string.clean_temp_sub), () -> goClean(AppCleanScanner.TYPE_TEMP)));
+        items.add(new NavItem("🐘", getString(R.string.clean_large), getString(R.string.clean_large_sub), () -> goClean(AppCleanScanner.TYPE_LARGE)));
+        items.add(new NavItem("🗑️", getString(R.string.clean_residual), getString(R.string.clean_residual_sub), () -> goClean(AppCleanScanner.TYPE_RESIDUAL)));
+        items.add(new NavItem("🖼", getString(R.string.clean_thumb), getString(R.string.clean_thumb_sub), () -> goClean(AppCleanScanner.TYPE_THUMB)));
+        items.add(new NavItem("🚫", getString(R.string.clean_ad), getString(R.string.clean_ad_sub), () -> goClean(AppCleanScanner.TYPE_AD)));
+        items.add(new NavItem("📤", getString(R.string.extract_title), getString(R.string.extract_sub), () -> go(ApkExtractActivity.class)));
+
         items.add(NavItem.header(getString(R.string.cat_tools)));
         items.add(new NavItem("🧮", getString(R.string.tool_calc_title), getString(R.string.tool_calc_sub), () -> go(CalculatorActivity.class)));
         items.add(new NavItem("🔄", getString(R.string.tool_convert_title), getString(R.string.tool_convert_sub), () -> go(UnitConverterActivity.class)));
@@ -132,6 +146,12 @@ public class MainActivity extends BaseActivity {
         items.add(new NavItem("ℹ️", getString(R.string.feat_about), getString(R.string.feat_about_sub), () -> go(AboutActivity.class)));
 
         rv.setAdapter(new NavAdapter(items));
+    }
+
+    private void goClean(int type) {
+        Intent ci = new Intent(this, ScanResultActivity.class);
+        ci.putExtra(ScanResultActivity.EXTRA_CLEAN_TYPE, type);
+        startActivity(ci);
     }
 
     static class NavItem {

@@ -77,6 +77,10 @@
             android:name=".ThemePickerActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ApkExtractActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

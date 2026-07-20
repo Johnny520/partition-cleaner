@@ -16,7 +16,7 @@
     <string name="filter_keep">建议保留</string>
     <string name="about">关于</string>
     <string name="about_title">关于 分区清理大师</string>
-    <string name="about_version_text">版本 v1.0.2</string>
+    <string name="about_version_text">版本 v1.0.3</string>
     <string name="about_developer_text">开发者：Johnny520（文强哥）</string>
     <string name="about_github_text">https://github.com/Johnny520/partition-cleaner</string>
     <string name="about_desc_text">查询各分区使用情况，扫描并清理系统/数据分区垃圾与空文件夹，查找并清理内部存储中的重复文件。</string>
@@ -139,5 +139,37 @@
     <string name="theme_tip">点击主题即可即时预览，选择会全局生效并自动记住。</string>
 
     <string name="partition_summary">共 %1$d 个分区 · 已用 %2$s · 总计 %3$s</string>
+
+    <!-- 全量清理功能（微信/QQ/抖音/浏览器/安装包/截图/日志/临时/大文件/卸载残留/缩略图/广告） -->
+    <string name="clean_wechat">微信清理</string>
+    <string name="clean_wechat_sub">清理聊天图片/视频/语音/表情缓存</string>
+    <string name="clean_qq">QQ 清理</string>
+    <string name="clean_qq_sub">清理聊天缓存与接收的文件</string>
+    <string name="clean_douyin">抖音清理</string>
+    <string name="clean_douyin_sub">清理缓存视频与临时文件</string>
+    <string name="clean_browser">浏览器清理</string>
+    <string name="clean_browser_sub">清理浏览器缓存与缩略图</string>
+    <string name="clean_apk">安装包清理</string>
+    <string name="clean_apk_sub">清理冗余的 APK 安装包</string>
+    <string name="clean_screenshot">截图清理</string>
+    <string name="clean_screenshot_sub">清理相册截图（删除不可恢复，请谨慎）</string>
+    <string name="clean_log">日志清理</string>
+    <string name="clean_log_sub">清理应用日志与崩溃记录</string>
+    <string name="clean_temp">临时文件</string>
+    <string name="clean_temp_sub">清理下载/编辑产生的临时文件</string>
+    <string name="clean_large">大文件清理</string>
+    <string name="clean_large_sub">清理大于 100MB 的大文件</string>
+    <string name="clean_residual">卸载残留</string>
+    <string name="clean_residual_sub">清理已卸载应用的残留目录</string>
+    <string name="clean_thumb">缩略图清理</string>
+    <string name="clean_thumb_sub">清理系统缩略图缓存</string>
+    <string name="clean_ad">广告残留</string>
+    <string name="clean_ad_sub">清理应用广告缓存目录</string>
+
+    <!-- 安装包提取 -->
+    <string name="extract_title">安装包提取</string>
+    <string name="extract_sub">备份/分享已安装应用的 APK</string>
+    <string name="extract_hint">点击「提取」将应用的安装包（APK）复制到本地，便于备份或分享。公共目录不可写时自动保存到应用私有目录。</string>
+    <string name="extract_action">提取</string>
 
 </resources>
