@@ -140,16 +140,4 @@
 
     <string name="partition_summary">共 %1$d 个分区 · 已用 %2$s · 总计 %3$s</string>
 
-    <string name="tool_calc_title">计算器</string>
-    <string name="tool_calc_sub">日常运算小帮手</string>
-    <string name="tool_convert_title">单位换算</string>
-    <string name="tool_convert_sub">长度 / 重量 / 温度等</string>
-    <string name="tool_device_title">设备信息</string>
-    <string name="tool_device_sub">硬件与系统详情</string>
-    <string name="tool_text_title">文本工具</string>
-    <string name="tool_text_sub">大小写 / 编码 / 计数</string>
-    <string name="tool_random_title">随机数</string>
-    <string name="tool_random_sub">抽奖 / 抽签</string>
-    <string name="tool_time_title">时间戳</string>
-    <string name="tool_time_sub">日期 ↔ 时间戳</string>
 </resources>
