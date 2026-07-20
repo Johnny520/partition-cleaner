@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 /**
  * 资料页（头像 / 昵称 / 个性签名）持久化。
- * 默认值：头像 avatar_01、昵称「孤独的根号3」、签名「这个人很懒，除了帅其它什么也没留下」。
+ * 默认值：头像 avatar_01、昵称「文强哥」、签名「这个人很懒，除了帅其它什么也没留下」。
  */
 public class ProfilePrefs {
     private static final String NAME = "profile_prefs";
@@ -14,7 +14,7 @@ public class ProfilePrefs {
     private static final String K_SIGN = "sign";
 
     public static final String DEFAULT_AVATAR = "avatar_01";
-    public static final String DEFAULT_NAME = "孤独的根号3";
+    public static final String DEFAULT_NAME = "文强哥";
     public static final String DEFAULT_SIGN = "这个人很懒，除了帅其它什么也没留下";
 
     private static SharedPreferences sp(Context c) {
