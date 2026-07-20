@@ -4,8 +4,13 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.content.ClipboardManager;
+import android.content.ClipData;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Process;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -49,12 +54,16 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     @Override
     public void uncaughtException(Thread thread, Throwable ex) {
+        String report = null;
         try {
-            writeCrashLog(thread, ex);
+            report = writeCrashLog(thread, ex);
         } catch (Throwable t) {
             // 写日志本身失败不能影响后续流程
             android.util.Log.e(TAG, "写崩溃日志异常", t);
         }
+        // 关键：自动把完整崩溃堆栈复制到剪切板，绕过 Android 11+ 隐藏 /Android/data/ 导致拿不到日志文件的问题
+        if (report != null) copyToClipboard(report);
+        showClipboardToast();
         // 交给系统默认处理器：弹出“已停止”对话框并终止进程
         if (defaultHandler != null) {
             defaultHandler.uncaughtException(thread, ex);
@@ -63,7 +72,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         }
     }
 
-    private void writeCrashLog(Thread thread, Throwable ex) {
+    private String writeCrashLog(Thread thread, Throwable ex) {
         StringBuilder sb = new StringBuilder();
         sb.append("时间: ").append(fmt(new Date())).append("\n");
         sb.append("应用: 分区清理大师 (").append(context.getPackageName()).append(")\n");
@@ -90,6 +99,30 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         String content = sb.toString();
         boolean ok = tryWrite(primaryDir(), content);
         if (!ok) tryWrite(fallbackDir(), content);
+        return content;
+    }
+
+    /** 把崩溃报告复制到系统剪切板：用户打开任意 App 长按粘贴即可发给开发者，无需去找日志文件 */
+    private void copyToClipboard(String text) {
+        try {
+            ClipboardManager cm = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            if (cm != null) {
+                ClipData cd = ClipData.newPlainText("分区清理大师崩溃日志", text);
+                cm.setPrimaryClip(cd);
+            }
+        } catch (Throwable t) {
+            android.util.Log.e(TAG, "复制到剪切板失败", t);
+        }
+    }
+
+    /** 尽力提示用户已复制（进程即将被系统终止，Toast 可能不显示，剪切板才是可靠来源） */
+    private void showClipboardToast() {
+        try {
+            new Handler(Looper.getMainLooper()).post(() ->
+                Toast.makeText(context, "崩溃日志已自动复制到剪切板，去任意 App 长按粘贴发我", Toast.LENGTH_LONG).show());
+        } catch (Throwable t) {
+            android.util.Log.e(TAG, "提示 Toast 失败", t);
+        }
     }
 
     private String getVersion() {

@@ -116,7 +116,9 @@
             android:name=".PolicyActivity"
             android:exported="false" />
 
-
+        <activity
+            android:name=".EnterpriseActivity"
+            android:exported="false" />
 
         <activity
             android:name=".SourceActivity"
