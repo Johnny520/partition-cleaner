@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +25,11 @@ public class AboutActivity extends BaseActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         setTitle(R.string.about_title);
+
+        TextView tvVersion = findViewById(R.id.tv_version);
+        if (tvVersion != null) {
+            tvVersion.setText("版本 v" + BuildConfig.VERSION_NAME);
+        }
 
         Button btn = findViewById(R.id.btn_open_repo);
         btn.setOnClickListener(v -> openUrl(RELEASES_URL));

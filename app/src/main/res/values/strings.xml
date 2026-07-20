@@ -20,7 +20,7 @@
     <string name="selected_size_none">已选：0 B</string>
     <string name="about">关于</string>
     <string name="about_title">关于 分区清理大师</string>
-    <string name="about_version_text">版本 v1.0.3</string>
+    <string name="about_version_text">版本 v1.0.6</string>
     <string name="about_developer_text">开发者：Johnny520（文强哥）</string>
     <string name="about_github_text">https://github.com/Johnny520/partition-cleaner</string>
     <string name="about_desc_text">查询各分区使用情况，扫描并清理系统/数据分区垃圾与空文件夹，查找并清理内部存储中的重复文件。</string>
