@@ -20,8 +20,14 @@ public class JunkAdapter extends RecyclerView.Adapter<JunkAdapter.VH> {
         void onItemClick(JunkItem item);
     }
 
+    /** 任一项勾选状态变化时回调（用于实时刷新“已选大小”）。 */
+    interface OnSelectionChanged {
+        void onChanged();
+    }
+
     private final List<JunkItem> data;
     private OnItemClick onItemClick;
+    private OnSelectionChanged onSelectionChanged;
 
     public JunkAdapter(List<JunkItem> data) {
         this.data = data;
@@ -29,6 +35,10 @@ public class JunkAdapter extends RecyclerView.Adapter<JunkAdapter.VH> {
 
     public void setOnItemClick(OnItemClick l) {
         this.onItemClick = l;
+    }
+
+    public void setOnSelectionChanged(OnSelectionChanged l) {
+        this.onSelectionChanged = l;
     }
 
     @NonNull
@@ -49,7 +59,10 @@ public class JunkAdapter extends RecyclerView.Adapter<JunkAdapter.VH> {
         h.cb.setOnCheckedChangeListener(null);
         h.cb.setChecked(it.selected);
         h.cb.setText(it.path);
-        h.cb.setOnCheckedChangeListener((CompoundButton b, boolean checked) -> it.selected = checked);
+        h.cb.setOnCheckedChangeListener((CompoundButton b, boolean checked) -> {
+            it.selected = checked;
+            if (onSelectionChanged != null) onSelectionChanged.onChanged();
+        });
         h.tvType.setText(it.typeLabel());
         h.tvSize.setText(Util.formatSize(it.size));
 

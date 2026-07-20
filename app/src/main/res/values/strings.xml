@@ -14,6 +14,10 @@
     <string name="filter_all">全部</string>
     <string name="filter_clean">建议清理</string>
     <string name="filter_keep">建议保留</string>
+    <string name="select_all">全选</string>
+    <string name="deselect_all">取消全选</string>
+    <string name="selected_size">已选：%1$s（%2$d 项）</string>
+    <string name="selected_size_none">已选：0 B</string>
     <string name="about">关于</string>
     <string name="about_title">关于 分区清理大师</string>
     <string name="about_version_text">版本 v1.0.3</string>

@@ -37,6 +37,9 @@ public class ScanResultActivity extends BaseActivity {
     private Button btnClean;
     private Button btnCleanRec;
     private ChipGroup chipFilter;
+    private Button btnSelectAll;
+    private Button btnDeselectAll;
+    private TextView tvSelectedSize;
 
     private List<JunkItem> items = new ArrayList<>();        // 全量扫描结果
     private List<JunkItem> displayItems = new ArrayList<>(); // 当前筛选后显示
@@ -68,6 +71,7 @@ public class ScanResultActivity extends BaseActivity {
         rv.setLayoutManager(new LinearLayoutManager(this));
         adapter = new JunkAdapter(displayItems);
         adapter.setOnItemClick(this::showJunkDetail);
+        adapter.setOnSelectionChanged(this::updateSelectedSize);
         rv.setAdapter(adapter);
 
         pb = findViewById(R.id.pb);
@@ -75,9 +79,14 @@ public class ScanResultActivity extends BaseActivity {
         btnClean = findViewById(R.id.btn_clean);
         btnCleanRec = findViewById(R.id.btn_clean_recommended);
         chipFilter = findViewById(R.id.chip_filter);
+        btnSelectAll = findViewById(R.id.btn_select_all);
+        btnDeselectAll = findViewById(R.id.btn_deselect_all);
+        tvSelectedSize = findViewById(R.id.tv_selected_size);
 
         btnClean.setOnClickListener(v -> doClean(true));
         btnCleanRec.setOnClickListener(v -> doClean(false));
+        btnSelectAll.setOnClickListener(v -> setAllSelected(true));
+        btnDeselectAll.setOnClickListener(v -> setAllSelected(false));
 
         chipFilter.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == R.id.chip_clean) filterMode = FILTER_CLEAN;
@@ -140,6 +149,7 @@ public class ScanResultActivity extends BaseActivity {
             items.addAll(result);
             runOnUiThread(() -> {
                 applyFilter();
+                updateSelectedSize();
                 pb.setVisibility(View.GONE);
                 long cleanSize = 0;
                 int cleanCnt = 0, keepCnt = 0;
@@ -170,6 +180,27 @@ public class ScanResultActivity extends BaseActivity {
             displayItems.add(it);
         }
         adapter.notifyDataSetChanged();
+        updateSelectedSize();
+    }
+
+    /** 批量设置当前显示列表的勾选状态。 */
+    private void setAllSelected(boolean sel) {
+        for (JunkItem it : displayItems) it.selected = sel;
+        adapter.notifyDataSetChanged();
+        updateSelectedSize();
+    }
+
+    /** 实时统计当前显示列表中被勾选项的总大小并更新文本。 */
+    private void updateSelectedSize() {
+        long sel = 0;
+        int cnt = 0;
+        for (JunkItem it : displayItems) {
+            if (it.selected) {
+                sel += it.size;
+                cnt++;
+            }
+        }
+        tvSelectedSize.setText(getString(R.string.selected_size, Util.formatSize(sel), cnt));
     }
 
     /** 清理：useSelected=true 清勾选项；false 直接清所有“建议清理”项。 */
