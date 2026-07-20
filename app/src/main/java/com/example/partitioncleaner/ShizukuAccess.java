@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Method;
 
 import rikka.shizuku.Shizuku;
 
@@ -104,7 +105,11 @@ public class ShizukuAccess {
     public static IShell getShell(Context ctx) {
         if (!isShizukuAvailable(ctx)) return null;
         try {
-            Process p = Shizuku.newProcess(new String[]{"sh"}, null, null);
+            // Shizuku 13.x 把 newProcess 设为 private，但方法稳定存在；通过一次反射取得远程进程
+            // （返回 ShizukuRemoteProcess，本身 extends Process），作为 shell 使用。
+            Method m = Shizuku.class.getDeclaredMethod("newProcess", String[].class, String[].class, String.class);
+            m.setAccessible(true);
+            Process p = (Process) m.invoke(null, new String[]{"sh"}, null, null);
             return new ShizukuShell(p);
         } catch (Throwable t) {
             return null;
