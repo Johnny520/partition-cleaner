@@ -435,6 +435,9 @@
     <string name="company_verify">官网核验</string>
     <string name="company_visit_site">访问官网</string>
     <string name="company_open_fail">无法打开浏览器</string>
+
+    <!-- 崩溃日志导出（关于页按钮） -->
+    <string name="export_crash_log">导出崩溃日志</string>
     <!-- 源码与工具链（Step 5） -->
     <string name="feat_source">源码 &amp; 工具链</string>
     <string name="feat_source_sub">JDK/Gradle/SDK 下载</string>
