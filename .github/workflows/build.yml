@@ -12,6 +12,12 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # 注入仓库 Secrets 中的正式签名密钥（4 个），供 release 构建使用
+    env:
+      SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+      KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+      KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+      KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -30,22 +36,22 @@ jobs:
           sdkmanager "platforms;android-34" "build-tools;34.0.0"
           yes | sdkmanager --licenses
 
-      - name: Build debug APK
+      - name: Build release (signed) APK
         uses: gradle/gradle-build-action@v3
         with:
           gradle-version: 8.9
-          arguments: assembleDebug
+          arguments: assembleRelease
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: partition-cleaner-apk
-          path: app/build/outputs/apk/debug/*.apk
+          path: app/build/outputs/apk/release/*.apk
 
       - name: Publish release on tag
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: app/build/outputs/apk/debug/*.apk
+          files: app/build/outputs/apk/release/*.apk
           # 每个版本自动生成发行说明（基于本次 tag 以来的提交）
           generate_release_notes: true

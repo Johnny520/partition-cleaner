@@ -3,6 +3,14 @@
 一个 Android **Root 清理工具**，能像“分区详情”界面那样展示各分区使用情况，
 并扫描 / 清理系统分区与数据分区的垃圾文件、查询空文件夹。
 
+## 作者
+
+- **作者**：文强哥 (Johnny520)
+- **GitHub**：https://github.com/Johnny520
+- **仓库**：https://github.com/Johnny520/partition-cleaner
+
+> 本应用由「文强哥 (Johnny520)」开发并维护，发布版本均为正式签名 APK（非 debug）。
+
 ## 功能
 
 - **分区详情查询**：展示 System / Vendor / Data / Cache / Cust / Magisk 等文件系统分区，
@@ -47,18 +55,19 @@
 
 ```bash
 sdkmanager "platforms;android-34" "build-tools;34.0.0"
-./gradlew assembleDebug
-# 产物：app/build/outputs/apk/debug/app-debug.apk
+./gradlew assembleRelease
+# 产物：app/build/outputs/apk/release/app-release.apk（需配置正式签名密钥）
 ```
 
-> 若工程无 `gradlew` 包装脚本，可直接用 Gradle 8.9 运行 `gradle assembleDebug`。
+> 若工程无 `gradlew` 包装脚本，可直接用 Gradle 8.9 运行 `gradle assembleRelease`。
+> 发布版本使用仓库 Secrets 中的正式签名密钥（SIGNING_KEY / KEY_ALIAS / KEY_STORE_PASSWORD / KEY_PASSWORD）签名，非 debug 签名。
 
 ## 云端构建（推荐，零本地环境）
 
 1. 把本工程推到 GitHub 仓库。
 2. 在仓库 **Actions → Build APK → Run workflow** 手动触发，或 push 到 `main`/`master` 自动触发。
-3. 构建完成后在 **Artifacts** 下载 `partition-cleaner-apk`（含 `app-debug.apk`）。
-4. 打 `v*` 标签推送（`git tag v1.0.0 && git push origin v1.0.0`）会自动发布到 **Releases**。
+3. 构建完成后在 **Artifacts** 下载 `partition-cleaner-apk`（含正式签名的 `app-release.apk`）。
+4. 打 `v*` 标签推送（`git tag v1.0.13 && git push origin v1.0.13`）会自动发布正式签名的 APK 到 **Releases**。
 
 推送到 GitHub 的示例命令：
 

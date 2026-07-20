@@ -1,3 +1,10 @@
+/*
+ * 分区清理大师 (Partition Cleaner)
+ * 作者：文强哥 (Johnny520)
+ * GitHub: https://github.com/Johnny520
+ * 版权 © 2026 文强哥 (Johnny520). All rights reserved.
+ */
+
 package com.example.partitioncleaner;
 
 /** 一个待清理项（缓存/日志/临时文件/空文件夹/残留）。 */
