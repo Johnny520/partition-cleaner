@@ -35,7 +35,7 @@
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
         android:supportsRtl="true"
-        android:theme="@style/Theme.PartitionCleaner">
+        android:theme="@style/Theme.LiquidGlass">
 
         <activity
             android:name=".MainActivity"

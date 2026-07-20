@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 液态玻璃 UI（默认主题 · 夜间） -->
+    <style name="Theme.LiquidGlass" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowBackground">@drawable/glass_window_bg</item>
+        <item name="colorPrimary">@color/glass_primary</item>
+        <item name="colorOnPrimary">@color/glass_on_primary</item>
+        <item name="colorPrimaryContainer">@color/glass_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/glass_on_primary</item>
+        <item name="colorSecondary">@color/glass_secondary</item>
+        <item name="colorSurface">@color/glass_surface</item>
+        <item name="colorOnSurface">@color/glass_on_surface</item>
+        <item name="colorSurfaceVariant">@color/glass_surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/glass_on_surface_variant</item>
+        <item name="colorOutline">@color/glass_outline</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/glass_nav</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>
