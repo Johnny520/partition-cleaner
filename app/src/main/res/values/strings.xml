@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">分区清理大师</string>
+    <string name="about_text">分区清理大师 v1.0.0\n查询各分区使用情况，扫描并清理系统/数据分区垃圾与空文件夹。\n清理系统分区需要 Root 权限。</string>
+    <string name="scan_junk">扫描垃圾</string>
+    <string name="find_empty">查询空文件夹</string>
+    <string name="find_dup">查找重复文件</string>
+    <string name="clean_selected">清理选中</string>
+    <string name="clean_dup">清理重复项（保留选中）</string>
+    <string name="dup_title">重复文件</string>
+    <string name="dup_none">未发现重复文件</string>
+    <string name="clean_recommended">只清建议清理</string>
+    <string name="filter_all">全部</string>
+    <string name="filter_clean">建议清理</string>
+    <string name="filter_keep">建议保留</string>
+    <string name="about">关于</string>
+</resources>

@@ -1,0 +1,9 @@
+<resources>
+    <color name="blue">#2196F3</color>
+    <color name="blue_dark">#1976D2</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="gray">#9E9E9E</color>
+    <color name="advice_clean">#2E7D32</color>
+    <color name="advice_keep">#C62828</color>
+</resources>
