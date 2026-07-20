@@ -15,10 +15,20 @@ import java.util.List;
 
 public class JunkAdapter extends RecyclerView.Adapter<JunkAdapter.VH> {
 
+    /** 点击某项时回调（用于弹窗展示详情）。 */
+    interface OnItemClick {
+        void onItemClick(JunkItem item);
+    }
+
     private final List<JunkItem> data;
+    private OnItemClick onItemClick;
 
     public JunkAdapter(List<JunkItem> data) {
         this.data = data;
+    }
+
+    public void setOnItemClick(OnItemClick l) {
+        this.onItemClick = l;
     }
 
     @NonNull
@@ -32,6 +42,10 @@ public class JunkAdapter extends RecyclerView.Adapter<JunkAdapter.VH> {
     @Override
     public void onBindViewHolder(@NonNull VH h, int pos) {
         JunkItem it = data.get(pos);
+        final JunkItem item = it;
+        h.itemView.setOnClickListener(v -> {
+            if (onItemClick != null) onItemClick.onItemClick(item);
+        });
         h.cb.setOnCheckedChangeListener(null);
         h.cb.setChecked(it.selected);
         h.cb.setText(it.path);

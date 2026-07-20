@@ -11,6 +11,12 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="moe.shizuku.manager.permission.API_V23" />
+
+    <queries>
+        <package android:name="moe.shizuku.manager" />
+    </queries>
 
     <application
         android:allowBackup="true"
@@ -94,6 +100,15 @@
             android:exported="false" />
         <activity
             android:name=".RootStatusActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PermissionCenterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UnusedAppActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PolicyActivity"
             android:exported="false" />
 
     </application>

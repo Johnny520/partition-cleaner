@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +67,7 @@ public class ScanResultActivity extends BaseActivity {
         rv = findViewById(R.id.rv_junk);
         rv.setLayoutManager(new LinearLayoutManager(this));
         adapter = new JunkAdapter(displayItems);
+        adapter.setOnItemClick(this::showJunkDetail);
         rv.setAdapter(adapter);
 
         pb = findViewById(R.id.pb);
@@ -172,20 +174,23 @@ public class ScanResultActivity extends BaseActivity {
 
     /** 清理：useSelected=true 清勾选项；false 直接清所有“建议清理”项。 */
     private void doClean(boolean useSelected) {
-        if (rootShell == null || !rootShell.isAvailable()) {
-            Toast.makeText(this, "清理系统分区需要 Root 权限", Toast.LENGTH_LONG).show();
+        IShell shell = (rootShell != null && rootShell.isAvailable())
+                ? rootShell : ShizukuAccess.getShell(this);
+        if (shell == null) {
+            Toast.makeText(this, "清理系统分区需要 Root 或 Shizuku 免 Root 授权", Toast.LENGTH_LONG).show();
             return;
         }
+        final IShell usedShell = shell;
         pb.setVisibility(View.VISIBLE);
         new Thread(() -> {
             List<JunkItem> toClean = new ArrayList<>();
             String msg;
             if (useSelected) {
                 for (JunkItem it : items) if (it.selected) toClean.add(it);
-                msg = Cleaner.clean(rootShell, toClean);
+                msg = Cleaner.clean(usedShell, toClean);
             } else {
                 for (JunkItem it : items) if (it.advice == JunkItem.ADVICE_CLEAN) toClean.add(it);
-                msg = Cleaner.cleanForce(rootShell, toClean);
+                msg = Cleaner.cleanForce(usedShell, toClean);
             }
             final String result = msg;
             runOnUiThread(() -> {
@@ -194,6 +199,27 @@ public class ScanResultActivity extends BaseActivity {
                 startScan(); // 清理后刷新
             });
         }).start();
+    }
+
+    /** 点击扫描结果项时弹窗展示详情（类型/大小/建议/路径/文件状态）。 */
+    private void showJunkDetail(JunkItem it) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("类型：").append(it.typeLabel()).append("\n");
+        sb.append("大小：").append(Util.formatSize(it.size)).append("\n");
+        sb.append("建议：").append(it.adviceLabel()).append("\n");
+        if (it.reason != null && !it.reason.isEmpty()) {
+            sb.append("原因：").append(it.reason).append("\n");
+        }
+        sb.append("路径：").append(it.path).append("\n");
+        File f = new File(it.path);
+        sb.append("文件状态：").append(f.exists()
+                ? "存在（实际 " + Util.formatSize(f.length()) + "）"
+                : "不存在（已清理或路径失效）");
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.scan_item_detail)
+                .setMessage(sb.toString())
+                .setPositiveButton(android.R.string.ok, null)
+                .show();
     }
 
     @Override

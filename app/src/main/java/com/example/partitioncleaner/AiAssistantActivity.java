@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,9 @@ public class AiAssistantActivity extends BaseActivity {
     private RecyclerView rv;
     private EditText et;
     private ChatAdapter adapter;
+    private SwitchMaterial swOnline;
+    private TextView tvMode;
+    private boolean online = false;
     private final List<ChatMessage> messages = new ArrayList<>();
     private final HunyuanBrain brain = new HunyuanBrain();
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -58,6 +62,13 @@ public class AiAssistantActivity extends BaseActivity {
         rv.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ChatAdapter();
         rv.setAdapter(adapter);
+
+        swOnline = findViewById(R.id.sw_online);
+        tvMode = findViewById(R.id.tv_mode);
+        swOnline.setOnCheckedChangeListener((button, isChecked) -> {
+            online = isChecked;
+            tvMode.setText(isChecked ? R.string.ai_mode_online : R.string.ai_mode_offline);
+        });
 
         et = findViewById(R.id.et_ai);
         et.setOnEditorActionListener((v, actionId, event) -> {
@@ -104,17 +115,24 @@ public class AiAssistantActivity extends BaseActivity {
         scrollBottom();
 
         // 模拟思考
-        messages.add(new ChatMessage(false, getString(R.string.ai_think)));
+        messages.add(new ChatMessage(false, online ? getString(R.string.ai_online_thinking) : getString(R.string.ai_think)));
         int thinkIndex = messages.size() - 1;
         adapter.notifyItemInserted(thinkIndex);
         scrollBottom();
 
         handler.postDelayed(() -> {
-            String reply = brain.answer(text);
+            String reply;
+            if (online) {
+                // 在线模式：当前未配置云端接口，回退到本地离线应答并提示
+                Toast.makeText(this, R.string.ai_online_unavailable, Toast.LENGTH_SHORT).show();
+                reply = brain.answer(text);
+            } else {
+                reply = brain.answer(text);
+            }
             messages.set(thinkIndex, new ChatMessage(false, reply));
             adapter.notifyItemChanged(thinkIndex);
             scrollBottom();
-        }, 450);
+        }, online ? 700 : 450);
     }
 
     private void scrollBottom() {

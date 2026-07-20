@@ -60,6 +60,13 @@ public class AppCleanScanner {
     public static final int TYPE_RECORD = JunkItem.TYPE_RECORD;
     public static final int TYPE_WALLPAPER = JunkItem.TYPE_WALLPAPER;
 
+    // ===== v1.0.5 新增 =====
+    public static final int TYPE_PHOTO = JunkItem.TYPE_PHOTO;
+    public static final int TYPE_EBOOK = JunkItem.TYPE_EBOOK;
+    public static final int TYPE_APP_DATA = JunkItem.TYPE_APP_DATA;
+    public static final int TYPE_UNUSED_APP = JunkItem.TYPE_UNUSED_APP;
+    public static final int TYPE_DEEP = JunkItem.TYPE_DEEP;
+
     private static final long MB = 1024L * 1024L;
     private static final int MAX_DEPTH = 10;
 
@@ -98,6 +105,11 @@ public class AppCleanScanner {
             case TYPE_BLUETOOTH: return R.string.clean_bluetooth;
             case TYPE_RECORD: return R.string.clean_record;
             case TYPE_WALLPAPER: return R.string.clean_wallpaper;
+            case TYPE_PHOTO: return R.string.clean_photo;
+            case TYPE_EBOOK: return R.string.clean_ebook;
+            case TYPE_APP_DATA: return R.string.clean_app_data;
+            case TYPE_UNUSED_APP: return R.string.clean_unused;
+            case TYPE_DEEP: return R.string.clean_deep;
             default: return R.string.cat_clean;
         }
     }
@@ -447,6 +459,38 @@ public class AppCleanScanner {
                 s.junkType = JunkItem.TYPE_WALLPAPER;
                 s.reason = "壁纸缓存，清理后自动恢复默认壁纸";
                 break;
+            case TYPE_PHOTO:
+                s.roots = new String[]{"/storage/emulated/0/DCIM",
+                        "/storage/emulated/0/Pictures",
+                        "/storage/emulated/0/Download"};
+                s.mode = MODE_FILE;
+                s.patterns = new String[]{".jpg", ".jpeg", ".png", ".bmp",
+                        ".webp", ".gif", ".heic"};
+                s.junkType = JunkItem.TYPE_PHOTO;
+                s.advice = JunkItem.ADVICE_KEEP;
+                s.reason = "照片/图片文件，请确认是否可删（建议保留）";
+                break;
+            case TYPE_EBOOK:
+                s.roots = new String[]{"/storage/emulated/0/Documents",
+                        "/storage/emulated/0/Books",
+                        "/storage/emulated/0/Download",
+                        "/storage/emulated/0"};
+                s.mode = MODE_FILE;
+                s.patterns = new String[]{".epub", ".mobi", ".azw", ".azw3",
+                        ".txt", ".pdf"};
+                s.junkType = JunkItem.TYPE_EBOOK;
+                s.advice = JunkItem.ADVICE_KEEP;
+                s.reason = "电子书/文档文件，请确认是否可删";
+                break;
+            case TYPE_APP_DATA:
+                s.roots = new String[]{"/storage/emulated/0/Android/data"};
+                s.mode = MODE_DIR;
+                s.patterns = new String[]{"cache", "files", "databases",
+                        "shared_prefs", "tmp", ".cache"};
+                s.junkType = JunkItem.TYPE_APP_CACHE_ALL;
+                s.advice = JunkItem.ADVICE_CLEAN;
+                s.reason = "应用私有数据缓存，清理后应用可能需重新登录/加载";
+                break;
             default:
                 return null;
         }
@@ -456,6 +500,7 @@ public class AppCleanScanner {
     /** 扫描指定类型的可清理项。 */
     public static List<JunkItem> scan(Context ctx, int type, RootShell root) {
         if (type == TYPE_RESIDUAL) return scanResidual(ctx, root);
+        if (type == TYPE_DEEP) return scanDeep(ctx, root);
         Spec s = getSpec(type);
         if (s == null) return new ArrayList<>();
         List<JunkItem> items = new ArrayList<>();
@@ -466,6 +511,23 @@ public class AppCleanScanner {
             scanMediaStore(ctx, s, items); // 无 root 兜底：MediaStore 公共媒体/文件
         }
         return items;
+    }
+
+    /** 深度清理：聚合扫描多类可清理项，去重合并。 */
+    private static List<JunkItem> scanDeep(Context ctx, RootShell root) {
+        int[] types = {TYPE_CACHE, TYPE_THUMB, TYPE_TEMP, TYPE_LOG, TYPE_AD,
+                TYPE_RESIDUAL, TYPE_EMPTY_FILE, TYPE_LARGE, TYPE_APK,
+                TYPE_SCREENSHOT, TYPE_SYSTEM_JUNK, TYPE_APP_CACHE, TYPE_DOWNLOAD,
+                TYPE_MUSIC, TYPE_VIDEO_FILE, TYPE_DOC, TYPE_ARCHIVE,
+                TYPE_BLUETOOTH, TYPE_RECORD, TYPE_PHOTO, TYPE_EBOOK};
+        List<JunkItem> all = new ArrayList<>();
+        Set<String> seen = new HashSet<>();
+        for (int t : types) {
+            for (JunkItem it : scan(ctx, t, root)) {
+                if (it.path != null && seen.add(it.path)) all.add(it);
+            }
+        }
+        return all;
     }
 
     /* ===================== root 扫描 ===================== */

@@ -18,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.text.TextWatcher;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -131,6 +133,10 @@ public class MainActivity extends BaseActivity {
         items.add(new NavItem("🗑️", getString(R.string.clean_residual), getString(R.string.clean_residual_sub), () -> goClean(AppCleanScanner.TYPE_RESIDUAL)));
         items.add(new NavItem("🖼", getString(R.string.clean_thumb), getString(R.string.clean_thumb_sub), () -> goClean(AppCleanScanner.TYPE_THUMB)));
         items.add(new NavItem("🚫", getString(R.string.clean_ad), getString(R.string.clean_ad_sub), () -> goClean(AppCleanScanner.TYPE_AD)));
+        items.add(new NavItem("🖼️", getString(R.string.clean_photo), getString(R.string.clean_photo_sub), () -> goClean(AppCleanScanner.TYPE_PHOTO)));
+        items.add(new NavItem("📚", getString(R.string.clean_ebook), getString(R.string.clean_ebook_sub), () -> goClean(AppCleanScanner.TYPE_EBOOK)));
+        items.add(new NavItem("🗄️", getString(R.string.clean_app_data), getString(R.string.clean_app_data_sub), () -> goClean(AppCleanScanner.TYPE_APP_DATA)));
+        items.add(new NavItem("🔥", getString(R.string.clean_deep), getString(R.string.clean_deep_sub), () -> goClean(AppCleanScanner.TYPE_DEEP)));
         items.add(new NavItem("📤", getString(R.string.extract_title), getString(R.string.extract_sub), () -> go(ApkExtractActivity.class)));
 
         items.add(NavItem.header(getString(R.string.cat_tools)));
@@ -174,8 +180,24 @@ public class MainActivity extends BaseActivity {
         items.add(new NavItem("✨", getString(R.string.feat_ai), getString(R.string.feat_ai_sub), () -> go(AiAssistantActivity.class)));
         items.add(new NavItem("🎨", getString(R.string.feat_theme), getString(R.string.feat_theme_sub), () -> go(ThemePickerActivity.class)));
         items.add(new NavItem("ℹ️", getString(R.string.feat_about), getString(R.string.feat_about_sub), () -> go(AboutActivity.class)));
+        items.add(new NavItem("📉", getString(R.string.feat_unused_app), getString(R.string.feat_unused_app_sub), () -> go(UnusedAppActivity.class)));
+        items.add(new NavItem("🔐", getString(R.string.feat_permission_center), getString(R.string.feat_permission_center_sub), () -> go(PermissionCenterActivity.class)));
+        items.add(new NavItem("🛡️", getString(R.string.feat_root), getString(R.string.feat_root_sub), () -> go(RootStatusActivity.class)));
+        items.add(new NavItem("🔒", getString(R.string.feat_privacy), getString(R.string.feat_privacy_sub), () -> PolicyActivity.open(this, PolicyActivity.MODE_PRIVACY)));
+        items.add(new NavItem("📜", getString(R.string.feat_agreement), getString(R.string.feat_agreement_sub), () -> PolicyActivity.open(this, PolicyActivity.MODE_AGREEMENT)));
 
-        rv.setAdapter(new NavAdapter(items));
+        NavAdapter navAdapter = new NavAdapter(items);
+        rv.setAdapter(navAdapter);
+        EditText etSearch = container.findViewById(R.id.et_nav_search);
+        if (etSearch != null) {
+            etSearch.addTextChangedListener(new android.text.TextWatcher() {
+                @Override public void beforeTextChanged(CharSequence s, int a, int b, int c) {}
+                @Override public void afterTextChanged(android.text.Editable s) {}
+                @Override public void onTextChanged(CharSequence s, int a, int b, int c) {
+                    navAdapter.filter(s == null ? "" : s.toString());
+                }
+            });
+        }
     }
 
     private void goClean(int type) {
@@ -213,9 +235,37 @@ public class MainActivity extends BaseActivity {
     class NavAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private static final int TYPE_HEADER = 0;
         private static final int TYPE_FEATURE = 1;
+        private final List<NavItem> allData;
         private final List<NavItem> data;
 
-        NavAdapter(List<NavItem> data) { this.data = data; }
+        NavAdapter(List<NavItem> all) {
+            this.allData = new ArrayList<>(all);
+            this.data = new ArrayList<>(all);
+        }
+
+        void filter(String q) {
+            q = q == null ? "" : q.trim().toLowerCase();
+            data.clear();
+            if (q.isEmpty()) {
+                data.addAll(allData);
+            } else {
+                boolean headerKept = false;
+                for (NavItem it : allData) {
+                    if (it.isHeader) { headerKept = false; continue; }
+                    if ((it.title != null && it.title.toLowerCase().contains(q))
+                            || (it.sub != null && it.sub.toLowerCase().contains(q))) {
+                        if (!headerKept) {
+                            int idx = allData.indexOf(it) - 1;
+                            while (idx >= 0 && !allData.get(idx).isHeader) idx--;
+                            if (idx >= 0) { data.add(allData.get(idx)); headerKept = true; }
+                            else headerKept = true;
+                        }
+                        data.add(it);
+                    }
+                }
+            }
+            notifyDataSetChanged();
+        }
 
         @Override
         public int getItemViewType(int pos) {
@@ -289,8 +339,16 @@ public class MainActivity extends BaseActivity {
         items.add(new FeatureItem("💽", getString(R.string.feat_partition), "", () -> go(PartitionActivity.class)));
         items.add(new FeatureItem("⚡", getString(R.string.feat_memboost), "", () -> go(MemoryBoostActivity.class)));
         items.add(new FeatureItem("🛠️", getString(R.string.feat_custom), "", () -> go(CustomCleanActivity.class)));
-        items.add(new FeatureItem("🔐", getString(R.string.feat_permission), "", () -> startActivity(new Intent(this, RootStatusActivity.class))));
+        items.add(new FeatureItem("🔐", getString(R.string.feat_permission_center), getString(R.string.feat_permission_center_sub), () -> go(PermissionCenterActivity.class)));
         items.add(new FeatureItem("📤", getString(R.string.extract_title), "", () -> go(ApkExtractActivity.class)));
+        items.add(new FeatureItem("🖼️", getString(R.string.feat_photo), getString(R.string.feat_photo_sub), () -> goClean(AppCleanScanner.TYPE_PHOTO)));
+        items.add(new FeatureItem("📚", getString(R.string.feat_ebook), getString(R.string.feat_ebook_sub), () -> goClean(AppCleanScanner.TYPE_EBOOK)));
+        items.add(new FeatureItem("🗄️", getString(R.string.feat_app_data), getString(R.string.feat_app_data_sub), () -> goClean(AppCleanScanner.TYPE_APP_DATA)));
+        items.add(new FeatureItem("📉", getString(R.string.feat_unused_app), getString(R.string.feat_unused_app_sub), () -> go(UnusedAppActivity.class)));
+        items.add(new FeatureItem("🔥", getString(R.string.feat_deep), getString(R.string.feat_deep_sub), () -> goClean(AppCleanScanner.TYPE_DEEP)));
+        items.add(new FeatureItem("🛡️", getString(R.string.feat_root), getString(R.string.feat_root_sub), () -> go(RootStatusActivity.class)));
+        items.add(new FeatureItem("🔒", getString(R.string.feat_privacy), getString(R.string.feat_privacy_sub), () -> PolicyActivity.open(this, PolicyActivity.MODE_PRIVACY)));
+        items.add(new FeatureItem("📜", getString(R.string.feat_agreement), getString(R.string.feat_agreement_sub), () -> PolicyActivity.open(this, PolicyActivity.MODE_AGREEMENT)));
         rv.setAdapter(new FeatureAdapter(items, R.layout.item_home_feature));
 
         loadDashboard();
@@ -333,7 +391,7 @@ public class MainActivity extends BaseActivity {
                     int level = batt.getIntExtra("level", -1);
                     int scale = batt.getIntExtra("scale", -1);
                     battLevel = scale > 0 ? Math.round(level * 100f / scale) : level;
-                    battTemp = batt.getIntExtra("temperature", 0) / 10;
+                    battTemp = batt.getIntExtra("temperature", 0);
                     battHealth = batt.getIntExtra("health", 0);
                     battStatus = batt.getIntExtra("status", 0);
                 }
@@ -343,6 +401,9 @@ public class MainActivity extends BaseActivity {
             int cores = Runtime.getRuntime().availableProcessors();
             String freq = readCpuFreq();
             String cpuModel = safe(Build.HARDWARE) + " · " + safe(Build.BOARD);
+            String model = safe(Build.BRAND) + " " + safe(Build.MODEL);
+            String androidVer = Build.VERSION.RELEASE + " (API " + Build.VERSION.SDK_INT + ")";
+            String screen = getScreenInfo();
 
             // 传感器 / 应用
             int sensors = 0, apps = 0;
@@ -359,7 +420,8 @@ public class MainActivity extends BaseActivity {
                     fCores = cores, fSensors = sensors, fApps = apps;
             final long fStorageUsed = storageUsed, fStorageTotal = storageTotal,
                     fRamUsed = ramUsed, fRamTotal = ramTotal;
-            final String fFreq = freq, fCpuModel = cpuModel;
+            final String fFreq = freq, fCpuModel = cpuModel, fModel = model,
+                    fAndroid = androidVer, fScreen = screen;
 
             runOnUiThread(() -> {
                 setText(R.id.tv_storage_detail, getString(R.string.home_used) + " " + Util.formatSize(fStorageUsed)
@@ -373,7 +435,7 @@ public class MainActivity extends BaseActivity {
                 setBar(R.id.pb_ram, fRamPct);
 
                 setText(R.id.tv_battery_level, fBattLevel >= 0 ? fBattLevel + "%" : "—");
-                setText(R.id.tv_battery_temp, fBattTemp + "°C");
+                setText(R.id.tv_battery_temp, String.format("%.1f°C", fBattTemp / 10.0));
                 setText(R.id.tv_battery_health, healthText(fBattHealth));
                 if (fBattStatus == BatteryManager.BATTERY_STATUS_CHARGING) {
                     setText(R.id.tv_battery_level, (fBattLevel >= 0 ? fBattLevel + "%" : "—") + " ⚡");
@@ -385,8 +447,21 @@ public class MainActivity extends BaseActivity {
 
                 setText(R.id.tv_sensors, String.valueOf(fSensors));
                 setText(R.id.tv_apps, String.valueOf(fApps));
+                setText(R.id.tv_model, fModel);
+                setText(R.id.tv_android, fAndroid);
+                setText(R.id.tv_screen, fScreen);
             });
         }).start();
+    }
+
+    private String getScreenInfo() {
+        try {
+            android.util.DisplayMetrics dm = new android.util.DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(dm);
+            return dm.widthPixels + "×" + dm.heightPixels + " · " + dm.densityDpi + "dpi";
+        } catch (Exception e) {
+            return "未知";
+        }
     }
 
     private String readCpuFreq() {
@@ -427,7 +502,10 @@ public class MainActivity extends BaseActivity {
         items.add(new FeatureItem("✨", getString(R.string.feat_ai), getString(R.string.feat_ai_sub), () -> go(AiAssistantActivity.class)));
         items.add(new FeatureItem("🎨", getString(R.string.feat_theme), getString(R.string.feat_theme_sub), () -> go(ThemePickerActivity.class)));
         items.add(new FeatureItem("ℹ️", getString(R.string.feat_about), getString(R.string.feat_about_sub), () -> go(AboutActivity.class)));
-        items.add(new FeatureItem("🔐", getString(R.string.feat_permission), getString(R.string.feat_permission_sub), () -> startActivity(new Intent(this, RootStatusActivity.class))));
+        items.add(new FeatureItem("🔐", getString(R.string.feat_permission_center), getString(R.string.feat_permission_center_sub), () -> go(PermissionCenterActivity.class)));
+        items.add(new FeatureItem("🛡️", getString(R.string.feat_root), getString(R.string.feat_root_sub), () -> go(RootStatusActivity.class)));
+        items.add(new FeatureItem("🔒", getString(R.string.feat_privacy), getString(R.string.feat_privacy_sub), () -> PolicyActivity.open(this, PolicyActivity.MODE_PRIVACY)));
+        items.add(new FeatureItem("📜", getString(R.string.feat_agreement), getString(R.string.feat_agreement_sub), () -> PolicyActivity.open(this, PolicyActivity.MODE_AGREEMENT)));
         items.add(new FeatureItem("🌐", getString(R.string.feat_website), getString(R.string.feat_website_sub), () -> openUrl(RELEASES_URL)));
         items.add(new FeatureItem("📤", getString(R.string.feat_share), getString(R.string.feat_share_sub), this::shareApp));
         rv.setAdapter(new FeatureAdapter(items));

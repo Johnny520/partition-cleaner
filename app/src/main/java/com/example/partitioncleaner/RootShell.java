@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
  * 通过 su 获取 root shell 并执行命令。
  * 同一进程的输入/输出流在整个生命周期内复用，用随机 marker 标记命令输出结束。
  */
-public class RootShell {
+public class RootShell implements IShell {
     private Process process;
     private DataOutputStream os;
     private BufferedReader out;

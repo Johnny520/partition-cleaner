@@ -1,6 +1,9 @@
 package com.example.partitioncleaner;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -12,6 +15,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,6 +50,9 @@ public class ApkExtractActivity extends BaseActivity {
         String pkg;
         String src;
         long size;
+        String version;
+        long firstInstall;
+        long lastUpdate;
         Drawable icon;
     }
 
@@ -96,6 +106,13 @@ public class ApkExtractActivity extends BaseActivity {
                 e.pkg = ai.packageName;
                 e.src = ai.publicSourceDir != null ? ai.publicSourceDir : ai.sourceDir;
                 e.size = (e.src != null) ? new File(e.src).length() : 0;
+                try {
+                    PackageInfo pi = pm.getPackageInfo(ai.packageName, 0);
+                    e.version = pi.versionName;
+                    e.firstInstall = pi.firstInstallTime;
+                    e.lastUpdate = pi.lastUpdateTime;
+                } catch (Exception ignored) {
+                }
                 try {
                     e.icon = ai.loadIcon(pm);
                 } catch (Exception ignored) {
@@ -180,7 +197,43 @@ public class ApkExtractActivity extends BaseActivity {
             h.name.setText(e.label);
             h.pkg.setText(e.pkg);
             h.size.setText(Util.formatSize(e.size));
+            h.itemView.setOnClickListener(v -> showDetail(e));
             h.btn.setOnClickListener(v -> extract(e));
+        }
+
+        private void showDetail(AppEntry e) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("应用：").append(e.label).append("\n");
+            sb.append("包名：").append(e.pkg).append("\n");
+            sb.append("版本：").append(e.version == null ? "未知" : e.version).append("\n");
+            sb.append("大小：").append(Util.formatSize(e.size)).append("\n");
+            sb.append("安装路径：").append(e.src).append("\n");
+            sb.append("首次安装：").append(formatTime(e.firstInstall)).append("\n");
+            sb.append("最近更新：").append(formatTime(e.lastUpdate)).append("\n");
+            new com.google.android.material.dialog.MaterialAlertDialogBuilder(ApkExtractActivity.this)
+                    .setTitle(R.string.apk_detail_title)
+                    .setMessage(sb.toString())
+                    .setNeutralButton(R.string.apk_copy_pkg, (d, w) -> copyToClipboard(e.pkg))
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show();
+        }
+
+        private String formatTime(long t) {
+            if (t <= 0) return "未知";
+            try {
+                return new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(new Date(t));
+            } catch (Exception e) {
+                return String.valueOf(t);
+            }
+        }
+
+        private void copyToClipboard(String text) {
+            try {
+                ClipboardManager cm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                cm.setPrimaryClip(ClipData.newPlainText("pkg", text));
+                Toast.makeText(ApkExtractActivity.this, R.string.apk_copied, Toast.LENGTH_SHORT).show();
+            } catch (Exception ignored) {
+            }
         }
 
         @Override

@@ -65,6 +65,25 @@
     <string name="feat_share">分享应用</string>
     <string name="feat_share_sub">推荐给好友</string>
 
+    <string name="feat_photo">照片清理</string>
+    <string name="feat_photo_sub">照片与图片</string>
+    <string name="feat_ebook">电子书扫描</string>
+    <string name="feat_ebook_sub">电子书与文档</string>
+    <string name="feat_app_data">应用数据</string>
+    <string name="feat_app_data_sub">应用私有数据</string>
+    <string name="feat_unused_app">长期未使用</string>
+    <string name="feat_unused_app_sub">久未打开的应用</string>
+    <string name="feat_deep">深度清理</string>
+    <string name="feat_deep_sub">聚合全量扫描</string>
+    <string name="feat_privacy">隐私政策</string>
+    <string name="feat_privacy_sub">了解我们如何保护你的数据</string>
+    <string name="feat_agreement">用户协议</string>
+    <string name="feat_agreement_sub">使用条款与声明</string>
+    <string name="feat_permission_center">权限中心</string>
+    <string name="feat_permission_center_sub">存储 · 通知 · 免Root(Shizuku)</string>
+    <string name="feat_root">Root 状态</string>
+    <string name="feat_root_sub">实时查看 Root / Shizuku 状态</string>
+
     <!-- 用户中心 -->
     <string name="user_name">文强哥</string>
     <string name="user_level">Lv.29 · 分区清理大师用户</string>
@@ -258,6 +277,16 @@
     <string name="clean_record_sub">语音与录音</string>
     <string name="clean_wallpaper">壁纸文件清理</string>
     <string name="clean_wallpaper_sub">壁纸与图片</string>
+    <string name="clean_photo">照片清理</string>
+    <string name="clean_photo_sub">照片与图片文件</string>
+    <string name="clean_ebook">电子书扫描</string>
+    <string name="clean_ebook_sub">电子书与文档</string>
+    <string name="clean_app_data">应用数据清理</string>
+    <string name="clean_app_data_sub">清理应用私有数据缓存</string>
+    <string name="clean_unused">长期未使用 APP</string>
+    <string name="clean_unused_sub">查找久未打开的应用</string>
+    <string name="clean_deep">深度清理</string>
+    <string name="clean_deep_sub">聚合扫描全部可清理项</string>
 
     <!-- 主页分类标签 -->
     <string name="cat_appsys">应用与系统</string>
@@ -278,4 +307,94 @@
 
     <string name="cancel">取消</string>
     <string name="ok">确定</string>
+
+    <!-- 权限中心 -->
+    <string name="perm_center_title">权限中心</string>
+    <string name="perm_storage">存储权限</string>
+    <string name="perm_storage_sub">读取/清理公共目录文件（截图、下载、音乐等）</string>
+    <string name="perm_notification">通知权限</string>
+    <string name="perm_notification_sub">清理完成与扫描进度提醒</string>
+    <string name="perm_shizuku">免 Root 授权（Shizuku）</string>
+    <string name="perm_shizuku_sub">通过 Shizuku 以 shell 权限访问 Android/data，无需 Root</string>
+    <string name="perm_root">Root 权限</string>
+    <string name="perm_root_sub">获得最高权限进行系统级深度清理</string>
+    <string name="perm_granted">已授权</string>
+    <string name="perm_denied">未授权</string>
+    <string name="perm_grant">去授权</string>
+    <string name="perm_open_shizuku">打开 Shizuku</string>
+    <string name="perm_shizuku_uninstalled">未检测到 Shizuku，请先在应用商店安装</string>
+    <string name="perm_status_real">状态实时更新中…</string>
+
+    <!-- Root / Shizuku 状态页 -->
+    <string name="root_realtime">实时状态（自动刷新）</string>
+    <string name="root_shizuku">免Root(Shizuku)</string>
+    <string name="root_shizuku_avail">Shizuku 可用</string>
+    <string name="root_shizuku_unavail">Shizuku 不可用</string>
+    <string name="root_shizuku_denied">Shizuku 未授权</string>
+    <string name="root_storage_perm">存储权限</string>
+    <string name="root_storage_ok">已授予</string>
+    <string name="root_storage_no">未授予</string>
+    <string name="root_refresh_hint">状态每 3 秒自动刷新</string>
+    <string name="request_shizuku">请求 Shizuku 授权</string>
+
+    <!-- 安装包提取详情弹窗 -->
+    <string name="apk_pkg">包名</string>
+    <string name="apk_version">版本</string>
+    <string name="apk_size">大小</string>
+    <string name="apk_path">路径</string>
+    <string name="apk_install_time">首次安装</string>
+    <string name="apk_update_time">最近更新</string>
+    <string name="apk_copy_pkg">复制包名</string>
+    <string name="apk_copied">包名已复制</string>
+    <string name="apk_detail_title">安装包信息</string>
+    <string name="apk_copy_pkg">复制包名</string>
+    <string name="apk_copied">包名已复制</string>
+
+    <!-- AI 在线/离线 -->
+    <string name="ai_mode_offline">离线模式（本地）</string>
+    <string name="ai_mode_online">在线模式</string>
+    <string name="ai_mode_hint">离线：纯本地规则应答，无需联网；在线：调用云端（需配置 API）</string>
+    <string name="ai_online_unavailable">在线模式暂未配置云端接口，已切换到离线应答</string>
+    <string name="ai_online_thinking">云端思考中…</string>
+
+    <!-- 隐私政策 / 用户协议 -->
+    <string name="policy_privacy_title">隐私政策</string>
+    <string name="policy_agreement_title">用户协议</string>
+    <string name="policy_privacy_text">分区清理大师（开源 Android 存储清理与系统工具箱）重视你的隐私。本应用：\n\n• 所有扫描与清理均在你的设备上本地完成，不会上传任何文件或隐私数据；\n• 仅在你主动使用 AI 在线模式时，问题文本会被发送到你配置的云端接口；\n• 不收集联系人、短信、定位等敏感信息；\n• Root/Shizuku 授权仅用于系统级清理，不会被用于其他目的。\n\n（此为占位文本，正式发布前请替换为完整隐私政策。）</string>
+    <string name="policy_agreement_text">欢迎使用分区清理大师。使用本应用即表示你同意以下条款：\n\n• 清理操作具有一定风险，请谨慎确认每一项后再删除；\n• 系统分区清理需要 Root 或 Shizuku 授权，误操作可能导致应用异常；\n• 本软件按“现状”提供，作者不对任何数据丢失负责；\n• 你可以随时卸载本应用以终止使用。\n\n（此为占位文本，正式发布前请替换为完整用户协议。）</string>
+
+    <!-- 主页设备详情 / 导航搜索 -->
+    <string name="home_device_detail">设备详情</string>
+    <string name="home_model_label">设备型号</string>
+    <string name="home_android_label">安卓版本</string>
+    <string name="home_screen_label">屏幕分辨率</string>
+    <string name="nav_search_hint">搜索功能…</string>
+    <string name="scan_item_detail">扫描项详情</string>
+
+    <!-- Root / Shizuku 状态页 -->
+    <string name="shizuku_status_label">Shizuku 免 Root</string>
+    <string name="shizuku_request">请求 Shizuku 授权</string>
+    <string name="shizuku_guide_toast">请在 Shizuku 管理器中授予本应用权限</string>
+    <string name="root_realtime_hint">本页每 3 秒自动刷新，实时显示 Root 与 Shizuku 状态。</string>
+
+    <!-- 权限中心 -->
+    <string name="perm_center_title">权限中心</string>
+    <string name="perm_storage">存储权限</string>
+    <string name="perm_storage_desc">读取与清理存储空间所需</string>
+    <string name="perm_notification">通知权限</string>
+    <string name="perm_notification_desc">清理完成等通知提醒</string>
+    <string name="perm_shizuku">Shizuku 免 Root</string>
+    <string name="perm_shizuku_desc">免 Root 访问应用私有目录</string>
+    <string name="perm_root">Root 权限</string>
+    <string name="perm_root_desc">深度清理系统分区所需</string>
+    <string name="perm_granted">已授权</string>
+    <string name="perm_denied">未授权</string>
+    <string name="perm_grant">去授权</string>
+    <string name="perm_open">查看</string>
+    <string name="perm_not_needed">当前系统版本无需通知权限</string>
+
+    <!-- 长期未使用的 APP -->
+    <string name="app_open">打开</string>
+    <string name="unused_last_update">最近更新：</string>
+    <string name="unused_open_fail">无法打开应用详情</string>
 </resources>

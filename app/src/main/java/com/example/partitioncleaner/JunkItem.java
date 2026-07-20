@@ -45,6 +45,12 @@ public class JunkItem {
     public static final int TYPE_RECORD = 35;
     public static final int TYPE_WALLPAPER = 36;
 
+    // ===== v1.0.5 新增清理/聚合类型 =====
+    public static final int TYPE_EBOOK = 37;       // 电子书扫描
+    public static final int TYPE_APP_DATA = 38;    // 应用数据清理(聚合)
+    public static final int TYPE_UNUSED_APP = 39;  // 长期未使用 APP(非扫描项)
+    public static final int TYPE_DEEP = 40;        // 深度清理(聚合扫描)
+
     // 清理建议
     public static final int ADVICE_CLEAN = 0; // 建议清理（默认勾选）
     public static final int ADVICE_KEEP = 1;  // 建议保留（默认不勾选，有风险）
@@ -88,6 +94,14 @@ public class JunkItem {
                 return "缩略图";
             case TYPE_AD:
                 return "广告残留";
+            case TYPE_EBOOK:
+                return "电子书";
+            case TYPE_APP_DATA:
+                return "应用数据";
+            case TYPE_UNUSED_APP:
+                return "长期未使用";
+            case TYPE_DEEP:
+                return "深度清理";
             default:
                 return "残留";
         }
