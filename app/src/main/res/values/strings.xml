@@ -308,19 +308,6 @@
     <string name="cancel">取消</string>
     <string name="ok">确定</string>
 
-    <!-- 权限中心 -->
-    <string name="perm_center_title">权限中心</string>
-    <string name="perm_storage">存储权限</string>
-    <string name="perm_storage_sub">读取/清理公共目录文件（截图、下载、音乐等）</string>
-    <string name="perm_notification">通知权限</string>
-    <string name="perm_notification_sub">清理完成与扫描进度提醒</string>
-    <string name="perm_shizuku">免 Root 授权（Shizuku）</string>
-    <string name="perm_shizuku_sub">通过 Shizuku 以 shell 权限访问 Android/data，无需 Root</string>
-    <string name="perm_root">Root 权限</string>
-    <string name="perm_root_sub">获得最高权限进行系统级深度清理</string>
-    <string name="perm_granted">已授权</string>
-    <string name="perm_denied">未授权</string>
-    <string name="perm_grant">去授权</string>
     <string name="perm_open_shizuku">打开 Shizuku</string>
     <string name="perm_shizuku_uninstalled">未检测到 Shizuku，请先在应用商店安装</string>
     <string name="perm_status_real">状态实时更新中…</string>
@@ -347,8 +334,6 @@
     <string name="apk_copy_pkg">复制包名</string>
     <string name="apk_copied">包名已复制</string>
     <string name="apk_detail_title">安装包信息</string>
-    <string name="apk_copy_pkg">复制包名</string>
-    <string name="apk_copied">包名已复制</string>
 
     <!-- AI 在线/离线 -->
     <string name="ai_mode_offline">离线模式（本地）</string>
