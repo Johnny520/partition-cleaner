@@ -11,6 +11,11 @@
         android:title="@string/tab_home"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/nav_files"
+        android:icon="@drawable/ic_files"
+        android:title="@string/tab_files"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/nav_user"
         android:icon="@drawable/ic_user"
         android:title="@string/tab_user"

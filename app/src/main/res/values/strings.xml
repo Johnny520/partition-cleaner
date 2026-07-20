@@ -34,13 +34,15 @@
     <string name="partition_header">存储与内存分区</string>
     <string name="scanning">扫描中…</string>
 
-    <!-- 底部三 Tab -->
-    <string name="tab_nav">导航</string>
-    <string name="tab_home">主页</string>
-    <string name="tab_user">用户</string>
-    <string name="title_nav">分区清理大师</string>
-    <string name="title_home">设备概览</string>
-    <string name="title_user">我的</string>
+    <!-- 底部四 Tab（微信式布局，命名不复用微信） -->
+    <string name="tab_nav">清理</string>
+    <string name="tab_home">概览</string>
+    <string name="tab_files">文件</string>
+    <string name="tab_user">资料</string>
+    <string name="title_nav">清理</string>
+    <string name="title_home">概览</string>
+    <string name="title_files">文件管理</string>
+    <string name="title_user">资料</string>
 
     <!-- 导航分类 -->
     <string name="cat_clean">清理专区</string>
@@ -89,10 +91,27 @@
     <string name="feat_root_sub">实时查看 Root / Shizuku 状态</string>
 
     <!-- 用户中心 -->
-    <string name="user_name">文强哥</string>
+    <string name="user_name">孤独的根号3</string>
     <string name="user_level">Lv.29 · 分区清理大师用户</string>
     <string name="user_sign">每日签到</string>
     <string name="user_signed">今日已签到 ✓</string>
+
+    <!-- 资料页（可自定义头像 / 昵称 / 个性签名） -->
+    <string name="profile_avatar_title">选择头像</string>
+    <string name="profile_edit_name">修改昵称</string>
+    <string name="profile_edit_sign">修改个性签名</string>
+    <string name="profile_name_hint">请输入昵称</string>
+    <string name="profile_sign_hint">请输入个性签名</string>
+    <string name="profile_save">保存</string>
+
+    <!-- 文件管理 -->
+    <string name="file_up">返回上级</string>
+    <string name="file_root">内部存储根目录</string>
+    <string name="file_open_fail">没有应用可以打开此文件</string>
+    <string name="file_jump_dir">已跳转到文件所在目录</string>
+    <string name="file_empty">该目录为空或无法访问</string>
+    <string name="file_longpress_hint">点击进入文件夹 / 打开文件；长按文件可跳转到其所在目录</string>
+    <string name="file_loading">加载中…</string>
 
     <!-- 主页仪表盘 -->
     <string name="home_storage">内部存储</string>

@@ -6,16 +6,24 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.hardware.SensorManager;
 import android.net.Uri;
+import android.app.AlertDialog;
+import android.webkit.MimeTypeMap;
+import androidx.core.content.FileProvider;
+import java.io.File;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.StatFs;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.text.TextWatcher;
@@ -31,6 +39,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.io.BufferedReader;
@@ -39,6 +49,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Comparator;
 
 public class MainActivity extends BaseActivity {
 
@@ -64,6 +75,7 @@ public class MainActivity extends BaseActivity {
             int id = item.getItemId();
             if (id == R.id.nav_nav) showTab(0);
             else if (id == R.id.nav_home) showTab(1);
+            else if (id == R.id.nav_files) showTab(3);
             else showTab(2);
             return true;
         });
@@ -102,10 +114,14 @@ public class MainActivity extends BaseActivity {
             inf.inflate(R.layout.fragment_home, container, true);
             setupHome();
             setTitle(R.string.title_home);
-        } else {
+        } else if (tab == 2) {
             inf.inflate(R.layout.fragment_user, container, true);
             setupUser();
             setTitle(R.string.title_user);
+        } else {
+            inf.inflate(R.layout.fragment_files, container, true);
+            setupFiles();
+            setTitle(R.string.title_files);
         }
     }
 
@@ -515,6 +531,8 @@ public class MainActivity extends BaseActivity {
         items.add(new FeatureItem("📤", getString(R.string.feat_share), getString(R.string.feat_share_sub), this::shareApp));
         rv.setAdapter(new FeatureAdapter(items));
 
+        setupProfileHeader();
+
         com.google.android.material.button.MaterialButton btnSign = container.findViewById(R.id.btn_sign);
         if (signed) {
             btnSign.setText(R.string.user_signed);
@@ -526,6 +544,238 @@ public class MainActivity extends BaseActivity {
             btnSign.setEnabled(false);
             Toast.makeText(this, R.string.user_signed, Toast.LENGTH_SHORT).show();
         });
+    }
+
+    /* ===================== 资料页（可自定义头像/昵称/签名） ===================== */
+    private void setupProfileHeader() {
+        ImageView avatar = container.findViewById(R.id.iv_profile_avatar);
+        TextView name = container.findViewById(R.id.tv_profile_name);
+        TextView sign = container.findViewById(R.id.tv_profile_sign);
+        View avatarBox = container.findViewById(R.id.cv_profile_avatar);
+        TextView level = container.findViewById(R.id.tv_profile_level);
+
+        avatar.setImageResource(ProfilePrefs.getAvatarResId(this));
+        name.setText(ProfilePrefs.getName(this));
+        sign.setText(ProfilePrefs.getSign(this));
+        if (level != null) level.setText(R.string.user_level);
+
+        avatarBox.setOnClickListener(v -> showAvatarPicker(avatar));
+        name.setOnClickListener(v -> showNameEditor(name));
+        sign.setOnClickListener(v -> showSignEditor(sign));
+    }
+
+    private void showAvatarPicker(ImageView avatar) {
+        GridView gv = new GridView(this);
+        gv.setNumColumns(4);
+        gv.setHorizontalSpacing(16);
+        gv.setVerticalSpacing(16);
+        gv.setPadding(24, 24, 24, 24);
+        List<Integer> resIds = new ArrayList<>();
+        for (String n : ProfilePrefs.AVATARS) {
+            int id = getResources().getIdentifier(n, "drawable", getPackageName());
+            resIds.add(id == 0 ? R.drawable.avatar_01 : id);
+        }
+        gv.setAdapter(new BaseAdapter() {
+            @Override public int getCount() { return resIds.size(); }
+            @Override public Object getItem(int i) { return resIds.get(i); }
+            @Override public long getItemId(int i) { return i; }
+            @Override public View getView(int i, View v, ViewGroup p) {
+                ImageView iv = new ImageView(MainActivity.this);
+                iv.setLayoutParams(new ViewGroup.LayoutParams(120, 120));
+                iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                iv.setImageResource(resIds.get(i));
+                return iv;
+            }
+        });
+        AlertDialog dlg = new AlertDialog.Builder(this)
+                .setTitle(R.string.profile_avatar_title)
+                .setView(gv)
+                .setNegativeButton(android.R.string.cancel, null)
+                .create();
+        gv.setOnItemClickListener((parent, view, pos, id) -> {
+            ProfilePrefs.setAvatar(this, ProfilePrefs.AVATARS[pos]);
+            avatar.setImageResource(resIds.get(pos));
+            dlg.dismiss();
+        });
+        dlg.show();
+    }
+
+    private void showNameEditor(TextView name) {
+        EditText et = new EditText(this);
+        et.setHint(R.string.profile_name_hint);
+        et.setText(ProfilePrefs.getName(this));
+        et.setSelection(et.getText().length());
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.profile_edit_name)
+                .setView(et)
+                .setPositiveButton(R.string.profile_save, (d, w) -> {
+                    String v = et.getText().toString().trim();
+                    if (v.isEmpty()) v = ProfilePrefs.DEFAULT_NAME;
+                    ProfilePrefs.setName(this, v);
+                    name.setText(v);
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private void showSignEditor(TextView sign) {
+        EditText et = new EditText(this);
+        et.setHint(R.string.profile_sign_hint);
+        et.setText(ProfilePrefs.getSign(this));
+        et.setSelection(et.getText().length());
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.profile_edit_sign)
+                .setView(et)
+                .setPositiveButton(R.string.profile_save, (d, w) -> {
+                    String v = et.getText().toString().trim();
+                    if (v.isEmpty()) v = ProfilePrefs.DEFAULT_SIGN;
+                    ProfilePrefs.setSign(this, v);
+                    sign.setText(v);
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    /* ===================== 文件管理 Tab ===================== */
+    private String currentFilesPath;
+
+    private void setupFiles() {
+        if (currentFilesPath == null) {
+            File root = Environment.getExternalStorageDirectory();
+            currentFilesPath = root != null ? root.getAbsolutePath() : "/";
+        }
+        TextView pathView = container.findViewById(R.id.tv_file_path);
+        RecyclerView rv = container.findViewById(R.id.rv_files);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+        MaterialButton btnUp = container.findViewById(R.id.btn_file_up);
+        FloatingActionButton fabRoot = container.findViewById(R.id.fab_file_root);
+
+        Runnable refresh = () -> {
+            pathView.setText(currentFilesPath);
+            List<FileItem> list = listFiles(currentFilesPath);
+            if (list.isEmpty()) {
+                Toast.makeText(this, R.string.file_empty, Toast.LENGTH_SHORT).show();
+            }
+            rv.setAdapter(new FileAdapter(list,
+                    (file, isDir) -> {
+                        if (isDir) {
+                            currentFilesPath = file.getAbsolutePath();
+                            refresh.run();
+                        } else {
+                            openFile(file);
+                        }
+                    },
+                    (file) -> {
+                        File parent = file.getParentFile();
+                        if (parent != null && parent.canRead()) {
+                            currentFilesPath = parent.getAbsolutePath();
+                            refresh.run();
+                            Toast.makeText(this, R.string.file_jump_dir, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(this, R.string.file_open_fail, Toast.LENGTH_SHORT).show();
+                        }
+                    }));
+        };
+
+        btnUp.setOnClickListener(v -> {
+            File parent = new File(currentFilesPath).getParentFile();
+            if (parent != null && parent.canRead()) {
+                currentFilesPath = parent.getAbsolutePath();
+                refresh.run();
+            }
+        });
+        fabRoot.setOnClickListener(v -> {
+            File root = Environment.getExternalStorageDirectory();
+            currentFilesPath = root != null ? root.getAbsolutePath() : "/";
+            refresh.run();
+        });
+        refresh.run();
+    }
+
+    private List<FileItem> listFiles(String path) {
+        List<FileItem> result = new ArrayList<>();
+        File dir = new File(path);
+        File[] files;
+        try {
+            files = dir.listFiles();
+        } catch (Exception e) {
+            files = null;
+        }
+        if (files == null) return result;
+        List<File> dirs = new ArrayList<>();
+        List<File> regs = new ArrayList<>();
+        for (File f : files) {
+            if (f.isDirectory()) dirs.add(f); else regs.add(f);
+        }
+        dirs.sort(Comparator.comparing(File::getName, String.CASE_INSENSITIVE_ORDER));
+        regs.sort(Comparator.comparing(File::getName, String.CASE_INSENSITIVE_ORDER));
+        for (File f : dirs) result.add(new FileItem(f, true));
+        for (File f : regs) result.add(new FileItem(f, false));
+        return result;
+    }
+
+    private void openFile(File file) {
+        try {
+            Uri uri = FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", file);
+            String ext = MimeTypeMap.getFileExtensionFromUrl(file.getName());
+            String mime = ext != null ? MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext.toLowerCase()) : null;
+            if (mime == null) mime = "*/*";
+            Intent it = new Intent(Intent.ACTION_VIEW);
+            it.setDataAndType(uri, mime);
+            it.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            startActivity(it);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this, R.string.file_open_fail, Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(this, R.string.file_open_fail, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    static class FileItem {
+        final File file;
+        final boolean isDir;
+        FileItem(File f, boolean d) { this.file = f; this.isDir = d; }
+    }
+
+    interface OnFileClick { void onClick(File f, boolean isDir); }
+    interface OnFileLong { void onLong(File f); }
+
+    class FileAdapter extends RecyclerView.Adapter<FileAdapter.VH> {
+        private final List<FileItem> data;
+        private final OnFileClick click;
+        private final OnFileLong longClick;
+        FileAdapter(List<FileItem> d, OnFileClick c, OnFileLong l) { data = d; click = c; longClick = l; }
+
+        @NonNull
+        @Override
+        public VH onCreateViewHolder(@NonNull ViewGroup p, int vt) {
+            View v = LayoutInflater.from(p.getContext()).inflate(R.layout.item_file, p, false);
+            return new VH(v);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull VH h, int pos) {
+            FileItem it = data.get(pos);
+            String name = it.file.getName();
+            h.name.setText(name.isEmpty() ? "/" : name);
+            h.icon.setText(it.isDir ? "📁" : "📄");
+            h.sub.setText(it.isDir ? "文件夹" : Util.formatSize(it.file.length()));
+            h.itemView.setOnClickListener(v -> click.onClick(it.file, it.isDir));
+            h.itemView.setOnLongClickListener(v -> { longClick.onLong(it.file); return true; });
+        }
+
+        @Override
+        public int getItemCount() { return data.size(); }
+
+        class VH extends RecyclerView.ViewHolder {
+            TextView icon, name, sub;
+            VH(View v) {
+                super(v);
+                icon = v.findViewById(R.id.tv_file_icon);
+                name = v.findViewById(R.id.tv_file_name);
+                sub = v.findViewById(R.id.tv_file_sub);
+            }
+        }
     }
 
     static class FeatureItem {
