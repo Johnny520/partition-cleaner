@@ -435,4 +435,27 @@
     <string name="company_verify">官网核验</string>
     <string name="company_visit_site">访问官网</string>
     <string name="company_open_fail">无法打开浏览器</string>
+    <!-- 源码与工具链（Step 5） -->
+    <string name="feat_source">源码 &amp; 工具链</string>
+    <string name="feat_source_sub">JDK/Gradle/SDK 下载</string>
+    <string name="source_title">源码与构建工具链</string>
+    <string name="source_intro">本应用不内置 JDK / Gradle，按需下载以下工具链后在本地构建。</string>
+    <string name="src_repo">项目仓库</string>
+    <string name="src_repo_sub">GitHub 源码 · Issue · 贡献</string>
+    <string name="src_zip">下载源码 ZIP</string>
+    <string name="src_zip_sub">获取 main 分支最新源码</string>
+    <string name="src_release">最新 Release</string>
+    <string name="src_release_sub">稳定版 APK 下载</string>
+    <string name="src_jdk">JDK 17</string>
+    <string name="src_jdk_sub">Java 构建环境</string>
+    <string name="src_gradle">Gradle 8.5</string>
+    <string name="src_gradle_sub">构建工具（或用 gradlew）</string>
+    <string name="src_sdk">Android SDK</string>
+    <string name="src_sdk_sub">API 34 平台</string>
+    <string name="src_clone">复制克隆命令</string>
+    <string name="src_clone_sub">git clone 本仓库</string>
+    <string name="src_build">构建说明</string>
+    <string name="src_build_sub">本地编译步骤</string>
+    <string name="src_copied">已复制克隆命令</string>
+    <string name="src_build_info">本地构建步骤：\n1. 安装 JDK 17 并配置 JAVA_HOME\n2. 安装 Android SDK（API 34）并配置 ANDROID_HOME\n3. 安装 Gradle 8.5 或用项目内置 gradlew\n4. 执行：gradlew assembleDebug\n5. 产物：app/build/outputs/apk/debug/app-debug.apk</string>
 </resources>

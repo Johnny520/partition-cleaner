@@ -119,6 +119,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".SourceActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".CompassActivity"
             android:exported="false" />
         <activity

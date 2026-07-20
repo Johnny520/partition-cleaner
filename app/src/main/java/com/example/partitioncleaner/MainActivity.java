@@ -531,6 +531,7 @@ public class MainActivity extends BaseActivity {
         items.add(new FeatureItem("📜", getString(R.string.feat_agreement), getString(R.string.feat_agreement_sub), () -> PolicyActivity.open(this, PolicyActivity.MODE_AGREEMENT)));
         items.add(new FeatureItem("🌐", getString(R.string.feat_website), getString(R.string.feat_website_sub), () -> openUrl(RELEASES_URL)));
         items.add(new FeatureItem("📤", getString(R.string.feat_share), getString(R.string.feat_share_sub), this::shareApp));
+        items.add(new FeatureItem("📦", getString(R.string.feat_source), getString(R.string.feat_source_sub), () -> go(SourceActivity.class)));
         rv.setAdapter(new FeatureAdapter(items));
 
         setupProfileHeader();
