@@ -7,26 +7,28 @@ import android.content.pm.PackageManager;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
+
+import rikka.shizuku.Shizuku;
 
 /**
- * Shizuku 免 Root 桥接（纯反射实现，编译期不依赖 Shizuku SDK）。
+ * Shizuku 免 Root 桥接（基于官方 Shizuku SDK）。
  *
- * 能力：
- *  · isShizukuAvailable() —— 检测 Shizuku 管理器已安装且本应用已获得 API_V23 权限；
- *  · requestShizuku()     —— 拉起 Shizuku 管理器，引导用户在里面授权；
- *  · getShell()           —— 取得一个以 shell(uid 2000) 身份运行的 IShell，用于免 Root 删除媒体文件；
- *  · getBestShell()       —— 优先 Root，没有 Root 时退回到 Shizuku。
- *
- * 注意：Shizuku 的 shell 身份(uid 2000)可访问 /storage/emulated/0 等共享存储，
- * 但无法访问 /system 等系统分区（那仍需 Root）。在真机上的授权与执行需配合 Shizuku 管理器验证。
+ * 关键点：
+ *  · 必须在 AndroidManifest 中声明 rikka.shizuku.ShizukuProvider，本应用才会出现在
+ *    Shizuku 管理器的“应用”列表里，用户才能授予 API_V23 权限；
+ *  · getShell() 通过 Shizuku.newProcess("sh") 取得一个以 shell(uid 2000) 身份运行的进程，
+ *    用于免 Root 删除媒体文件等。shell 身份可访问共享存储，但无法访问 /system（那仍需 Root）。
  */
 public class ShizukuAccess {
 
     public static final String SHIZUKU_PKG = "moe.shizuku.manager";
     public static final String SHIZUKU_PERMISSION = "moe.shizuku.manager.permission.API_V23";
+    private static final int REQ_CODE = 9527;
+
+    /** 授权结果回调。 */
+    public interface PermissionCallback {
+        void onResult(boolean granted);
+    }
 
     /** Shizuku 管理器是否已安装。 */
     public static boolean isManagerInstalled(Context ctx) {
@@ -38,17 +40,55 @@ public class ShizukuAccess {
         }
     }
 
+    /** Shizuku 服务 binder 是否已就绪（管理器已运行且本应用已连上）。 */
+    public static boolean isBinderAvailable() {
+        try {
+            return Shizuku.pingBinder();
+        } catch (Throwable t) {
+            return false;
+        }
+    }
+
     /** 本应用是否已获得 Shizuku 的 API_V23 权限。 */
     public static boolean isPermissionGranted(Context ctx) {
-        return ctx.checkSelfPermission(SHIZUKU_PERMISSION) == PackageManager.PERMISSION_GRANTED;
+        try {
+            return Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED;
+        } catch (Throwable t) {
+            return false;
+        }
     }
 
-    /** 综合判断：管理器已装 + 已授权。 */
+    /** 综合判断：管理器已装 + binder 就绪 + 已授权。 */
     public static boolean isShizukuAvailable(Context ctx) {
-        return isManagerInstalled(ctx) && isPermissionGranted(ctx);
+        return isManagerInstalled(ctx) && isBinderAvailable() && isPermissionGranted(ctx);
     }
 
-    /** 拉起 Shizuku 管理器，引导用户授权（API_V23）。 */
+    /**
+     * 请求 Shizuku 授权（应用内弹窗）。若已授权或 binder 未就绪会直接回调。
+     * 注意：必须先由用户在 Shizuku 管理器里把本应用列入并授权，否则此处会提示失败。
+     */
+    public static void requestPermission(PermissionCallback cb) {
+        if (isPermissionGranted(null)) {
+            if (cb != null) cb.onResult(true);
+            return;
+        }
+        Shizuku.OnRequestPermissionResultListener listener = new Shizuku.OnRequestPermissionResultListener() {
+            @Override
+            public void onRequestPermissionResult(int requestCode, int grantResult) {
+                Shizuku.removeRequestPermissionResultListener(this);
+                if (cb != null) cb.onResult(grantResult == PackageManager.PERMISSION_GRANTED);
+            }
+        };
+        Shizuku.addRequestPermissionResultListener(listener);
+        try {
+            Shizuku.requestPermission(REQ_CODE);
+        } catch (Throwable t) {
+            Shizuku.removeRequestPermissionResultListener(listener);
+            if (cb != null) cb.onResult(false);
+        }
+    }
+
+    /** 拉起 Shizuku 管理器（用于安装/启动/手动授权）。 */
     public static void requestShizuku(Context ctx) {
         try {
             Intent i = ctx.getPackageManager().getLaunchIntentForPackage(SHIZUKU_PKG);
@@ -60,18 +100,11 @@ public class ShizukuAccess {
         }
     }
 
-    /**
-     * 取得一个 Shizuku 提供的 shell 进程（以 shell uid 运行）。
-     * 通过反射调用 rikka.shizuku.Shizuku.newProcess() 实现；任何失败返回 null。
-     */
+    /** 取得一个 Shizuku 提供的 shell 进程（以 shell uid 运行）。未授权返回 null。 */
     public static IShell getShell(Context ctx) {
         if (!isShizukuAvailable(ctx)) return null;
         try {
-            Class<?> shizuku = Class.forName("rikka.shizuku.Shizuku");
-            Method ping = shizuku.getMethod("pingBinder");
-            if (!(Boolean) ping.invoke(null)) return null;
-            Method newProcess = shizuku.getMethod("newProcess", String[].class, String[].class, String.class);
-            Process p = (Process) newProcess.invoke(null, new String[]{"sh"}, null, null);
+            Process p = Shizuku.newProcess(new String[]{"sh"}, null, null);
             return new ShizukuShell(p);
         } catch (Throwable t) {
             return null;

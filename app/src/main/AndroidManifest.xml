@@ -111,6 +111,15 @@
             android:name=".PolicyActivity"
             android:exported="false" />
 
+        <!-- Shizuku：声明此 provider 后，本应用才会出现在 Shizuku 管理器“应用”列表中并可授予 API_V23 权限 -->
+        <provider
+            android:name="rikka.shizuku.ShizukuProvider"
+            android:authorities="${applicationId}.shizuku"
+            android:enabled="true"
+            android:exported="false"
+            android:multiprocess="false"
+            android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
+
     </application>
 
 </manifest>

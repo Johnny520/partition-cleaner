@@ -54,9 +54,18 @@ public class RootStatusActivity extends BaseActivity {
 
         btnRequest.setOnClickListener(v -> refresh(false));
         btnShizuku.setOnClickListener(v -> {
-            ShizukuAccess.requestShizuku(this);
-            Toast.makeText(this, R.string.shizuku_guide_toast, Toast.LENGTH_LONG).show();
-            refresh(false);
+            if (ShizukuAccess.isBinderAvailable()) {
+                // 管理器已运行：直接应用内弹窗授权
+                ShizukuAccess.requestPermission(granted -> {
+                    Toast.makeText(this, granted ? R.string.shizuku_granted : R.string.shizuku_denied, Toast.LENGTH_SHORT).show();
+                    refresh(false);
+                });
+            } else {
+                // 管理器未运行：引导用户打开 Shizuku 启动/授权
+                ShizukuAccess.requestShizuku(this);
+                Toast.makeText(this, R.string.shizuku_guide_toast, Toast.LENGTH_LONG).show();
+                refresh(false);
+            }
         });
 
         refresh(true);

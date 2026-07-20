@@ -360,6 +360,8 @@
     <string name="shizuku_status_label">Shizuku 免 Root</string>
     <string name="shizuku_request">请求 Shizuku 授权</string>
     <string name="shizuku_guide_toast">请在 Shizuku 管理器中授予本应用权限</string>
+    <string name="shizuku_granted">Shizuku 已授权</string>
+    <string name="shizuku_denied">Shizuku 授权被拒绝</string>
     <string name="root_realtime_hint">本页每 3 秒自动刷新，实时显示 Root 与 Shizuku 状态。</string>
 
     <!-- 权限中心 -->
