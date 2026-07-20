@@ -423,4 +423,16 @@
     <string name="app_open">打开</string>
     <string name="unused_last_update">最近更新：</string>
     <string name="unused_open_fail">无法打开应用详情</string>
+
+    <!-- 企业查询 -->
+    <string name="feat_company">企业查询</string>
+    <string name="feat_company_sub">工商信息 · 官网核验</string>
+    <string name="company_hint">输入企业名称或关键词</string>
+    <string name="company_search">查询</string>
+    <string name="company_loading">查询中…</string>
+    <string name="company_no_result">未找到相关企业，换个关键词试试</string>
+    <string name="company_tip_default">数据来自公开网页抓取（免费、无需密钥），仅供参考，请以官方公示为准。</string>
+    <string name="company_verify">官网核验</string>
+    <string name="company_visit_site">访问官网</string>
+    <string name="company_open_fail">无法打开浏览器</string>
 </resources>

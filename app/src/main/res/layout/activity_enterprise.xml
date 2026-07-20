@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="?attr/colorSurface">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:titleTextColor="?attr/colorOnPrimary"
+        app:navigationIconTint="?attr/colorOnPrimary"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:subtitleTextColor="?attr/colorOnPrimary" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="@dimen/space_md"
+        android:paddingEnd="@dimen/space_md"
+        android:paddingTop="@dimen/space_md"
+        android:paddingBottom="@dimen/space_sm">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="@dimen/space_sm"
+            app:boxCornerRadiusTopStart="@dimen/card_radius"
+            app:boxCornerRadiusTopEnd="@dimen/card_radius"
+            app:boxCornerRadiusBottomStart="@dimen/card_radius"
+            app:boxCornerRadiusBottomEnd="@dimen/card_radius">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_query"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/company_hint"
+                android:inputType="text"
+                android:imeOptions="actionSearch"
+                android:maxLines="1" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/company_search" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:paddingStart="@dimen/space_md"
+        android:paddingEnd="@dimen/space_md"
+        android:textSize="13sp"
+        android:textColor="?attr/colorOnSurfaceVariant" />
+
+    <ListView
+        android:id="@+id/list_results"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="@dimen/space_md"
+        android:clipToPadding="false"
+        android:scrollbars="vertical" />
+
+</LinearLayout>

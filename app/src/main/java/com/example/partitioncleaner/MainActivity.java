@@ -366,6 +366,7 @@ public class MainActivity extends BaseActivity {
         items.add(new FeatureItem("🛡️", getString(R.string.feat_root), getString(R.string.feat_root_sub), () -> go(RootStatusActivity.class)));
         items.add(new FeatureItem("🔒", getString(R.string.feat_privacy), getString(R.string.feat_privacy_sub), () -> PolicyActivity.open(this, PolicyActivity.MODE_PRIVACY)));
         items.add(new FeatureItem("📜", getString(R.string.feat_agreement), getString(R.string.feat_agreement_sub), () -> PolicyActivity.open(this, PolicyActivity.MODE_AGREEMENT)));
+        items.add(new FeatureItem("🏢", getString(R.string.feat_company), getString(R.string.feat_company_sub), () -> go(EnterpriseActivity.class)));
         rv.setAdapter(new FeatureAdapter(items, R.layout.item_home_feature));
 
         View statInstalled = container.findViewById(R.id.stat_installed);

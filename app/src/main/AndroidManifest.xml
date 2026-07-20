@@ -115,6 +115,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".EnterpriseActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".CompassActivity"
             android:exported="false" />
         <activity
