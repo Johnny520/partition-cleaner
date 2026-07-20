@@ -645,52 +645,53 @@ public class MainActivity extends BaseActivity {
             File root = Environment.getExternalStorageDirectory();
             currentFilesPath = root != null ? root.getAbsolutePath() : "/";
         }
-        TextView pathView = container.findViewById(R.id.tv_file_path);
         RecyclerView rv = container.findViewById(R.id.rv_files);
         rv.setLayoutManager(new LinearLayoutManager(this));
         MaterialButton btnUp = container.findViewById(R.id.btn_file_up);
         FloatingActionButton fabRoot = container.findViewById(R.id.fab_file_root);
 
-        Runnable refresh = () -> {
-            pathView.setText(currentFilesPath);
-            List<FileItem> list = listFiles(currentFilesPath);
-            if (list.isEmpty()) {
-                Toast.makeText(this, R.string.file_empty, Toast.LENGTH_SHORT).show();
-            }
-            rv.setAdapter(new FileAdapter(list,
-                    (file, isDir) -> {
-                        if (isDir) {
-                            currentFilesPath = file.getAbsolutePath();
-                            refresh.run();
-                        } else {
-                            openFile(file);
-                        }
-                    },
-                    (file) -> {
-                        File parent = file.getParentFile();
-                        if (parent != null && parent.canRead()) {
-                            currentFilesPath = parent.getAbsolutePath();
-                            refresh.run();
-                            Toast.makeText(this, R.string.file_jump_dir, Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(this, R.string.file_open_fail, Toast.LENGTH_SHORT).show();
-                        }
-                    }));
-        };
-
         btnUp.setOnClickListener(v -> {
             File parent = new File(currentFilesPath).getParentFile();
             if (parent != null && parent.canRead()) {
                 currentFilesPath = parent.getAbsolutePath();
-                refresh.run();
+                refreshFiles();
             }
         });
         fabRoot.setOnClickListener(v -> {
             File root = Environment.getExternalStorageDirectory();
             currentFilesPath = root != null ? root.getAbsolutePath() : "/";
-            refresh.run();
+            refreshFiles();
         });
-        refresh.run();
+        refreshFiles();
+    }
+
+    private void refreshFiles() {
+        TextView pathView = container.findViewById(R.id.tv_file_path);
+        RecyclerView rv = container.findViewById(R.id.rv_files);
+        pathView.setText(currentFilesPath);
+        List<FileItem> list = listFiles(currentFilesPath);
+        if (list.isEmpty()) {
+            Toast.makeText(this, R.string.file_empty, Toast.LENGTH_SHORT).show();
+        }
+        rv.setAdapter(new FileAdapter(list,
+                (file, isDir) -> {
+                    if (isDir) {
+                        currentFilesPath = file.getAbsolutePath();
+                        refreshFiles();
+                    } else {
+                        openFile(file);
+                    }
+                },
+                (file) -> {
+                    File parent = file.getParentFile();
+                    if (parent != null && parent.canRead()) {
+                        currentFilesPath = parent.getAbsolutePath();
+                        refreshFiles();
+                        Toast.makeText(this, R.string.file_jump_dir, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, R.string.file_open_fail, Toast.LENGTH_SHORT).show();
+                    }
+                }));
     }
 
     private List<FileItem> listFiles(String path) {
