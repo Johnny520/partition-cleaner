@@ -10,30 +10,41 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AiAssistantActivity extends BaseActivity {
 
+    private static final String PREF_AI = "ai_keys";
+
     private RecyclerView rv;
     private EditText et;
     private ChatAdapter adapter;
     private SwitchMaterial swOnline;
     private TextView tvMode;
+    private Spinner spModel;
     private boolean online = false;
+    private final List<AiModel> models = AiModel.defaults();
+    private AiModel currentModel = models.get(0);
+    private android.content.SharedPreferences prefs;
     private final List<ChatMessage> messages = new ArrayList<>();
     private final HunyuanBrain brain = new HunyuanBrain();
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -63,12 +74,34 @@ public class AiAssistantActivity extends BaseActivity {
         adapter = new ChatAdapter();
         rv.setAdapter(adapter);
 
+        prefs = getSharedPreferences(PREF_AI, MODE_PRIVATE);
+
         swOnline = findViewById(R.id.sw_online);
         tvMode = findViewById(R.id.tv_mode);
         swOnline.setOnCheckedChangeListener((button, isChecked) -> {
             online = isChecked;
             tvMode.setText(isChecked ? R.string.ai_mode_online : R.string.ai_mode_offline);
         });
+
+        spModel = findViewById(R.id.sp_model);
+        List<String> names = new ArrayList<>();
+        for (AiModel m : models) names.add(m.name);
+        ArrayAdapter<String> spAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, names);
+        spAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spModel.setAdapter(spAdapter);
+        spModel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                currentModel = models.get(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        findViewById(R.id.btn_key).setOnClickListener(v -> openKeyDialog());
 
         et = findViewById(R.id.et_ai);
         et.setOnEditorActionListener((v, actionId, event) -> {
@@ -121,18 +154,86 @@ public class AiAssistantActivity extends BaseActivity {
         scrollBottom();
 
         handler.postDelayed(() -> {
-            String reply;
             if (online) {
-                // 在线模式：当前未配置云端接口，回退到本地离线应答并提示
-                Toast.makeText(this, R.string.ai_online_unavailable, Toast.LENGTH_SHORT).show();
-                reply = brain.answer(text);
+                askOnline(text, thinkIndex);
             } else {
-                reply = brain.answer(text);
+                String reply = brain.answer(text);
+                messages.set(thinkIndex, new ChatMessage(false, reply));
+                adapter.notifyItemChanged(thinkIndex);
+                scrollBottom();
             }
+        }, online ? 700 : 450);
+    }
+
+    /** 调用在线模型；未配置 Key 或异常时回退到本地离线大脑。 */
+    private void askOnline(String userText, int thinkIndex) {
+        String key = prefs.getString("ai_key_" + currentModel.id, "");
+        String base = prefs.getString("ai_base_" + currentModel.id, currentModel.baseUrl);
+
+        if (key == null || key.trim().isEmpty()) {
+            Toast.makeText(this, getString(R.string.ai_no_key, currentModel.name), Toast.LENGTH_LONG).show();
+            String reply = brain.answer(userText);
             messages.set(thinkIndex, new ChatMessage(false, reply));
             adapter.notifyItemChanged(thinkIndex);
             scrollBottom();
-        }, online ? 700 : 450);
+            return;
+        }
+
+        List<AiClient.Msg> history = new ArrayList<>();
+        history.add(new AiClient.Msg("system", getString(R.string.ai_system_prompt)));
+        for (int i = 0; i < messages.size(); i++) {
+            if (i == thinkIndex) break;
+            ChatMessage m = messages.get(i);
+            history.add(new AiClient.Msg(m.isUser ? "user" : "assistant", m.text));
+        }
+        history.add(new AiClient.Msg("user", userText));
+
+        new Thread(() -> {
+            try {
+                final String reply = AiClient.chat(base, key, currentModel.modelId, history);
+                runOnUiThread(() -> {
+                    messages.set(thinkIndex, new ChatMessage(false, reply != null && !reply.isEmpty()
+                            ? reply : brain.answer(userText)));
+                    adapter.notifyItemChanged(thinkIndex);
+                    scrollBottom();
+                });
+            } catch (final Exception e) {
+                final String msg = "调用 " + currentModel.name + " 失败：" + e.getMessage();
+                runOnUiThread(() -> {
+                    Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+                    messages.set(thinkIndex,
+                            new ChatMessage(false, getString(R.string.ai_fallback) + brain.answer(userText)));
+                    adapter.notifyItemChanged(thinkIndex);
+                    scrollBottom();
+                });
+            }
+        }).start();
+    }
+
+    /** 弹出对话框填写当前模型的 API Key（及可选的接口地址）。 */
+    private void openKeyDialog() {
+        android.view.LayoutInflater inflater = getLayoutInflater();
+        android.view.View dialogView = inflater.inflate(R.layout.dialog_api_key, null);
+        TextInputEditText etKey = dialogView.findViewById(R.id.et_api_key);
+        TextInputEditText etBase = dialogView.findViewById(R.id.et_api_base);
+        etKey.setText(prefs.getString("ai_key_" + currentModel.id, ""));
+        etBase.setText(prefs.getString("ai_base_" + currentModel.id, currentModel.baseUrl));
+
+        new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.ai_key_title, currentModel.name))
+                .setView(dialogView)
+                .setPositiveButton(android.R.string.ok, (d, w) -> {
+                    String k = etKey.getText() == null ? "" : etKey.getText().toString().trim();
+                    String b = etBase.getText() == null ? "" : etBase.getText().toString().trim();
+                    prefs.edit()
+                            .putString("ai_key_" + currentModel.id, k)
+                            .putString("ai_base_" + currentModel.id,
+                                    b.isEmpty() ? currentModel.baseUrl : b)
+                            .apply();
+                    Toast.makeText(this, R.string.ai_key_saved, Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
     }
 
     private void scrollBottom() {

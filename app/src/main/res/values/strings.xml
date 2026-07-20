@@ -350,6 +350,15 @@
     <string name="ai_mode_hint">离线：纯本地规则应答，无需联网；在线：调用云端（需配置 API）</string>
     <string name="ai_online_unavailable">在线模式暂未配置云端接口，已切换到离线应答</string>
     <string name="ai_online_thinking">云端思考中…</string>
+    <string name="ai_model_label">模型</string>
+    <string name="ai_key_button">🔑 密钥</string>
+    <string name="ai_key_title">配置 %s 的 API Key</string>
+    <string name="ai_key_hint">在此粘贴你的 API Key</string>
+    <string name="ai_base_hint">接口地址（默认可不填）</string>
+    <string name="ai_key_saved">已保存</string>
+    <string name="ai_no_key">未配置 %s 的 API Key，已使用离线模型</string>
+    <string name="ai_fallback">（在线调用失败，已回退离线应答）\n</string>
+    <string name="ai_system_prompt">你是「分区清理大师」应用的 AI 助手。请用简洁、专业、友好的中文回答用户关于安卓系统清理、垃圾文件、存储空间、Root 权限、设备信息、内置工具使用等方面的问题；不知道答案时诚实说明。</string>
 
     <!-- 隐私政策 / 用户协议 -->
     <string name="policy_privacy_title">隐私政策</string>
