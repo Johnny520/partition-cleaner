@@ -2,6 +2,10 @@
 
 本文件记录分区清理大师每个正式版本的变更。Release 同时会在 GitHub 自动生成发行说明。
 
+## v1.0.10（2026-07-21）
+- 🐞 **修复打开即闪退（真正的元凶）**：`AndroidManifest.xml` 中 `rikka.shizuku.ShizukuProvider` 被误设为 `android:exported="false"`，而 Shizuku 要求必须为 `true`，导致 ContentProvider 在 Application 初始化前就抛 `IllegalStateException` 崩溃。改为 `exported="true"` 后恢复正常
+- ℹ️ 该崩溃发生在 `App.onCreate` 之前，所以此前任何“崩溃日志/复制剪贴板”都来不及执行——日志拿不到是表象，根因即此
+
 ## v1.0.9（2026-07-21）
 - 📂 **崩溃日志改写到公开 Download 目录（MediaStore）**：Android 11+ 隐藏了 `/Android/data/`，此前日志“写了但拿不到”；现在文件管理器里直接可见 `分区清理大师_崩溃日志_*.txt`，长按分享/发送即可
 - 📋 保留自动复制到剪切板（部分机型不留存，故以 Download 文件为准）
