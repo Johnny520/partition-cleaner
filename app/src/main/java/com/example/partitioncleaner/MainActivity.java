@@ -14,6 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView rvPartitions;
     private PartitionAdapter adapter;
-    private ProgressBar pb;
+    private CircularProgressIndicator pb;
     private TextView tvRoot;
     private List<PartitionInfo> partitions = new ArrayList<>();
 
@@ -37,8 +40,12 @@ public class MainActivity extends AppCompatActivity {
         adapter = new PartitionAdapter(partitions);
         rvPartitions.setAdapter(adapter);
 
-        pb = findViewById(R.id.pb);
+        pb = findViewById(R.id.pb_root);
         tvRoot = findViewById(R.id.tv_root);
+        MaterialCardView cardRoot = findViewById(R.id.card_root);
+        cardRoot.setOnClickListener(v -> requestRootStatus());
+        MaterialCardView cardToolbox = findViewById(R.id.card_toolbox);
+        cardToolbox.setOnClickListener(v -> startActivity(new Intent(this, ToolboxActivity.class)));
 
         Button btnScan = findViewById(R.id.btn_scan);
         Button btnEmpty = findViewById(R.id.btn_empty);
@@ -51,14 +58,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkRootAndScan() {
+        requestRootStatus();
+    }
+
+    private void requestRootStatus() {
         pb.setVisibility(View.VISIBLE);
         new Thread(() -> {
+            boolean suThere = RootShell.suBinaryExists();
             RootShell root = new RootShell();
             boolean ok = root.requestRoot();
             root.close();
             boolean finalOk = ok;
+            boolean finalSu = suThere;
             runOnUiThread(() -> {
-                tvRoot.setText(finalOk ? "Root 已授权" : "未获取 Root（仅能扫描可访问分区）");
+                if (finalOk) {
+                    tvRoot.setText("Root 已授权");
+                } else if (finalSu) {
+                    tvRoot.setText("检测到 Root 管理器，但授权被拒绝——可在 Magisk/KernelSU 中允许本应用后点此重试");
+                } else {
+                    tvRoot.setText("未检测到 Root 管理器（需安装 Magisk/KernelSU），仅能扫描用户区文件，点此可重试");
+                }
                 loadPartitions();
             });
         }).start();
@@ -93,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_about) {
-            Toast.makeText(this, R.string.about_text, Toast.LENGTH_LONG).show();
+            startActivity(new Intent(this, AboutActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);

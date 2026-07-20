@@ -7,6 +7,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -38,6 +39,10 @@ public class PartitionAdapter extends RecyclerView.Adapter<PartitionAdapter.VH> 
         int percent = p.getPercent();
         h.pb.setProgress(percent);
         h.tvPercent.setText(percent + "%");
+        int usageColor = percent >= 85 ? R.color.usage_high
+                : (percent >= 60 ? R.color.usage_mid : R.color.usage_low);
+        h.pb.setProgressTintList(ContextCompat.getColorStateList(h.pb.getContext(), usageColor));
+        h.tvPercent.setTextColor(ContextCompat.getColor(h.tvPercent.getContext(), usageColor));
     }
 
     @Override

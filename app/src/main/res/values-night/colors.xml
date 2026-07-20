@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="blue">#4FD8C6</color>
+    <color name="blue_dark">#00504A</color>
+    <color name="white">#DEE5E1</color>
+    <color name="black">#DEE5E1</color>
+    <color name="gray">#99A39F</color>
+
+    <color name="primary">#4FD8C6</color>
+    <color name="onPrimary">#003732</color>
+    <color name="primaryContainer">#00504A</color>
+    <color name="onPrimaryContainer">#6FF2E2</color>
+    <color name="secondary">#B0CCC5</color>
+    <color name="onSecondary">#16322D</color>
+    <color name="secondaryContainer">#324B46</color>
+    <color name="onSecondaryContainer">#CCE8E1</color>
+    <color name="tertiary">#B3CBE1</color>
+    <color name="onTertiary">#1B3242</color>
+    <color name="tertiaryContainer">#33495C</color>
+    <color name="onTertiaryContainer">#CFE5FB</color>
+    <color name="surface">#0F1513</color>
+    <color name="onSurface">#DEE5E1</color>
+    <color name="surfaceVariant">#3F4946</color>
+    <color name="onSurfaceVariant">#BFC9C5</color>
+    <color name="background">#0F1513</color>
+    <color name="onBackground">#DEE5E1</color>
+    <color name="outline">#89938F</color>
+    <color name="outlineVariant">#3F4946</color>
+    <color name="error">#FFB4AB</color>
+    <color name="errorContainer">#93000A</color>
+    <color name="onErrorContainer">#FFDAD6</color>
+    <color name="surfaceContainerLow">#171D1B</color>
+    <color name="surfaceContainer">#1C2321</color>
+    <color name="surfaceContainerHigh">#262D2B</color>
+    <color name="surfaceContainerHighest">#313937</color>
+
+    <color name="advice_clean">#7DDD82</color>
+    <color name="advice_keep">#FF8A80</color>
+    <color name="usage_low">#7DDD82</color>
+    <color name="usage_mid">#FFCB52</color>
+    <color name="usage_high">#FF8A80</color>
+
+    <color name="tile_calc">#0B3B52</color>
+    <color name="tile_convert">#1B432B</color>
+    <color name="tile_device">#3A2350</color>
+    <color name="tile_text">#4A3314</color>
+    <color name="tile_random">#4A1E2B</color>
+    <color name="tile_time">#0B3A40</color>
+</resources>

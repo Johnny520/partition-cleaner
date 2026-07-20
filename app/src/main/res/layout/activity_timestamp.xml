@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="?attr/colorBackground">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:titleTextColor="?attr/colorOnPrimary"
+        app:navigationIconTint="?attr/colorOnPrimary" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/space_lg">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="@dimen/card_radius"
+                app:cardElevation="1dp"
+                app:contentPadding="@dimen/space_lg"
+                app:strokeColor="?attr/colorOutlineVariant"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="时间戳 → 时间"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="?attr/colorOnSurface" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_md"
+                        android:hint="秒级时间戳">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_ts"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:importantForAutofill="no" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_ts_to_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_md"
+                        android:text="转换为时间" />
+
+                    <TextView
+                        android:id="@+id/tv_ts_result"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="28dp"
+                        android:textSize="18sp"
+                        android:textColor="?attr/colorPrimary" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_lg"
+                app:cardCornerRadius="@dimen/card_radius"
+                app:cardElevation="1dp"
+                app:contentPadding="@dimen/space_lg"
+                app:strokeColor="?attr/colorOutlineVariant"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="时间 → 时间戳"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="?attr/colorOnSurface" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_md"
+                        android:hint="yyyy-MM-dd HH:mm:ss">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/et_time"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="datetime"
+                            android:importantForAutofill="no" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_time_to_ts"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_md"
+                        android:text="转换为时间戳" />
+
+                    <TextView
+                        android:id="@+id/tv_time_result"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="28dp"
+                        android:textSize="18sp"
+                        android:textColor="?attr/colorPrimary" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_lg"
+                app:cardCornerRadius="@dimen/card_radius"
+                app:cardElevation="1dp"
+                app:contentPadding="@dimen/space_lg"
+                app:strokeColor="?attr/colorOutlineVariant"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_now"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="当前时间戳" />
+
+                    <TextView
+                        android:id="@+id/tv_now_result"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_md"
+                        android:minHeight="28dp"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        android:textColor="?attr/colorPrimary" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

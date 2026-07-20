@@ -33,6 +33,38 @@
             android:name=".DuplicateActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".AboutActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ToolboxActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".CalculatorActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".UnitConverterActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".DeviceInfoActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".TextToolsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".RandomActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".TimestampActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

@@ -35,6 +35,23 @@ public class RootShell {
         return available;
     }
 
+    /**
+     * 检测系统是否安装了 root 管理器（Magisk/KernelSU/SuperSU）。
+     * 仅检查 su 二进制是否存在，不会触发授权弹窗。
+     */
+    public static boolean suBinaryExists() {
+        try {
+            Process p = Runtime.getRuntime().exec(new String[]{"sh", "-c", "command -v su"});
+            BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line = br.readLine();
+            br.close();
+            p.destroy();
+            return line != null && !line.trim().isEmpty();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     /** 执行一条命令并返回其 stdout（自动剔除结束 marker 行）。 */
     public String run(String cmd) {
         if (!available) return "";

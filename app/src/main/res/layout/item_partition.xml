@@ -1,48 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="12dp">
+    android:layout_marginBottom="@dimen/space_md"
+    app:cardCornerRadius="@dimen/card_radius"
+    app:cardElevation="1dp"
+    app:contentPadding="@dimen/space_lg"
+    app:strokeColor="?attr/colorOutlineVariant"
+    app:strokeWidth="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_name"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="?attr/colorOnSurface" />
+
+            <TextView
+                android:id="@+id/tv_percent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="?attr/colorPrimary" />
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/tv_percent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:id="@+id/tv_mount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="12sp" />
+
+        <ProgressBar
+            android:id="@+id/pb_partition"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_sm"
+            android:max="100"
+            android:progressTint="?attr/colorPrimary" />
+
+        <TextView
+            android:id="@+id/tv_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="12sp" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/tv_mount"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/gray"
-        android:textSize="12sp" />
-
-    <ProgressBar
-        android:id="@+id/pb_partition"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="100" />
-
-    <TextView
-        android:id="@+id/tv_detail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/gray"
-        android:textSize="12sp" />
-
-</LinearLayout>
+</com.google.android.material.card.MaterialCardView>

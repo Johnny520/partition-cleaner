@@ -1,66 +1,236 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="?attr/colorBackground">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/blue"
-        android:elevation="4dp" />
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        app:title="@string/app_name"
+        app:titleTextColor="?attr/colorOnPrimary" />
 
-    <TextView
-        android:id="@+id/tv_root"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="12dp"
-        android:text="正在检测 Root..." />
-
-    <ProgressBar
-        android:id="@+id/pb"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:visibility="gone" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_partitions"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:fillViewport="true">
 
-    <LinearLayout
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/space_md">
+
+            <!-- Root 状态卡片 -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_root"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardCornerRadius="@dimen/card_radius"
+                app:cardElevation="2dp"
+                app:contentPadding="@dimen/space_lg"
+                app:strokeColor="?attr/colorOutlineVariant"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🛡️"
+                        android:textSize="28sp"
+                        android:layout_marginEnd="@dimen/space_md" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_root"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/root_checking"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/root_tap_retry"
+                            android:textSize="12sp"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                    </LinearLayout>
+
+                    <com.google.android.material.progressindicator.CircularProgressIndicator
+                        android:id="@+id/pb_root"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:indeterminate="true"
+                        app:indicatorSize="24dp"
+                        app:trackThickness="3dp"
+                        app:indicatorColor="?attr/colorPrimary" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 工具箱入口卡片 -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_toolbox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_md"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardCornerRadius="@dimen/card_radius"
+                app:cardElevation="2dp"
+                app:contentPadding="@dimen/space_lg"
+                app:strokeColor="?attr/colorOutlineVariant"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="@dimen/tile_size"
+                        android:layout_height="@dimen/tile_size"
+                        android:background="?attr/colorPrimaryContainer"
+                        android:gravity="center"
+                        android:layout_marginEnd="@dimen/space_md">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🧰"
+                            android:textSize="26sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/toolbox_title"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/toolbox_subtitle"
+                            android:textSize="12sp"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="›"
+                        android:textSize="24sp"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 分区列表标题 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_lg"
+                android:layout_marginBottom="@dimen/space_sm"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="18dp"
+                    android:background="?attr/colorPrimary"
+                    android:layout_marginEnd="@dimen/space_sm" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/partition_header"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorOnSurface" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_partitions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- 底部操作区 -->
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="12dp">
+        app:cardCornerRadius="0dp"
+        app:cardElevation="6dp"
+        app:contentPadding="@dimen/space_md"
+        app:strokeWidth="0dp">
 
-        <Button
-            android:id="@+id/btn_scan"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_weight="1"
-            android:text="@string/scan_junk" />
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btn_empty"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/find_empty" />
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/btn_dup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="12dp"
-        android:text="@string/find_dup" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_scan"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/space_sm"
+                    android:text="@string/scan_junk" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_empty"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/find_empty" />
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_dup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_sm"
+                android:text="@string/find_dup" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>

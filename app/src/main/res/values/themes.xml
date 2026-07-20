@@ -1,8 +1,25 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <style name="Theme.PartitionCleaner" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/blue</item>
-        <item name="colorPrimaryVariant">@color/blue_dark</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <item name="android:statusBarColor">@color/blue</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnPrimary">@color/onPrimary</item>
+        <item name="colorPrimaryContainer">@color/primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/onPrimaryContainer</item>
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorSecondaryContainer">@color/secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/onSecondaryContainer</item>
+        <item name="colorTertiary">@color/tertiary</item>
+        <item name="colorTertiaryContainer">@color/tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/onTertiaryContainer</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/onSurface</item>
+        <item name="colorSurfaceVariant">@color/surfaceVariant</color>
+        <item name="colorOnSurfaceVariant">@color/onSurfaceVariant</color>
+        <item name="colorBackground">@color/background</color>
+        <item name="colorOnBackground">@color/onBackground</color>
+        <item name="colorOutline">@color/outline</item>
+        <item name="colorError">@color/error</item>
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
+        <item name="android:navigationBarColor">?attr/colorSurface</item>
+        <item name="android:windowLightStatusBar">?attr/isLightTheme</item>
     </style>
 </resources>

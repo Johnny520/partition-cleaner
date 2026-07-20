@@ -1,21 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="12dp">
+    android:layout_marginBottom="@dimen/space_md"
+    app:cardCornerRadius="@dimen/card_radius"
+    app:cardElevation="1dp"
+    app:contentPadding="@dimen/space_lg"
+    app:strokeColor="?attr/colorOutlineVariant"
+    app:strokeWidth="1dp">
 
-    <TextView
-        android:id="@+id/tv_group_title"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:textStyle="bold" />
+        android:orientation="vertical">
 
-    <RadioGroup
-        android:id="@+id/rg_files"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="4dp" />
+        <TextView
+            android:id="@+id/tv_group_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="?attr/colorOnSurface" />
 
-</LinearLayout>
+        <RadioGroup
+            android:id="@+id/rg_files"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/space_sm" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

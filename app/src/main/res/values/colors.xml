@@ -1,9 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="blue">#2196F3</color>
-    <color name="blue_dark">#1976D2</color>
-    <color name="white">#FFFFFF</color>
-    <color name="black">#000000</color>
-    <color name="gray">#9E9E9E</color>
+    <!-- 兼容旧引用 -->
+    <color name="blue">#006A60</color>
+    <color name="blue_dark">#004E47</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#171D1B</color>
+    <color name="gray">#5F6B67</color>
+
+    <!-- Material 3 · Clean(Teal) · Light -->
+    <color name="primary">#006A60</color>
+    <color name="onPrimary">#FFFFFF</color>
+    <color name="primaryContainer">#6FF2E2</color>
+    <color name="onPrimaryContainer">#00201C</color>
+    <color name="secondary">#4A635E</color>
+    <color name="onSecondary">#FFFFFF</color>
+    <color name="secondaryContainer">#CCE8E1</color>
+    <color name="onSecondaryContainer">#051F1B</color>
+    <color name="tertiary">#4A6074</color>
+    <color name="onTertiary">#FFFFFF</color>
+    <color name="tertiaryContainer">#CFE5FB</color>
+    <color name="onTertiaryContainer">#041C2E</color>
+    <color name="surface">#FBFDFC</color>
+    <color name="onSurface">#171D1B</color>
+    <color name="surfaceVariant">#DEE5E1</color>
+    <color name="onSurfaceVariant">#3F4946</color>
+    <color name="background">#FBFDFC</color>
+    <color name="onBackground">#171D1B</color>
+    <color name="outline">#6F7976</color>
+    <color name="outlineVariant">#BFC9C5</color>
+    <color name="error">#BA1A1A</color>
+    <color name="errorContainer">#FFDAD6</color>
+    <color name="onErrorContainer">#410002</color>
+    <color name="surfaceContainerLow">#F0F6F4</color>
+    <color name="surfaceContainer">#EAEFF0</color>
+    <color name="surfaceContainerHigh">#E4EAEB</color>
+    <color name="surfaceContainerHighest">#DEE5E1</color>
+
+    <!-- 语义色 -->
     <color name="advice_clean">#2E7D32</color>
     <color name="advice_keep">#C62828</color>
+    <color name="usage_low">#2E7D32</color>
+    <color name="usage_mid">#F9A825</color>
+    <color name="usage_high">#C62828</color>
+
+    <!-- 工具箱图标底色 -->
+    <color name="tile_calc">#E3F2FD</color>
+    <color name="tile_convert">#E8F5E9</color>
+    <color name="tile_device">#F3E5F5</color>
+    <color name="tile_text">#FFF3E0</color>
+    <color name="tile_random">#FCE4EC</color>
+    <color name="tile_time">#E0F7FA</color>
 </resources>
