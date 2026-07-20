@@ -106,6 +106,28 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         }
     }
 
+    public static File getLatestCrashLog(android.content.Context ctx) {
+        File best = null;
+        long bestTime = -1;
+        File[] dirs = new File[2];
+        dirs[0] = new File(Environment.getExternalStorageDirectory(),
+                DIR_NAME + File.separator + LOG_SUBDIR);
+        File ext = ctx.getExternalFilesDir(null);
+        dirs[1] = ext == null ? null : new File(ext, DIR_NAME + File.separator + LOG_SUBDIR);
+        for (File dir : dirs) {
+            if (dir == null || !dir.exists()) continue;
+            String[] names = dir.list();
+            if (names == null) continue;
+            for (String name : names) {
+                if (name.startsWith("crash_") && name.endsWith(".txt")) {
+                    File f = new File(dir, name);
+                    if (f.lastModified() > bestTime) { bestTime = f.lastModified(); best = f; }
+                }
+            }
+        }
+        return best;
+    }
+
     private File primaryDir() {
         return new File(Environment.getExternalStorageDirectory(),
                 DIR_NAME + File.separator + LOG_SUBDIR);

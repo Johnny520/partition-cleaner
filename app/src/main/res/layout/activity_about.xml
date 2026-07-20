@@ -221,6 +221,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/about_open_repo" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_export_log"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_sm"
+                android:text="@string/export_crash_log" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

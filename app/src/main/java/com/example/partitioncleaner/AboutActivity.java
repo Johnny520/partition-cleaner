@@ -33,6 +33,32 @@ public class AboutActivity extends BaseActivity {
 
         Button btn = findViewById(R.id.btn_open_repo);
         btn.setOnClickListener(v -> openUrl(RELEASES_URL));
+        Button btnExport = findViewById(R.id.btn_export_log);
+        if (btnExport != null) btnExport.setOnClickListener(v -> exportCrashLog());
+    }
+
+    private void exportCrashLog() {
+        java.io.File log = CrashHandler.getLatestCrashLog(this);
+        if (log == null || !log.exists()) {
+            Toast.makeText(this, "暂无崩溃日志", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        try {
+            StringBuilder sb = new StringBuilder();
+            try (java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(log))) {
+                String line;
+                while ((line = br.readLine()) != null) sb.append(line).append("\n");
+            }
+            android.content.ClipboardManager cm = getSystemService(android.content.ClipboardManager.class);
+            if (cm != null) {
+                cm.setPrimaryClip(android.content.ClipData.newPlainText("crash_log", sb.toString()));
+                Toast.makeText(this, "崩溃日志已复制，粘贴发给开发者即可", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "无法访问剪贴板", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, "读取日志失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     private void openUrl(String url) {
