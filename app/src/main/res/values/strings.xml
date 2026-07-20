@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">分区清理大师</string>
+
+    <!-- 旧的清理相关 -->
     <string name="about_text">分区清理大师 v1.0.0\n查询各分区使用情况，扫描并清理系统/数据分区垃圾与空文件夹。\n清理系统分区需要 Root 权限。</string>
     <string name="scan_junk">扫描垃圾</string>
     <string name="find_empty">查询空文件夹</string>
@@ -14,8 +16,8 @@
     <string name="filter_keep">建议保留</string>
     <string name="about">关于</string>
     <string name="about_title">关于 分区清理大师</string>
-    <string name="about_version_text">版本 v1.0.0</string>
-    <string name="about_developer_text">开发者：Johnny520</string>
+    <string name="about_version_text">版本 v1.0.2</string>
+    <string name="about_developer_text">开发者：Johnny520（文强哥）</string>
     <string name="about_github_text">https://github.com/Johnny520/partition-cleaner</string>
     <string name="about_desc_text">查询各分区使用情况，扫描并清理系统/数据分区垃圾与空文件夹，查找并清理内部存储中的重复文件。</string>
     <string name="about_disclaimer_text">⚠ 风险提示：清理系统分区存在变砖风险，请仅清理明确为垃圾的日志/缓存/临时文件。所有删除均需人工确认，本工具不提供自动全盘清理。清理系统分区需要 Root 权限（Magisk/KernelSU）。</string>
@@ -27,4 +29,127 @@
     <string name="toolbox_subtitle">计算器 · 单位换算 · 设备信息 · 文本工具</string>
     <string name="partition_header">存储与内存分区</string>
     <string name="scanning">扫描中…</string>
+
+    <!-- 底部三 Tab -->
+    <string name="tab_nav">导航</string>
+    <string name="tab_home">主页</string>
+    <string name="tab_user">用户</string>
+    <string name="title_nav">分区清理大师</string>
+    <string name="title_home">设备概览</string>
+    <string name="title_user">我的</string>
+
+    <!-- 导航分类 -->
+    <string name="cat_clean">清理专区</string>
+    <string name="cat_tools">工具箱</string>
+    <string name="cat_smart">智能中心</string>
+
+    <!-- 功能项 -->
+    <string name="feat_junk">垃圾清理</string>
+    <string name="feat_junk_sub">扫描并清理系统/数据分区垃圾</string>
+    <string name="feat_empty">空文件夹</string>
+    <string name="feat_empty_sub">查找可清理的空目录</string>
+    <string name="feat_dup">重复文件</string>
+    <string name="feat_dup_sub">查找内部存储重复文件</string>
+    <string name="feat_partition">存储分区</string>
+    <string name="feat_partition_sub">查看各分区使用率</string>
+    <string name="feat_ai">混元 AI 助手</string>
+    <string name="feat_ai_sub">智能问答 · 设备管家</string>
+    <string name="feat_theme">主题管理</string>
+    <string name="feat_theme_sub">切换配色风格</string>
+    <string name="feat_about">关于应用</string>
+    <string name="feat_about_sub">版本 · 作者 · 声明</string>
+    <string name="feat_permission">权限中心</string>
+    <string name="feat_permission_sub">授予存储与 Root 权限</string>
+    <string name="feat_website">应用官网</string>
+    <string name="feat_website_sub">GitHub 发布页</string>
+    <string name="feat_share">分享应用</string>
+    <string name="feat_share_sub">推荐给好友</string>
+
+    <!-- 用户中心 -->
+    <string name="user_name">文强哥</string>
+    <string name="user_level">Lv.29 · 分区清理大师用户</string>
+    <string name="user_sign">每日签到</string>
+    <string name="user_signed">今日已签到 ✓</string>
+
+    <!-- 主页仪表盘 -->
+    <string name="home_storage">内部存储</string>
+    <string name="home_ram">运行内存</string>
+    <string name="home_battery">电池</string>
+    <string name="home_cpu">处理器</string>
+    <string name="home_sensors">传感器</string>
+    <string name="home_apps">已安装应用</string>
+    <string name="home_scan">一键扫描垃圾</string>
+    <string name="home_refresh">刷新数据</string>
+    <string name="home_used">已用</string>
+    <string name="home_free">可用</string>
+    <string name="home_total">总计</string>
+    <string name="home_cores">核心数</string>
+    <string name="home_freq">当前主频</string>
+    <string name="home_temp">温度</string>
+    <string name="home_health">健康</string>
+    <string name="home_status">状态</string>
+
+    <!-- 混元 AI 助手 -->
+    <string name="ai_title">混元 AI 助手</string>
+    <string name="ai_hint">问我任何关于清理、设备、Root 的问题…</string>
+    <string name="ai_send">发送</string>
+    <string name="ai_welcome">你好，我是混元 AI 助手 🤖 你的设备清洁与系统管家。我能帮你：清理加速、查看设备信息、单位换算、算数、切换主题、了解 Root 权限。</string>
+    <string name="ai_disclaimer">本地智能助手（无需联网），基于设备实时数据与大模型知识库作答。</string>
+    <string name="ai_quick_clean">清理建议</string>
+    <string name="ai_quick_device">我的设备</string>
+    <string name="ai_quick_root">怎么 Root</string>
+    <string name="ai_quick_convert">单位换算</string>
+    <string name="ai_quick_calc">计算器</string>
+    <string name="ai_quick_about">关于作者</string>
+    <string name="ai_action_clean">去清理</string>
+    <string name="ai_action_convert">去换算</string>
+    <string name="ai_action_device">看设备</string>
+    <string name="ai_action_theme">换主题</string>
+
+    <!-- 主题管理 -->
+    <string name="theme_title">主题管理</string>
+    <string name="theme_subtitle">选择一套喜欢的配色，点选即时应用</string>
+
+    <!-- 存储分区页 -->
+    <string name="partition_title">存储分区</string>
+    <string name="partition_loading">正在加载分区信息…</string>
+
+    <!-- 关于页（文强哥 / 2026） -->
+    <string name="about_module_intro">分区清理大师 是一款开源的 Android 存储清理与系统工具箱，支持 Root 深度清理、空文件夹与重复文件查找，并内置计算器、单位换算、设备信息、文本工具、混元 AI 助手等实用功能。</string>
+    <string name="about_author_title">作者</string>
+    <string name="about_author_name">文强哥</string>
+    <string name="about_author_bio">一位喜欢折腾安卓的开发者，专注于系统工具与清理优化。</string>
+    <string name="about_contact">联系：GitHub @Johnny520</string>
+    <string name="about_thanks_title">特别鸣谢</string>
+    <string name="about_thanks_1">感谢所有参与测试与反馈的用户</string>
+    <string name="about_thanks_2">感谢 Magisk / KernelSU 社区提供的 Root 方案</string>
+    <string name="about_thanks_3">感谢 Material Design 3 设计灵感</string>
+    <string name="about_copyright">© 2026 文强哥（Johnny520）. 保留所有权利。</string>
+
+    <!-- 补齐：导航 / AI 快捷 / 工具箱 / 主题 / 分区 -->
+    <string name="ai_subtitle">本地智能助手 · 离线可用</string>
+    <string name="ai_think">正在思考…</string>
+    <string name="ai_q_clean">清理建议</string>
+    <string name="ai_q_root">怎么获取 Root</string>
+    <string name="ai_q_device">我的设备怎样</string>
+    <string name="ai_q_calc">帮我算 25*36</string>
+    <string name="ai_q_tool">推荐工具</string>
+    <string name="ai_q_theme">切换主题</string>
+
+    <string name="theme_tip">点击主题即可即时预览，选择会全局生效并自动记住。</string>
+
+    <string name="partition_summary">共 %1$d 个分区 · 已用 %2$s · 总计 %3$s</string>
+
+    <string name="tool_calc_title">计算器</string>
+    <string name="tool_calc_sub">日常运算小帮手</string>
+    <string name="tool_convert_title">单位换算</string>
+    <string name="tool_convert_sub">长度 / 重量 / 温度等</string>
+    <string name="tool_device_title">设备信息</string>
+    <string name="tool_device_sub">硬件与系统详情</string>
+    <string name="tool_text_title">文本工具</string>
+    <string name="tool_text_sub">大小写 / 编码 / 计数</string>
+    <string name="tool_random_title">随机数</string>
+    <string name="tool_random_sub">抽奖 / 抽签</string>
+    <string name="tool_time_title">时间戳</string>
+    <string name="tool_time_sub">日期 ↔ 时间戳</string>
 </resources>

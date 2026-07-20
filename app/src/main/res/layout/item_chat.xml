@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingVertical="@dimen/space_xs">
+
+    <TextView
+        android:id="@+id/tv_bubble"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="280dp"
+        android:padding="@dimen/space_md"
+        android:textSize="14sp"
+        android:lineSpacingExtra="2dp"
+        android:textColor="?attr/colorOnSurface"
+        android:background="@drawable/bubble_ai" />
+</LinearLayout>

@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/nav_nav"
+        android:icon="@drawable/ic_nav"
+        android:title="@string/tab_nav"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_home"
+        android:title="@string/tab_home"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/nav_user"
+        android:icon="@drawable/ic_user"
+        android:title="@string/tab_user"
+        app:showAsAction="ifRoom" />
+</menu>

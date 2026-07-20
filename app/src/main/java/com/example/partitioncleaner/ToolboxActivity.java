@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ToolboxActivity extends AppCompatActivity {
+public class ToolboxActivity extends BaseActivity {
 
     static class ToolItem {
         final String title;

@@ -20,7 +20,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DuplicateActivity extends AppCompatActivity {
+public class DuplicateActivity extends BaseActivity {
 
     private RecyclerView rv;
     private DupGroupAdapter adapter;

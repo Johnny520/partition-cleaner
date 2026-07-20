@@ -19,7 +19,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 
-public class DeviceInfoActivity extends AppCompatActivity {
+public class DeviceInfoActivity extends BaseActivity {
 
     private LinearLayout container;
 

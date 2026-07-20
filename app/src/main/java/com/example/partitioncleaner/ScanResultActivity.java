@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScanResultActivity extends AppCompatActivity {
+public class ScanResultActivity extends BaseActivity {
 
     public static final String EXTRA_EMPTY_ONLY = "empty_only";
 

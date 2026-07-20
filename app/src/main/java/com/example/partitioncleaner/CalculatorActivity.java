@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class CalculatorActivity extends AppCompatActivity {
+public class CalculatorActivity extends BaseActivity {
 
     private TextView tvExpr;
     private TextView tvResult;

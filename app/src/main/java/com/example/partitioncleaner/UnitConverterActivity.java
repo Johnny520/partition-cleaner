@@ -17,7 +17,7 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Locale;
 
-public class UnitConverterActivity extends AppCompatActivity {
+public class UnitConverterActivity extends BaseActivity {
 
     private static final int CAT_LENGTH = 0;
     private static final int CAT_WEIGHT = 1;

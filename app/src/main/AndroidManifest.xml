@@ -65,6 +65,18 @@
             android:name=".TimestampActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".PartitionActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".AiAssistantActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ThemePickerActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

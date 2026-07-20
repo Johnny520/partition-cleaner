@@ -1,13 +1,16 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- 基础主题：翡翠绿（默认） -->
     <style name="Theme.PartitionCleaner" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorOnPrimary">@color/onPrimary</item>
         <item name="colorPrimaryContainer">@color/primaryContainer</item>
         <item name="colorOnPrimaryContainer">@color/onPrimaryContainer</item>
         <item name="colorSecondary">@color/secondary</item>
+        <item name="colorOnSecondary">@color/onSecondary</item>
         <item name="colorSecondaryContainer">@color/secondaryContainer</item>
         <item name="colorOnSecondaryContainer">@color/onSecondaryContainer</item>
         <item name="colorTertiary">@color/tertiary</item>
+        <item name="colorOnTertiary">@color/onTertiary</item>
         <item name="colorTertiaryContainer">@color/tertiaryContainer</item>
         <item name="colorOnTertiaryContainer">@color/onTertiaryContainer</item>
         <item name="colorSurface">@color/surface</item>
@@ -16,9 +19,128 @@
         <item name="colorOnSurfaceVariant">@color/onSurfaceVariant</item>
         <item name="android:windowBackground">@color/background</item>
         <item name="colorOutline">@color/outline</item>
+        <item name="colorOutlineVariant">@color/outlineVariant</item>
         <item name="colorError">@color/error</item>
+        <item name="colorErrorContainer">@color/errorContainer</item>
+        <item name="colorOnErrorContainer">@color/onErrorContainer</item>
         <item name="android:statusBarColor">?attr/colorPrimary</item>
         <item name="android:navigationBarColor">?attr/colorSurface</item>
         <item name="android:windowLightStatusBar">?attr/isLightTheme</item>
+    </style>
+
+    <!-- 深海蓝 -->
+    <style name="Theme.PartitionCleaner.Blue" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">#1565C0</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#D3E3FF</item>
+        <item name="colorOnPrimaryContainer">#001D36</item>
+        <item name="colorSecondary">#535F70</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
+        <item name="colorSecondaryContainer">#D9E2F3</item>
+        <item name="colorOnSecondaryContainer">#101C2B</item>
+        <item name="colorTertiary">#6B5777</item>
+        <item name="colorOnTertiary">#FFFFFF</item>
+        <item name="colorTertiaryContainer">#F3DCF6</item>
+        <item name="colorOnTertiaryContainer">#25162B</item>
+        <item name="colorSurface">#FDFCFF</item>
+        <item name="colorOnSurface">#1A1C1E</item>
+        <item name="colorSurfaceVariant">#E0E2EC</item>
+        <item name="colorOnSurfaceVariant">#43474E</item>
+        <item name="android:windowBackground">#FDFCFF</item>
+        <item name="colorOutline">#73777F</item>
+        <item name="colorOutlineVariant">#C3C6CF</item>
+        <item name="colorError">#BA1A1A</item>
+        <item name="colorErrorContainer">#FFDAD6</item>
+        <item name="colorOnErrorContainer">#410002</item>
+        <item name="android:statusBarColor">#1565C0</item>
+        <item name="android:navigationBarColor">#FDFCFF</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <!-- 魅影紫 -->
+    <style name="Theme.PartitionCleaner.Purple" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">#6750A4</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#EADDFF</item>
+        <item name="colorOnPrimaryContainer">#21005D</item>
+        <item name="colorSecondary">#625B71</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
+        <item name="colorSecondaryContainer">#E8DEF8</item>
+        <item name="colorOnSecondaryContainer">#1E1922</item>
+        <item name="colorTertiary">#7D5260</item>
+        <item name="colorOnTertiary">#FFFFFF</item>
+        <item name="colorTertiaryContainer">#FFD8E4</item>
+        <item name="colorOnTertiaryContainer">#31111D</item>
+        <item name="colorSurface">#FFFBFE</item>
+        <item name="colorOnSurface">#1C1B1F</item>
+        <item name="colorSurfaceVariant">#E7E0EC</item>
+        <item name="colorOnSurfaceVariant">#49454F</item>
+        <item name="android:windowBackground">#FFFBFE</item>
+        <item name="colorOutline">#79747E</item>
+        <item name="colorOutlineVariant">#CAC4D0</item>
+        <item name="colorError">#BA1A1A</item>
+        <item name="colorErrorContainer">#FFDAD6</item>
+        <item name="colorOnErrorContainer">#410002</item>
+        <item name="android:statusBarColor">#6750A4</item>
+        <item name="android:navigationBarColor">#FFFBFE</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <!-- 炽焰红 -->
+    <style name="Theme.PartitionCleaner.Red" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">#BA1A1A</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#FFDAD6</item>
+        <item name="colorOnPrimaryContainer">#410002</item>
+        <item name="colorSecondary">#775652</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
+        <item name="colorSecondaryContainer">#FFDAD6</item>
+        <item name="colorOnSecondaryContainer">#2C1512</item>
+        <item name="colorTertiary">#7C5400</item>
+        <item name="colorOnTertiary">#FFFFFF</item>
+        <item name="colorTertiaryContainer">#FFDFA2</item>
+        <item name="colorOnTertiaryContainer">#251A00</item>
+        <item name="colorSurface">#FFFBFA</item>
+        <item name="colorOnSurface">#201A19</item>
+        <item name="colorSurfaceVariant">#F4DDDB</item>
+        <item name="colorOnSurfaceVariant">#534341</item>
+        <item name="android:windowBackground">#FFFBFA</item>
+        <item name="colorOutline">#857372</item>
+        <item name="colorOutlineVariant">#D8C2BF</item>
+        <item name="colorError">#BA1A1A</item>
+        <item name="colorErrorContainer">#FFDAD6</item>
+        <item name="colorOnErrorContainer">#410002</item>
+        <item name="android:statusBarColor">#BA1A1A</item>
+        <item name="android:navigationBarColor">#FFFBFA</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <!-- 曜金黑（暗色） -->
+    <style name="Theme.PartitionCleaner.DarkGold" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">#E6C66E</item>
+        <item name="colorOnPrimary">#2E2400</item>
+        <item name="colorPrimaryContainer">#4A3C00</item>
+        <item name="colorOnPrimaryContainer">#FFE08A</item>
+        <item name="colorSecondary">#CBC2A6</item>
+        <item name="colorOnSecondary">#2B2614</item>
+        <item name="colorSecondaryContainer">#41472B</item>
+        <item name="colorOnSecondaryContainer">#D9CFB0</item>
+        <item name="colorTertiary">#AECAD0</item>
+        <item name="colorOnTertiary">#0E262B</item>
+        <item name="colorTertiaryContainer">#33484D</item>
+        <item name="colorOnTertiaryContainer">#CDEBEF</item>
+        <item name="colorSurface">#1B1C1D</item>
+        <item name="colorOnSurface">#E4E2E1</item>
+        <item name="colorSurfaceVariant">#41474A</item>
+        <item name="colorOnSurfaceVariant">#C1C7C5</item>
+        <item name="android:windowBackground">#121313</item>
+        <item name="colorOutline">#8B9193</item>
+        <item name="colorOutlineVariant">#41474A</item>
+        <item name="colorError">#FFB4AB</item>
+        <item name="colorErrorContainer">#93000A</item>
+        <item name="colorOnErrorContainer">#FFDAD6</item>
+        <item name="android:statusBarColor">#1B1C1D</item>
+        <item name="android:navigationBarColor">#1B1C1D</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 </resources>

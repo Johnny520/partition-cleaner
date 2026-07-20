@@ -15,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class TimestampActivity extends AppCompatActivity {
+public class TimestampActivity extends BaseActivity {
 
     private TextInputEditText etTs;
     private TextInputEditText etTime;

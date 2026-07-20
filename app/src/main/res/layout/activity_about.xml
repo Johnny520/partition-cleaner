@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/background">
+    android:background="?attr/colorSurface">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
@@ -12,7 +12,8 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         app:titleTextColor="?attr/colorOnPrimary"
-        app:navigationIconTint="?attr/colorOnPrimary" />
+        app:navigationIconTint="?attr/colorOnPrimary"
+        app:navigationIcon="?attr/homeAsUpIndicator" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -33,13 +34,20 @@
                 android:gravity="center_vertical"
                 android:layout_marginBottom="@dimen/space_lg">
 
-                <TextView
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
-                    android:gravity="center"
-                    android:text="🧹"
-                    android:textSize="34sp"
-                    android:layout_marginEnd="@dimen/space_md" />
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_marginEnd="@dimen/space_md"
+                    app:cardBackgroundColor="?attr/colorPrimaryContainer"
+                    app:cardCornerRadius="32dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="🧹"
+                        android:textSize="34sp" />
+                </com.google.android.material.card.MaterialCardView>
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -64,7 +72,25 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- 开发者 / GitHub -->
+            <!-- 简介 -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/space_md"
+                app:cardCornerRadius="@dimen/card_radius"
+                app:cardElevation="1dp"
+                app:contentPadding="@dimen/space_lg"
+                app:strokeColor="?attr/colorOutlineVariant"
+                app:strokeWidth="1dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/about_module_intro"
+                    android:textColor="?attr/colorOnSurface" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 作者 -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -83,43 +109,42 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/about_developer_text"
+                        android:text="@string/about_author_title"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="?attr/colorPrimary" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/about_author_name"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
                         android:textColor="?attr/colorOnSurface" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/about_author_bio"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/space_sm"
-                        android:text="@string/about_github_text"
+                        android:text="@string/about_contact"
                         android:textColor="?attr/colorPrimary"
-                        android:autoLink="web"
-                        android:textSize="14sp" />
+                        android:textSize="13sp" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- 简介 -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/space_md"
-                app:cardCornerRadius="@dimen/card_radius"
-                app:cardElevation="1dp"
-                app:contentPadding="@dimen/space_lg"
-                app:strokeColor="?attr/colorOutlineVariant"
-                app:strokeWidth="1dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/about_desc_text"
-                    android:textColor="?attr/colorOnSurface" />
             </com.google.android.material.card.MaterialCardView>
 
             <!-- 风险提示 -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/space_lg"
+                android:layout_marginBottom="@dimen/space_md"
                 app:cardCornerRadius="@dimen/card_radius"
                 app:cardElevation="1dp"
                 app:contentPadding="@dimen/space_lg"
@@ -132,6 +157,63 @@
                     android:text="@string/about_disclaimer_text"
                     android:textColor="?attr/colorError" />
             </com.google.android.material.card.MaterialCardView>
+
+            <!-- 特别鸣谢 -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/space_md"
+                app:cardCornerRadius="@dimen/card_radius"
+                app:cardElevation="1dp"
+                app:contentPadding="@dimen/space_lg"
+                app:strokeColor="?attr/colorOutlineVariant"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/about_thanks_title"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="?attr/colorPrimary"
+                        android:layout_marginBottom="@dimen/space_xs" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/about_thanks_1"
+                        android:textColor="?attr/colorOnSurface" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/about_thanks_2"
+                        android:textColor="?attr/colorOnSurface" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/about_thanks_3"
+                        android:textColor="?attr/colorOnSurface" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- 版权 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginBottom="@dimen/space_md"
+                android:text="@string/about_copyright"
+                android:textSize="12sp"
+                android:textColor="?attr/colorOnSurfaceVariant" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_open_repo"

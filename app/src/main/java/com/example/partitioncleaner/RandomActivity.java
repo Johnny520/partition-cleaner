@@ -12,7 +12,7 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Random;
 
-public class RandomActivity extends AppCompatActivity {
+public class RandomActivity extends BaseActivity {
 
     private TextInputEditText etMin;
     private TextInputEditText etMax;

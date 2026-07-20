@@ -19,7 +19,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
 
-public class TextToolsActivity extends AppCompatActivity {
+public class TextToolsActivity extends BaseActivity {
 
     private TextInputEditText etInput;
     private TextView tvOutput;

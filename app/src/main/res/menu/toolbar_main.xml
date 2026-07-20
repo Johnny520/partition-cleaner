@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_ai"
+        android:icon="@drawable/ic_ai"
+        android:title="@string/feat_ai"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_theme"
+        android:icon="@drawable/ic_palette"
+        android:title="@string/feat_theme"
+        app:showAsAction="ifRoom" />
+</menu>

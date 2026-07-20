@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class AboutActivity extends AppCompatActivity {
+public class AboutActivity extends BaseActivity {
 
     private static final String REPO_URL = "https://github.com/Johnny520/partition-cleaner";
     private static final String RELEASES_URL = "https://github.com/Johnny520/partition-cleaner/releases";
