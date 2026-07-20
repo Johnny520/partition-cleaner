@@ -16,9 +16,16 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 安装包提取/备份：需遍历全部已安装应用（含系统应用），绕过 Android 11+ 包可见性限制 -->
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
 
     <queries>
         <package android:name="moe.shizuku.manager" />
+        <!-- 匹配所有带启动图标的已安装应用，确保 getInstalledApplications 返回完整列表 -->
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
     </queries>
 
     <application

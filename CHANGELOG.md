@@ -2,6 +2,11 @@
 
 本文件记录分区清理大师每个正式版本的变更。Release 同时会在 GitHub 自动生成发行说明。
 
+## v1.0.11（2026-07-21）
+- 🏢 **企业信息查询重写（官方·免费·最全·不丑）**：原 Bing 网页抓取常因反爬改版返回空结果（"查不到"），改为**内嵌国家企业信用信息公示系统（gsxt.gov.cn）官方页面**——WebView 真实浏览器自动过 JS 挑战(WAF)，数据官方免费最全；注入 JS 提取企业列表后，**App 原生 Material 卡片结构化展示**（自动归类/去重/按名称排序/可点击），WebView 同时作为详情兜底。再也不是难看的纯网页
+- 📦 **修复「安装包提取只显示几个应用」**：根因是 Android 11+ 包可见性限制——`AndroidManifest.xml` 的 `<queries>` 仅声明了 Shizuku 一个包，未申请 `QUERY_ALL_PACKAGES` 时 `getInstalledApplications()` 默认只返回自身+系统核心。现已加 `QUERY_ALL_PACKAGES` 权限并补充 launcher intent，`ApkExtractActivity` 可列出全部已装应用
+- ℹ️ 已知问题/闪退警示：v1.0.0–v1.0.9 因 `ShizukuProvider` 被误设 `exported="false"`（应为 `true`），**打开即闪退**，已于 v1.0.10 修复；v1.0.8 首构建失败已修
+
 ## v1.0.10（2026-07-21）
 - 🐞 **修复打开即闪退（真正的元凶）**：`AndroidManifest.xml` 中 `rikka.shizuku.ShizukuProvider` 被误设为 `android:exported="false"`，而 Shizuku 要求必须为 `true`，导致 ContentProvider 在 Application 初始化前就抛 `IllegalStateException` 崩溃。改为 `exported="true"` 后恢复正常
 - ℹ️ 该崩溃发生在 `App.onCreate` 之前，所以此前任何“崩溃日志/复制剪贴板”都来不及执行——日志拿不到是表象，根因即此

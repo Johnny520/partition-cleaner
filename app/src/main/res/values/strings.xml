@@ -431,10 +431,14 @@
     <string name="company_search">查询</string>
     <string name="company_loading">查询中…</string>
     <string name="company_no_result">未找到相关企业，换个关键词试试</string>
-    <string name="company_tip_default">数据来自公开网页抓取（免费、无需密钥），仅供参考，请以官方公示为准。</string>
+    <string name="company_tip_default">数据来自国家企业信用信息公示系统（官方、免费、最全），仅供参考，请以官方公示为准。</string>
     <string name="company_verify">官网核验</string>
     <string name="company_visit_site">访问官网</string>
     <string name="company_open_fail">无法打开浏览器</string>
+    <string name="company_loading_site">正在加载国家企业信用信息公示系统…</string>
+    <string name="company_source">国家企业信用信息公示系统 · 官方公示</string>
+    <string name="company_back_web">返回网页</string>
+    <string name="company_card_count">已提取 %1$d 家企业</string>
 
     <!-- 崩溃日志导出（关于页按钮） -->
     <string name="export_crash_log">导出崩溃日志</string>
