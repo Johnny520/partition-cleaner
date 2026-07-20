@@ -14,8 +14,7 @@
         <item name="colorOnSurface">@color/onSurface</item>
         <item name="colorSurfaceVariant">@color/surfaceVariant</item>
         <item name="colorOnSurfaceVariant">@color/onSurfaceVariant</item>
-        <item name="colorBackground">@color/background</item>
-        <item name="colorOnBackground">@color/onBackground</item>
+        <item name="android:windowBackground">@color/background</item>
         <item name="colorOutline">@color/outline</item>
         <item name="colorError">@color/error</item>
         <item name="android:statusBarColor">?attr/colorPrimary</item>
