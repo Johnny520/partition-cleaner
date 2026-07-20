@@ -23,6 +23,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -140,6 +141,35 @@ public class MainActivity extends BaseActivity {
         items.add(new NavItem("🎲", getString(R.string.tool_random_title), getString(R.string.tool_random_sub), () -> go(RandomActivity.class)));
         items.add(new NavItem("🕒", getString(R.string.tool_time_title), getString(R.string.tool_time_sub), () -> go(TimestampActivity.class)));
 
+        items.add(NavItem.header(getString(R.string.cat_social)));
+        items.add(new NavItem("📰", getString(R.string.clean_weibo), getString(R.string.clean_weibo_sub), () -> goClean(AppCleanScanner.TYPE_WEIBO)));
+        items.add(new NavItem("📕", getString(R.string.clean_xhs), getString(R.string.clean_xhs_sub), () -> goClean(AppCleanScanner.TYPE_XHS)));
+        items.add(new NavItem("🎬", getString(R.string.clean_kuaishou), getString(R.string.clean_kuaishou_sub), () -> goClean(AppCleanScanner.TYPE_KUAISHOU)));
+        items.add(new NavItem("📺", getString(R.string.clean_bilibili), getString(R.string.clean_bilibili_sub), () -> goClean(AppCleanScanner.TYPE_BILIBILI)));
+        items.add(new NavItem("🎧", getString(R.string.clean_netease), getString(R.string.clean_netease_sub), () -> goClean(JunkItem.TYPE_WANGYI)));
+        items.add(new NavItem("🛒", getString(R.string.clean_taobao), getString(R.string.clean_taobao_sub), () -> goClean(AppCleanScanner.TYPE_TAOBAO)));
+        items.add(new NavItem("🟧", getString(R.string.clean_pdd), getString(R.string.clean_pdd_sub), () -> goClean(AppCleanScanner.TYPE_PDD)));
+
+        items.add(NavItem.header(getString(R.string.cat_appsys)));
+        items.add(new NavItem("📲", getString(R.string.clean_app_cache_all), getString(R.string.clean_app_cache_all_sub), () -> goClean(JunkItem.TYPE_APP_CACHE_ALL)));
+        items.add(new NavItem("⚙️", getString(R.string.clean_system), getString(R.string.clean_system_sub), () -> goClean(JunkItem.TYPE_SYSTEM_JUNK)));
+        items.add(new NavItem("🗺️", getString(R.string.clean_map), getString(R.string.clean_map_sub), () -> goClean(JunkItem.TYPE_MAPS)));
+        items.add(new NavItem("⌨️", getString(R.string.clean_ime), getString(R.string.clean_ime_sub), () -> goClean(AppCleanScanner.TYPE_IME)));
+
+        items.add(NavItem.header(getString(R.string.cat_file)));
+        items.add(new NavItem("🎵", getString(R.string.clean_music), getString(R.string.clean_music_sub), () -> goClean(AppCleanScanner.TYPE_MUSIC)));
+        items.add(new NavItem("🎞️", getString(R.string.clean_video), getString(R.string.clean_video_sub), () -> goClean(AppCleanScanner.TYPE_VIDEO_FILE)));
+        items.add(new NavItem("📄", getString(R.string.clean_doc), getString(R.string.clean_doc_sub), () -> goClean(AppCleanScanner.TYPE_DOC)));
+        items.add(new NavItem("🗜️", getString(R.string.clean_archive), getString(R.string.clean_archive_sub), () -> goClean(AppCleanScanner.TYPE_ARCHIVE)));
+        items.add(new NavItem("⬇️", getString(R.string.clean_download), getString(R.string.clean_download_sub), () -> goClean(AppCleanScanner.TYPE_DOWNLOAD)));
+        items.add(new NavItem("📄", getString(R.string.clean_empty_file), getString(R.string.clean_empty_file_sub), () -> goClean(AppCleanScanner.TYPE_EMPTY_FILE)));
+        items.add(new NavItem("🔵", getString(R.string.clean_bluetooth), getString(R.string.clean_bluetooth_sub), () -> goClean(AppCleanScanner.TYPE_BLUETOOTH)));
+        items.add(new NavItem("🎙️", getString(R.string.clean_record), getString(R.string.clean_record_sub), () -> goClean(AppCleanScanner.TYPE_RECORD)));
+        items.add(new NavItem("🖼️", getString(R.string.clean_wallpaper), getString(R.string.clean_wallpaper_sub), () -> goClean(AppCleanScanner.TYPE_WALLPAPER)));
+
+        items.add(new NavItem("🛠️", getString(R.string.custom_title), getString(R.string.custom_sub), () -> go(CustomCleanActivity.class)));
+        items.add(new NavItem("🚀", getString(R.string.memboost_title), getString(R.string.memboost_sub), () -> go(MemoryBoostActivity.class)));
+
         items.add(NavItem.header(getString(R.string.cat_smart)));
         items.add(new NavItem("✨", getString(R.string.feat_ai), getString(R.string.feat_ai_sub), () -> go(AiAssistantActivity.class)));
         items.add(new NavItem("🎨", getString(R.string.feat_theme), getString(R.string.feat_theme_sub), () -> go(ThemePickerActivity.class)));
@@ -237,6 +267,32 @@ public class MainActivity extends BaseActivity {
     private void setupHome() {
         container.findViewById(R.id.btn_home_scan).setOnClickListener(v -> startScan(false));
         container.findViewById(R.id.btn_home_refresh).setOnClickListener(v -> loadDashboard());
+
+        RecyclerView rv = container.findViewById(R.id.rv_home_grid);
+        rv.setLayoutManager(new GridLayoutManager(this, 3));
+        List<FeatureItem> items = new ArrayList<>();
+        items.add(new FeatureItem("🧹", getString(R.string.feat_junk), "", () -> startScan(false)));
+        items.add(new FeatureItem("📁", getString(R.string.feat_empty), "", () -> startScan(true)));
+        items.add(new FeatureItem("🗑️", getString(R.string.clean_residual), "", () -> goClean(AppCleanScanner.TYPE_RESIDUAL)));
+        items.add(new FeatureItem("💬", getString(R.string.clean_wechat), "", () -> goClean(AppCleanScanner.TYPE_WECHAT)));
+        items.add(new FeatureItem("🐧", getString(R.string.clean_qq), "", () -> goClean(AppCleanScanner.TYPE_QQ)));
+        items.add(new FeatureItem("🎵", getString(R.string.clean_douyin), "", () -> goClean(AppCleanScanner.TYPE_DOUYIN)));
+        items.add(new FeatureItem("🌐", getString(R.string.clean_browser), "", () -> goClean(AppCleanScanner.TYPE_BROWSER)));
+        items.add(new FeatureItem("📦", getString(R.string.clean_apk), "", () -> goClean(AppCleanScanner.TYPE_APK)));
+        items.add(new FeatureItem("🖼️", getString(R.string.clean_screenshot), "", () -> goClean(AppCleanScanner.TYPE_SCREENSHOT)));
+        items.add(new FeatureItem("📜", getString(R.string.clean_log), "", () -> goClean(AppCleanScanner.TYPE_LOG)));
+        items.add(new FeatureItem("🗂️", getString(R.string.clean_temp), "", () -> goClean(AppCleanScanner.TYPE_TEMP)));
+        items.add(new FeatureItem("🐘", getString(R.string.clean_large), "", () -> goClean(AppCleanScanner.TYPE_LARGE)));
+        items.add(new FeatureItem("🖼", getString(R.string.clean_thumb), "", () -> goClean(AppCleanScanner.TYPE_THUMB)));
+        items.add(new FeatureItem("🚫", getString(R.string.clean_ad), "", () -> goClean(AppCleanScanner.TYPE_AD)));
+        items.add(new FeatureItem("📑", getString(R.string.feat_dup), "", () -> go(DuplicateActivity.class)));
+        items.add(new FeatureItem("💽", getString(R.string.feat_partition), "", () -> go(PartitionActivity.class)));
+        items.add(new FeatureItem("⚡", getString(R.string.feat_memboost), "", () -> go(MemoryBoostActivity.class)));
+        items.add(new FeatureItem("🛠️", getString(R.string.feat_custom), "", () -> go(CustomCleanActivity.class)));
+        items.add(new FeatureItem("🔐", getString(R.string.feat_permission), "", () -> startActivity(new Intent(this, RootStatusActivity.class))));
+        items.add(new FeatureItem("📤", getString(R.string.extract_title), "", () -> go(ApkExtractActivity.class)));
+        rv.setAdapter(new FeatureAdapter(items, R.layout.item_home_feature));
+
         loadDashboard();
     }
 
@@ -371,7 +427,7 @@ public class MainActivity extends BaseActivity {
         items.add(new FeatureItem("✨", getString(R.string.feat_ai), getString(R.string.feat_ai_sub), () -> go(AiAssistantActivity.class)));
         items.add(new FeatureItem("🎨", getString(R.string.feat_theme), getString(R.string.feat_theme_sub), () -> go(ThemePickerActivity.class)));
         items.add(new FeatureItem("ℹ️", getString(R.string.feat_about), getString(R.string.feat_about_sub), () -> go(AboutActivity.class)));
-        items.add(new FeatureItem("🔐", getString(R.string.feat_permission), getString(R.string.feat_permission_sub), this::openAppSettings));
+        items.add(new FeatureItem("🔐", getString(R.string.feat_permission), getString(R.string.feat_permission_sub), () -> startActivity(new Intent(this, RootStatusActivity.class))));
         items.add(new FeatureItem("🌐", getString(R.string.feat_website), getString(R.string.feat_website_sub), () -> openUrl(RELEASES_URL)));
         items.add(new FeatureItem("📤", getString(R.string.feat_share), getString(R.string.feat_share_sub), this::shareApp));
         rv.setAdapter(new FeatureAdapter(items));
@@ -399,12 +455,14 @@ public class MainActivity extends BaseActivity {
 
     class FeatureAdapter extends RecyclerView.Adapter<FeatureAdapter.VH> {
         private final List<FeatureItem> data;
-        FeatureAdapter(List<FeatureItem> data) { this.data = data; }
+        private final int layoutRes;
+        FeatureAdapter(List<FeatureItem> data) { this(data, R.layout.item_feature); }
+        FeatureAdapter(List<FeatureItem> data, int layoutRes) { this.data = data; this.layoutRes = layoutRes; }
 
         @NonNull
         @Override
         public VH onCreateViewHolder(@NonNull ViewGroup parent, int vt) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_feature, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(layoutRes, parent, false);
             return new VH(v);
         }
 
@@ -452,7 +510,7 @@ public class MainActivity extends BaseActivity {
 
     private void openAppSettings() {
         try {
-            Intent i = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+          Intent i = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
             i.setData(Uri.parse("package:" + getPackageName()));
             startActivity(i);
         } catch (Exception e) {

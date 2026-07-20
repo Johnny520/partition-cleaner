@@ -15,6 +15,36 @@ public class JunkItem {
     public static final int TYPE_THUMB = 10;     // 缩略图
     public static final int TYPE_AD = 11;        // 广告残留
 
+    // ===== 扩展清理类型（社交 / 应用系统 / 文件类型） =====
+    // 社交与内容平台
+    public static final int TYPE_WECHAT = 12;
+    public static final int TYPE_QQ = 13;
+    public static final int TYPE_DOUYIN = 14;
+    public static final int TYPE_BROWSER = 15;
+    public static final int TYPE_SCREENSHOT = 16;
+    public static final int TYPE_WEIBO = 17;
+    public static final int TYPE_XHS = 18;
+    public static final int TYPE_KUAISHOU = 19;
+    public static final int TYPE_BILIBILI = 20;
+    public static final int TYPE_WANGYI = 21;
+    public static final int TYPE_TAOBAO = 22;
+    public static final int TYPE_PDD = 23;
+    // 应用与系统
+    public static final int TYPE_APP_CACHE_ALL = 24;
+    public static final int TYPE_SYSTEM_JUNK = 25;
+    public static final int TYPE_MAPS = 26;
+    public static final int TYPE_IME = 27;
+    // 文件类型
+    public static final int TYPE_MUSIC = 28;
+    public static final int TYPE_VIDEO_FILE = 29;
+    public static final int TYPE_DOC = 30;
+    public static final int TYPE_ARCHIVE = 31;
+    public static final int TYPE_DOWNLOAD = 32;
+    public static final int TYPE_EMPTY_FILE = 33;
+    public static final int TYPE_BLUETOOTH = 34;
+    public static final int TYPE_RECORD = 35;
+    public static final int TYPE_WALLPAPER = 36;
+
     // 清理建议
     public static final int ADVICE_CLEAN = 0; // 建议清理（默认勾选）
     public static final int ADVICE_KEEP = 1;  // 建议保留（默认不勾选，有风险）

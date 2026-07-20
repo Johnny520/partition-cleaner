@@ -1,6 +1,8 @@
 package com.example.partitioncleaner;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +23,7 @@ public class ScanResultActivity extends BaseActivity {
 
     public static final String EXTRA_EMPTY_ONLY = "empty_only";
     public static final String EXTRA_CLEAN_TYPE = "clean_type";
+    public static final String EXTRA_CUSTOM_RULE_ID = "custom_rule_id";
 
     private static final int FILTER_ALL = 0;
     private static final int FILTER_CLEAN = 1;
@@ -40,6 +43,7 @@ public class ScanResultActivity extends BaseActivity {
     private boolean emptyOnly;
     private int cleanType = -1;
     private int filterMode = FILTER_ALL;
+    private CustomRule customRule;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +57,10 @@ public class ScanResultActivity extends BaseActivity {
 
         emptyOnly = getIntent().getBooleanExtra(EXTRA_EMPTY_ONLY, false);
         cleanType = getIntent().getIntExtra(EXTRA_CLEAN_TYPE, -1);
-        if (cleanType > 0) setTitle(getString(AppCleanScanner.getTitleRes(cleanType)));
+        String ruleId = getIntent().getStringExtra(EXTRA_CUSTOM_RULE_ID);
+        if (ruleId != null) customRule = new CustomRuleStore(this).getById(ruleId);
+        if (customRule != null) setTitle(customRule.name);
+        else if (cleanType > 0) setTitle(getString(AppCleanScanner.getTitleRes(cleanType)));
         else setTitle(emptyOnly ? "空文件夹查询" : "垃圾扫描结果");
 
         rv = findViewById(R.id.rv_junk);
@@ -77,7 +84,35 @@ public class ScanResultActivity extends BaseActivity {
             applyFilter();
         });
 
-        startScan();
+        if (ensureStoragePermission()) startScan();
+    }
+
+    private static final int REQ_STORAGE = 1001;
+
+    /** 确保存储权限；无权限则申请，无论授权与否最终都会扫描（API29+ 的 MediaStore 不强制权限即可查询）。 */
+    private boolean ensureStoragePermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            boolean ok = checkSelfPermission("android.permission.READ_MEDIA_IMAGES") == PackageManager.PERMISSION_GRANTED
+                    || checkSelfPermission("android.permission.READ_MEDIA_VIDEO") == PackageManager.PERMISSION_GRANTED
+                    || checkSelfPermission("android.permission.READ_MEDIA_AUDIO") == PackageManager.PERMISSION_GRANTED;
+            if (!ok) {
+                requestPermissions(new String[]{"android.permission.READ_MEDIA_IMAGES",
+                        "android.permission.READ_MEDIA_VIDEO", "android.permission.READ_MEDIA_AUDIO"}, REQ_STORAGE);
+                return false;
+            }
+            return true;
+        }
+        if (checkSelfPermission("android.permission.READ_EXTERNAL_STORAGE") != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{"android.permission.READ_EXTERNAL_STORAGE"}, REQ_STORAGE);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQ_STORAGE) startScan();
     }
 
     private void startScan() {
@@ -88,7 +123,9 @@ public class ScanResultActivity extends BaseActivity {
             rootShell = new RootShell();
             boolean root = rootShell.requestRoot();
             final List<JunkItem> result = new ArrayList<>();
-            if (cleanType > 0) {
+            if (customRule != null) {
+                result.addAll(AppCleanScanner.scanCustom(this, rootShell, customRule));
+            } else if (cleanType > 0) {
                 result.addAll(AppCleanScanner.scan(this, cleanType, rootShell));
             } else if (emptyOnly) {
                 String[] roots = {"/data", "/storage/emulated/0", "/cache", "/system", "/cust"};

@@ -94,7 +94,7 @@
     <string name="ai_hint">问我任何关于清理、设备、Root 的问题…</string>
     <string name="ai_send">发送</string>
     <string name="ai_welcome">你好，我是混元 AI 助手 🤖 你的设备清洁与系统管家。我能帮你：清理加速、查看设备信息、单位换算、算数、切换主题、了解 Root 权限。</string>
-    <string name="ai_disclaimer">本地智能助手（无需联网），基于设备实时数据与大模型知识库作答。</string>
+
     <string name="ai_quick_clean">清理建议</string>
     <string name="ai_quick_device">我的设备</string>
     <string name="ai_quick_root">怎么 Root</string>
@@ -172,4 +172,110 @@
     <string name="extract_hint">点击「提取」将应用的安装包（APK）复制到本地，便于备份或分享。公共目录不可写时自动保存到应用私有目录。</string>
     <string name="extract_action">提取</string>
 
+    <!-- ===== 自定义规则（CustomClean / CustomRuleEdit） ===== -->
+    <string name="custom_title">自定义清理规则</string>
+    <string name="custom_sub">我的清理规则</string>
+    <string name="custom_hint">点击右下角 + 新增规则，或扫描已有规则</string>
+    <string name="custom_add">新增规则</string>
+    <string name="custom_scan">扫描</string>
+    <string name="custom_edit">编辑</string>
+    <string name="custom_delete">删除规则</string>
+    <string name="custom_deleted">已删除</string>
+    <string name="custom_err_name">请填写规则名称</string>
+    <string name="custom_err_roots">请至少填写一个路径</string>
+    <string name="custom_saved">已保存</string>
+    <string name="custom_field_name">规则名称</string>
+    <string name="custom_field_name_hint">如「微信备份清理」</string>
+    <string name="custom_field_roots">扫描路径（每行一个）</string>
+    <string name="custom_field_roots_hint">/storage/emulated/0/...</string>
+    <string name="custom_field_mode">匹配模式</string>
+    <string name="custom_field_patterns">匹配规则</string>
+    <string name="custom_field_patterns_hint">目录名或 .jpg,.mp4</string>
+    <string name="custom_field_minsize">最小大小(MB，0不限)</string>
+    <string name="custom_field_advice">清理建议</string>
+    <string name="custom_field_reason">提示文案</string>
+    <string name="custom_field_reason_hint">展示给用户的原因</string>
+    <string name="custom_save">保存</string>
+
+    <!-- ===== 内存加速（MemoryBoost） ===== -->
+    <string name="memboost_title">内存加速</string>
+    <string name="memboost_sub">释放后台内存</string>
+    <string name="memboost_hint">勾选需要结束的后台应用，一键释放内存</string>
+    <string name="memboost_action">一键加速</string>
+    <string name="memboost_limit">当前无正在运行的后台应用</string>
+    <string name="memboost_free">可用内存：%1$s</string>
+    <string name="memboost_done">已结束 %1$d 个进程</string>
+
+    <!-- ===== 各类清理项标题 / 描述 ===== -->
+    <!-- 社交与内容平台 -->
+    <string name="clean_weibo">微博清理</string>
+    <string name="clean_weibo_sub">微博缓存与临时文件</string>
+    <string name="clean_xhs">小红书清理</string>
+    <string name="clean_xhs_sub">小红书缓存与图片</string>
+    <string name="clean_kuaishou">快手清理</string>
+    <string name="clean_kuaishou_sub">快手缓存与临时文件</string>
+    <string name="clean_bilibili">B站清理</string>
+    <string name="clean_bilibili_sub">哔哩哔哩缓存与离线</string>
+    <string name="clean_wangyi">网易云音乐清理</string>
+    <string name="clean_netease">网易云音乐清理</string>
+    <string name="clean_netease_sub">网易云缓存与临时文件</string>
+    <string name="clean_taobao">淘宝清理</string>
+    <string name="clean_taobao_sub">淘宝缓存与图片</string>
+    <string name="clean_pdd">拼多多清理</string>
+    <string name="clean_pdd_sub">拼多多缓存与图片</string>
+
+    <!-- 应用与系统 -->
+    <string name="clean_appcache">应用缓存清理</string>
+    <string name="clean_app_cache_all">应用缓存清理</string>
+    <string name="clean_app_cache_all_sub">全设备应用缓存</string>
+    <string name="clean_systemjunk">系统垃圾清理</string>
+    <string name="clean_system">系统垃圾清理</string>
+    <string name="clean_system_sub">系统临时与日志</string>
+    <string name="clean_maps">地图缓存清理</string>
+    <string name="clean_map">地图缓存清理</string>
+    <string name="clean_map_sub">地图离线与缓存</string>
+    <string name="clean_ime">输入法清理</string>
+    <string name="clean_ime_sub">输入法缓存与词库</string>
+
+    <!-- 文件类型 -->
+    <string name="clean_music">音乐文件清理</string>
+    <string name="clean_music_sub">本地音乐与缓存</string>
+    <string name="clean_videofile">视频文件清理</string>
+    <string name="clean_video">视频文件清理</string>
+    <string name="clean_video_sub">本地视频与缓存</string>
+    <string name="clean_doc">文档文件清理</string>
+    <string name="clean_doc_sub">文档与表格</string>
+    <string name="clean_archive">压缩包清理</string>
+    <string name="clean_archive_sub">压缩与归档文件</string>
+    <string name="clean_download">下载文件清理</string>
+    <string name="clean_download_sub">下载目录文件</string>
+    <string name="clean_emptyfile">空文件清理</string>
+    <string name="clean_empty_file">空文件清理</string>
+    <string name="clean_empty_file_sub">0 字节空文件</string>
+    <string name="clean_bluetooth">蓝牙文件清理</string>
+    <string name="clean_bluetooth_sub">蓝牙接收文件</string>
+    <string name="clean_record">录音文件清理</string>
+    <string name="clean_record_sub">语音与录音</string>
+    <string name="clean_wallpaper">壁纸文件清理</string>
+    <string name="clean_wallpaper_sub">壁纸与图片</string>
+
+    <!-- 主页分类标签 -->
+    <string name="cat_appsys">应用与系统</string>
+    <string name="cat_file">文件类型</string>
+    <string name="cat_social">社交娱乐</string>
+
+    <!-- 其他 -->
+    <string name="ai_disclaimer">AI 仅提供建议，清理操作请谨慎确认</string>
+    <string name="root_status_title">Root 状态</string>
+    <string name="root_status_label">当前 Root 权限状态</string>
+    <string name="request_root">请求 Root 授权</string>
+    <string name="checking">检测中…</string>
+    <string name="home_device">设备信息</string>
+    <string name="home_model">型号</string>
+    <string name="home_features">清理功能</string>
+    <string name="feat_memboost">内存加速</string>
+    <string name="feat_custom">自定义清理</string>
+
+    <string name="cancel">取消</string>
+    <string name="ok">确定</string>
 </resources>

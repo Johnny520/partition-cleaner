@@ -1,7 +1,12 @@
 package com.example.partitioncleaner;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.MediaStore;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -10,28 +15,50 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * 市面上常见的 App 数据与文件清理扫描引擎。
- * 覆盖：微信 / QQ / 抖音 / 浏览器缓存、安装包、截图、日志、临时文件、
- * 大文件、卸载残留、缩略图、广告残留。
+ * 市面上常见的 App 数据与文件清理扫描引擎（数据驱动 + 用户自定义）。
+ * 内置覆盖：微信 / QQ / 抖音 / 浏览器缓存、安装包、截图、日志、临时文件、
+ * 大文件、卸载残留、缩略图、广告残留；以及微博 / 小红书 / 快手 / B站 / 网易云 /
+ * 淘宝 / 拼多多等社交内容平台；应用缓存、系统垃圾、地图离线包、输入法缓存；
+ * 音乐 / 视频 / 文档 / 压缩包 / 下载 / 蓝牙 / 录音 / 壁纸 / 空文件等。
+ * 同时支持 scanCustom() 扫描用户自定义规则（CustomRule）。
  *
- * 扫描优先使用 root 的 find/du（可访问 /Android/data 等受限制目录）；
- * 无 root 时降级为 Java 文件遍历（仅能访问未被限制的区域）。
+ * 扫描优先使用 root 的 find/du（可访问受限目录）；无 root 时降级为 Java 遍历。
  */
 public class AppCleanScanner {
 
-    // ===== 清理类型 =====
-    public static final int TYPE_WECHAT = 1;     // 微信清理
-    public static final int TYPE_QQ = 2;         // QQ 清理
-    public static final int TYPE_DOUYIN = 3;      // 抖音清理
-    public static final int TYPE_BROWSER = 4;     // 浏览器清理
-    public static final int TYPE_APK = 5;         // 安装包清理
-    public static final int TYPE_SCREENSHOT = 6;  // 截图清理
-    public static final int TYPE_LOG = 7;         // 日志清理
-    public static final int TYPE_TEMP = 8;        // 临时文件清理
-    public static final int TYPE_LARGE = 9;       // 大文件清理
-    public static final int TYPE_RESIDUAL = 10;   // 卸载残留
-    public static final int TYPE_THUMB = 11;      // 缩略图清理
-    public static final int TYPE_AD = 12;         // 广告残留清理
+    // ===== 清理类型常量（别名指向 JunkItem，确保全局唯一值与标题一致） =====
+    public static final int TYPE_WECHAT = JunkItem.TYPE_WECHAT;
+    public static final int TYPE_QQ = JunkItem.TYPE_QQ;
+    public static final int TYPE_DOUYIN = JunkItem.TYPE_DOUYIN;
+    public static final int TYPE_BROWSER = JunkItem.TYPE_BROWSER;
+    public static final int TYPE_APK = JunkItem.TYPE_APK;
+    public static final int TYPE_SCREENSHOT = JunkItem.TYPE_SCREENSHOT;
+    public static final int TYPE_LOG = JunkItem.TYPE_LOG;
+    public static final int TYPE_TEMP = JunkItem.TYPE_TEMP;
+    public static final int TYPE_LARGE = JunkItem.TYPE_LARGE;
+    public static final int TYPE_RESIDUAL = JunkItem.TYPE_RESIDUAL;
+    public static final int TYPE_THUMB = JunkItem.TYPE_THUMB;
+    public static final int TYPE_AD = JunkItem.TYPE_AD;
+    public static final int TYPE_WEIBO = JunkItem.TYPE_WEIBO;
+    public static final int TYPE_XHS = JunkItem.TYPE_XHS;
+    public static final int TYPE_KUAISHOU = JunkItem.TYPE_KUAISHOU;
+    public static final int TYPE_BILIBILI = JunkItem.TYPE_BILIBILI;
+    public static final int TYPE_WANGYI = JunkItem.TYPE_WANGYI;
+    public static final int TYPE_TAOBAO = JunkItem.TYPE_TAOBAO;
+    public static final int TYPE_PDD = JunkItem.TYPE_PDD;
+    public static final int TYPE_APP_CACHE = JunkItem.TYPE_APP_CACHE;
+    public static final int TYPE_SYSTEM_JUNK = JunkItem.TYPE_SYSTEM_JUNK;
+    public static final int TYPE_MAPS = JunkItem.TYPE_MAPS;
+    public static final int TYPE_IME = JunkItem.TYPE_IME;
+    public static final int TYPE_MUSIC = JunkItem.TYPE_MUSIC;
+    public static final int TYPE_VIDEO_FILE = JunkItem.TYPE_VIDEO_FILE;
+    public static final int TYPE_DOC = JunkItem.TYPE_DOC;
+    public static final int TYPE_ARCHIVE = JunkItem.TYPE_ARCHIVE;
+    public static final int TYPE_DOWNLOAD = JunkItem.TYPE_DOWNLOAD;
+    public static final int TYPE_EMPTY_FILE = JunkItem.TYPE_EMPTY_FILE;
+    public static final int TYPE_BLUETOOTH = JunkItem.TYPE_BLUETOOTH;
+    public static final int TYPE_RECORD = JunkItem.TYPE_RECORD;
+    public static final int TYPE_WALLPAPER = JunkItem.TYPE_WALLPAPER;
 
     private static final long MB = 1024L * 1024L;
     private static final int MAX_DEPTH = 10;
@@ -51,6 +78,26 @@ public class AppCleanScanner {
             case TYPE_RESIDUAL: return R.string.clean_residual;
             case TYPE_THUMB: return R.string.clean_thumb;
             case TYPE_AD: return R.string.clean_ad;
+            case TYPE_WEIBO: return R.string.clean_weibo;
+            case TYPE_XHS: return R.string.clean_xhs;
+            case TYPE_KUAISHOU: return R.string.clean_kuaishou;
+            case TYPE_BILIBILI: return R.string.clean_bilibili;
+            case TYPE_WANGYI: return R.string.clean_wangyi;
+            case TYPE_TAOBAO: return R.string.clean_taobao;
+            case TYPE_PDD: return R.string.clean_pdd;
+            case TYPE_APP_CACHE: return R.string.clean_appcache;
+            case TYPE_SYSTEM_JUNK: return R.string.clean_systemjunk;
+            case TYPE_MAPS: return R.string.clean_maps;
+            case TYPE_IME: return R.string.clean_ime;
+            case TYPE_MUSIC: return R.string.clean_music;
+            case TYPE_VIDEO_FILE: return R.string.clean_videofile;
+            case TYPE_DOC: return R.string.clean_doc;
+            case TYPE_ARCHIVE: return R.string.clean_archive;
+            case TYPE_DOWNLOAD: return R.string.clean_download;
+            case TYPE_EMPTY_FILE: return R.string.clean_emptyfile;
+            case TYPE_BLUETOOTH: return R.string.clean_bluetooth;
+            case TYPE_RECORD: return R.string.clean_record;
+            case TYPE_WALLPAPER: return R.string.clean_wallpaper;
             default: return R.string.cat_clean;
         }
     }
@@ -58,13 +105,14 @@ public class AppCleanScanner {
     // 扫描模式
     private static final int MODE_DIR = 0;   // 按目录名匹配整目录
     private static final int MODE_FILE = 1;  // 按文件扩展名匹配
+    private static final int MODE_EMPTY = 2; // 空文件（0 字节）
 
     /** 一种清理类型的扫描规格。 */
     private static class Spec {
         String[] roots;
         int mode;
         String[] patterns;   // MODE_DIR: 目录名; MODE_FILE: 扩展名（含点，小写）
-        long minSize;        // MODE_FILE 下最小字节，0=不限（匹配所有文件）
+        long minSize;        // MODE_FILE 下最小字节，0=不限
         int junkType;
         int advice;
         String reason;
@@ -192,6 +240,213 @@ public class AppCleanScanner {
                 s.junkType = JunkItem.TYPE_AD;
                 s.reason = "应用广告缓存目录，可安全清理";
                 break;
+            // ===== 社交 / 内容平台 =====
+            case TYPE_WEIBO:
+                s.roots = new String[]{
+                        "/storage/emulated/0/Android/data/com.sina.weibo",
+                        "/storage/emulated/0/Android/data/com.sina.weibolite",
+                        "/storage/emulated/0/sina/weibo"};
+                s.mode = MODE_DIR;
+                s.patterns = new String[]{"cache", "image", "video", "tmp", "stickers", "meipai", "webview"};
+                s.junkType = JunkItem.TYPE_APP_CACHE;
+                s.reason = "微博缓存的图片/视频/临时文件，可安全清理";
+                break;
+            case TYPE_XHS:
+                s.roots = new String[]{
+                        "/storage/emulated/0/Android/data/com.xingin.xhs",
+                        "/storage/emulated/0/Android/data/com.xhs.partner"};
+                s.mode = MODE_DIR;
+                s.patterns = new String[]{"cache", "image", "video", "tmp", "download", "webview"};
+                s.junkType = JunkItem.TYPE_APP_CACHE;
+                s.reason = "小红书缓存的图片/视频，可安全清理";
+                break;
+            case TYPE_KUAISHOU:
+                s.roots = new String[]{
+                        "/storage/emulated/0/Android/data/com.smile.gifmaker",
+                        "/storage/emulated/0/Android/data/com.kuaishou.nebula"};
+                s.mode = MODE_DIR;
+                s.patterns = new String[]{"cache", "video", "tmp", "gif", "ad"};
+                s.junkType = JunkItem.TYPE_APP_CACHE;
+                s.reason = "快手缓存的视频/临时文件，可安全清理";
+                break;
+            case TYPE_BILIBILI:
+                s.roots = new String[]{
+                        "/storage/emulated/0/Android/data/tv.danmaku.bili",
+                        "/storage/emulated/0/Android/data/com.bilibili.studio"};
+                s.mode = MODE_DIR;
+                s.patterns = new String[]{"cache", "download", "tmp", "danmaku", "vcache", "webview"};
+                s.junkType = JunkItem.TYPE_APP_CACHE;
+                s.reason = "B站缓存的视频/弹幕/临时文件，可安全清理";
+                break;
+            case TYPE_WANGYI:
+                s.roots = new String[]{
+                        "/storage/emulated/0/Android/data/com.netease.cloudmusic",
+                        "/storage/emulated/0/netease/cloudmusic"};
+                s.mode = MODE_DIR;
+                s.patterns = new String[]{"cache", "Album", "lyrics", "tmp", "download", "webview"};
+                s.junkType = JunkItem.TYPE_APP_CACHE;
+                s.reason = "网易云音乐缓存与歌词缓存，清理后需重新加载";
+                break;
+            case TYPE_TAOBAO:
+                s.roots = new String[]{
+                        "/storage/emulated/0/Android/data/com.taobao.taobao",
+                        "/storage/emulated/0/Android/data/com.taobao.idlefish",
+                        "/storage/emulated/0/Android/data/com.tmall.wireless"};
+                s.mode = MODE_DIR;
+                s.patterns = new String[]{"cache", "image", "tmp", "news", "view", "webview", "ad"};
+                s.junkType = JunkItem.TYPE_APP_CACHE;
+                s.reason = "淘宝/闲鱼缓存图片与网页缓存，可安全清理";
+                break;
+            case TYPE_PDD:
+                s.roots = new String[]{
+                        "/storage/emulated/0/Android/data/com.xunmeng.pinduoduo"};
+                s.mode = MODE_DIR;
+                s.patterns = new String[]{"cache", "image", "tmp", "webview", "ad", "download"};
+                s.junkType = JunkItem.TYPE_APP_CACHE;
+                s.reason = "拼多多缓存图片与网页缓存，可安全清理";
+                break;
+            // ===== 应用 / 系统 =====
+            case TYPE_APP_CACHE:
+                s.roots = new String[]{"/storage/emulated/0/Android/data"};
+                s.mode = MODE_DIR;
+                s.patterns = new String[]{"cache", "caches", "tmp", "temp"};
+                s.junkType = JunkItem.TYPE_APP_CACHE_ALL;
+                s.reason = "各应用缓存目录（需 root 才能访问大部分），清理后需重新加载";
+                break;
+            case TYPE_SYSTEM_JUNK:
+                s.roots = new String[]{
+                        "/data/anr",
+                        "/data/tombstones",
+                        "/data/system/dropbox",
+                        "/cache",
+                        "/data/log",
+                        "/data/logs",
+                        "/storage/emulated/0/log"};
+                s.mode = MODE_FILE;
+                s.patterns = new String[]{".log", ".txt", ".trace", ".dump", ".bugreport"};
+                s.junkType = JunkItem.TYPE_SYSTEM_JUNK;
+                s.reason = "系统崩溃/ANR/调试日志，需 root，可安全清理";
+                break;
+            case TYPE_MAPS:
+                s.roots = new String[]{
+                        "/storage/emulated/0/Android/data/com.autonavi.minimap",
+                        "/storage/emulated/0/Android/data/com.baidu.BaiduMap",
+                        "/storage/emulated/0/Android/data/com.tencent.map",
+                        "/storage/emulated/0/Android/data/com.google.android.apps.maps"};
+                s.mode = MODE_DIR;
+                s.patterns = new String[]{"offline", "mapdata", "vmp", "offlineMap", "navi", "cache", "maps"};
+                s.junkType = JunkItem.TYPE_APP_CACHE_ALL;
+                s.reason = "地图离线包与缓存，确认不需要离线导航时可清理";
+                break;
+            case TYPE_IME:
+                s.roots = new String[]{
+                        "/storage/emulated/0/Android/data/com.sohu.inputmethod.sogou",
+                        "/storage/emulated/0/Android/data/com.iflytek.inputmethod",
+                        "/storage/emulated/0/Android/data/com.baidu.input",
+                        "/storage/emulated/0/Android/data/com.cootek.smartinputv5",
+                        "/storage/emulated/0/Android/data/com.touchtype.swiftkey"};
+                s.mode = MODE_DIR;
+                s.patterns = new String[]{"cache", "tmp", "theme", "skin", "dict", "webview"};
+                s.junkType = JunkItem.TYPE_IME;
+                s.reason = "输入法缓存与词库缓存，清理后可能需重新下载词库";
+                break;
+            // ===== 文件类型 =====
+            case TYPE_MUSIC:
+                s.roots = new String[]{
+                        "/storage/emulated/0/Music",
+                        "/storage/emulated/0",
+                        "/storage/emulated/0/DCIM"};
+                s.mode = MODE_FILE;
+                s.patterns = new String[]{".mp3", ".flac", ".wav", ".ogg", ".aac", ".ape"};
+                s.junkType = JunkItem.TYPE_MUSIC;
+                s.advice = JunkItem.ADVICE_KEEP;
+                s.reason = "音乐/音频文件，请确认是否可删";
+                break;
+            case TYPE_VIDEO_FILE:
+                s.roots = new String[]{
+                        "/storage/emulated/0/Movies",
+                        "/storage/emulated/0/DCIM",
+                        "/storage/emulated/0/Download",
+                        "/storage/emulated/0"};
+                s.mode = MODE_FILE;
+                s.patterns = new String[]{".mp4", ".mkv", ".avi", ".mov", ".3gp", ".webm", ".flv"};
+                s.junkType = JunkItem.TYPE_VIDEO_FILE;
+                s.advice = JunkItem.ADVICE_KEEP;
+                s.reason = "视频文件，请确认是否可删";
+                break;
+            case TYPE_DOC:
+                s.roots = new String[]{
+                        "/storage/emulated/0/Documents",
+                        "/storage/emulated/0/Download",
+                        "/storage/emulated/0"};
+                s.mode = MODE_FILE;
+                s.patterns = new String[]{".pdf", ".doc", ".docx", ".xls", ".xlsx",
+                        ".ppt", ".pptx", ".txt", ".epub", ".csv"};
+                s.junkType = JunkItem.TYPE_DOC;
+                s.advice = JunkItem.ADVICE_KEEP;
+                s.reason = "文档文件，请确认是否可删";
+                break;
+            case TYPE_ARCHIVE:
+                s.roots = new String[]{
+                        "/storage/emulated/0",
+                        "/storage/emulated/0/Download"};
+                s.mode = MODE_FILE;
+                s.patterns = new String[]{".zip", ".rar", ".7z", ".tar", ".gz", ".bz2"};
+                s.junkType = JunkItem.TYPE_ARCHIVE;
+                s.advice = JunkItem.ADVICE_KEEP;
+                s.reason = "压缩包，请确认是否可删";
+                break;
+            case TYPE_DOWNLOAD:
+                s.roots = new String[]{"/storage/emulated/0/Download"};
+                s.mode = MODE_FILE;
+                s.patterns = new String[]{}; // 所有文件
+                s.junkType = JunkItem.TYPE_DOWNLOAD;
+                s.advice = JunkItem.ADVICE_KEEP;
+                s.reason = "下载目录文件，请确认是否可删";
+                break;
+            case TYPE_EMPTY_FILE:
+                s.roots = new String[]{
+                        "/storage/emulated/0",
+                        "/storage/emulated/0/Android/data",
+                        "/storage/emulated/0/Download"};
+                s.mode = MODE_EMPTY;
+                s.patterns = new String[]{};
+                s.junkType = JunkItem.TYPE_EMPTY_FILE;
+                s.reason = "0 字节的空文件，可安全清理";
+                break;
+            case TYPE_BLUETOOTH:
+                s.roots = new String[]{
+                        "/storage/emulated/0/Bluetooth",
+                        "/storage/emulated/0/bluetooth"};
+                s.mode = MODE_FILE;
+                s.patterns = new String[]{}; // 所有文件
+                s.junkType = JunkItem.TYPE_BLUETOOTH;
+                s.advice = JunkItem.ADVICE_KEEP;
+                s.reason = "蓝牙接收的文件，请确认是否可删";
+                break;
+            case TYPE_RECORD:
+                s.roots = new String[]{
+                        "/storage/emulated/0",
+                        "/storage/emulated/0/Sounds",
+                        "/storage/emulated/0/Recordings",
+                        "/storage/emulated/0/CallRecord"};
+                s.mode = MODE_FILE;
+                s.patterns = new String[]{".amr", ".3gpp", ".m4a", ".wav"};
+                s.junkType = JunkItem.TYPE_RECORD;
+                s.advice = JunkItem.ADVICE_KEEP;
+                s.reason = "录音/通话录音文件，请确认是否可删";
+                break;
+            case TYPE_WALLPAPER:
+                s.roots = new String[]{
+                        "/storage/emulated/0/Android/data/com.android.wallpaper",
+                        "/storage/emulated/0/Android/data/com.miui.home",
+                        "/storage/emulated/0/Android/data/com.android.systemui"};
+                s.mode = MODE_DIR;
+                s.patterns = new String[]{"wallpaper", "downloaded_wallpaper",
+                        "lockwallpaper", "Magazines", "wallpaper_cache"};
+                s.junkType = JunkItem.TYPE_WALLPAPER;
+                s.reason = "壁纸缓存，清理后自动恢复默认壁纸";
+                break;
             default:
                 return null;
         }
@@ -208,6 +463,7 @@ public class AppCleanScanner {
             scanWithRoot(s, root, items);
         } else {
             scanWithFile(s, items);
+            scanMediaStore(ctx, s, items); // 无 root 兜底：MediaStore 公共媒体/文件
         }
         return items;
     }
@@ -230,6 +486,11 @@ public class AppCleanScanner {
                     .append(" | while read -r d; do sz=$(du -sb \"$d\" 2>/dev/null | cut -f1);")
                     .append(" echo \"${sz:-0}\\t$d\"; done");
             parseLines(root.run(calc.toString()), s, items);
+        } else if (s.mode == MODE_EMPTY) {
+            StringBuilder find = new StringBuilder("find");
+            for (String r : s.roots) find.append(" '").append(r).append("'");
+            find.append(" -type f -empty -printf '%s\\t%p\\n' 2>/dev/null");
+            parseLines(root.run(find.toString()), s, items);
         } else {
             StringBuilder find = new StringBuilder("find");
             for (String r : s.roots) find.append(" '").append(r).append("'");
@@ -278,6 +539,7 @@ public class AppCleanScanner {
         for (File rootDir : roots) {
             if (rootDir == null || !rootDir.isDirectory()) continue;
             if (s.mode == MODE_DIR) collectDirs(rootDir, s, items, 0);
+            else if (s.mode == MODE_EMPTY) collectEmpty(rootDir, s, items, 0);
             else collectFiles(rootDir, s, items, 0);
         }
     }
@@ -335,6 +597,25 @@ public class AppCleanScanner {
         }
     }
 
+    private static void collectEmpty(File dir, Spec s, List<JunkItem> out, int depth) {
+        if (depth > MAX_DEPTH || dir == null || !dir.isDirectory()) return;
+        File[] files = dir.listFiles();
+        if (files == null) return;
+        for (File f : files) {
+            if (f.isDirectory()) {
+                collectEmpty(f, s, out, depth + 1);
+            } else if (f.length() == 0) {
+                JunkItem it = new JunkItem();
+                it.path = f.getAbsolutePath();
+                it.size = 0;
+                it.type = s.junkType;
+                it.advice = s.advice;
+                it.reason = s.reason;
+                out.add(it);
+            }
+        }
+    }
+
     private static long sizeOf(File dir) {
         long total = 0;
         File[] files = dir.listFiles();
@@ -344,6 +625,75 @@ public class AppCleanScanner {
             else total += f.length();
         }
         return total;
+    }
+
+    /**
+     * 无 root 兜底扫描：通过 MediaStore 查询公共媒体/文件，覆盖截图、视频、音乐、
+     * 文档、压缩包、下载、安装包、临时文件等。仅对按扩展名匹配（非目录名）的类型有效；
+     * 目录名匹配（社交/应用缓存）因 /Android/data 受限无法访问，交由 root 分支处理。
+     */
+    @SuppressWarnings("deprecation")
+    private static void scanMediaStore(Context ctx, Spec s, List<JunkItem> items) {
+        if (ctx == null || s.mode == MODE_DIR) return;
+        ContentResolver cr = ctx.getContentResolver();
+        Uri uri = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+                ? MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL)
+                : MediaStore.Files.getContentUri("external");
+        String[] proj = {MediaStore.Files.FileColumns._ID, MediaStore.Files.FileColumns.DATA,
+                MediaStore.Files.FileColumns.SIZE};
+        StringBuilder sel = new StringBuilder();
+        List<String> args = new ArrayList<>();
+        boolean has = false;
+        if (s.patterns != null && s.patterns.length > 0) {
+            sel.append("(");
+            for (int i = 0; i < s.patterns.length; i++) {
+                if (i > 0) sel.append(" OR ");
+                sel.append(MediaStore.Files.FileColumns.DATA).append(" LIKE ?");
+                args.add("%" + s.patterns[i]);
+            }
+            sel.append(")");
+            has = true;
+        }
+        if (s.roots != null) {
+            for (String r : s.roots) {
+                if (r.startsWith("/storage/emulated/0/")
+                        && !r.contains("/Android/data/")
+                        && !r.contains("/Android/obb/")
+                        && !r.contains("/Android/media/")) {
+                    if (has) sel.append(" AND ");
+                    sel.append(MediaStore.Files.FileColumns.DATA).append(" LIKE ?");
+                    args.add(r + "%");
+                    has = true;
+                }
+            }
+        }
+        if (!has) return;
+        Set<String> existing = new HashSet<>();
+        for (JunkItem it : items) if (it.path != null) existing.add(it.path);
+        Cursor c = null;
+        try {
+            c = cr.query(uri, proj, sel.toString(), args.toArray(new String[0]), null);
+            if (c == null) return;
+            int idxData = c.getColumnIndex(MediaStore.Files.FileColumns.DATA);
+            int idxSize = c.getColumnIndex(MediaStore.Files.FileColumns.SIZE);
+            if (idxData < 0) return;
+            while (c.moveToNext()) {
+                String path = c.getString(idxData);
+                if (path == null || path.isEmpty() || existing.contains(path)) continue;
+                long sz = idxSize >= 0 ? c.getLong(idxSize) : 0;
+                if (s.minSize > 0 && sz < s.minSize) continue;
+                JunkItem it = new JunkItem();
+                it.path = path;
+                it.size = sz;
+                it.type = s.junkType;
+                it.advice = s.advice;
+                it.reason = s.reason;
+                items.add(it);
+            }
+        } catch (Exception ignored) {
+        } finally {
+            if (c != null) c.close();
+        }
     }
 
     /* ===================== 卸载残留 ===================== */
@@ -409,5 +759,26 @@ public class AppCleanScanner {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    /* ===================== 用户自定义规则 ===================== */
+    /**
+     * 扫描用户自定义规则。CustomRule.mode: 0=目录名匹配 1=文件后缀匹配 2=空文件。
+     */
+    public static List<JunkItem> scanCustom(Context ctx, RootShell root, CustomRule rule) {
+        Spec s = new Spec();
+        s.roots = (rule.roots != null && rule.roots.length > 0)
+                ? rule.roots : new String[]{"/storage/emulated/0"};
+        s.mode = rule.mode; // 0=DIR 1=FILE 2=EMPTY
+        s.patterns = rule.patterns != null ? rule.patterns : new String[]{};
+        s.minSize = rule.minSize;
+        s.junkType = JunkItem.TYPE_APP_CACHE;
+        s.advice = rule.advice;
+        s.reason = (rule.reason != null && !rule.reason.isEmpty())
+                ? rule.reason : "自定义规则扫描结果";
+        List<JunkItem> items = new ArrayList<>();
+        if (root != null && root.isAvailable()) scanWithRoot(s, root, items);
+        else scanWithFile(s, items);
+        return items;
     }
 }

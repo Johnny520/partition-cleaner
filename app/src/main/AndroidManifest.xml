@@ -8,6 +8,9 @@
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
 
     <application
         android:allowBackup="true"
@@ -79,6 +82,18 @@
 
         <activity
             android:name=".ApkExtractActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CustomCleanActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CustomRuleEditActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MemoryBoostActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RootStatusActivity"
             android:exported="false" />
 
     </application>
