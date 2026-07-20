@@ -47,3 +47,5 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: app/build/outputs/apk/debug/*.apk
+          # 每个版本自动生成发行说明（基于本次 tag 以来的提交）
+          generate_release_notes: true
