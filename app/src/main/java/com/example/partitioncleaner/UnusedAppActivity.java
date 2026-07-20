@@ -42,7 +42,6 @@ public class UnusedAppActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(ThemeManager.getThemeStyle(this));
         setContentView(R.layout.activity_unused_app);
         setSupportActionBar(findViewById(R.id.toolbar));
         if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -115,7 +114,9 @@ public class UnusedAppActivity extends AppCompatActivity {
 
         class VH extends RecyclerView.ViewHolder {
             ImageView icon;
-      
+       TextView name, pkg, extra;
+            Button btn;
+
             VH(View v) {
                 super(v);
                 icon = v.findViewById(R.id.iv_icon);
