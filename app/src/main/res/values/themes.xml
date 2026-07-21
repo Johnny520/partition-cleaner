@@ -17,7 +17,7 @@
         <item name="colorOnSurface">@color/onSurface</item>
         <item name="colorSurfaceVariant">@color/surfaceVariant</item>
         <item name="colorOnSurfaceVariant">@color/onSurfaceVariant</item>
-        <item name="android:windowBackground">@color/background</item>
+        <item name="android:windowBackground">@drawable/bg_grad_emerald</item>
         <item name="colorOutline">@color/outline</item>
         <item name="colorOutlineVariant">@color/outlineVariant</item>
         <item name="colorError">@color/error</item>
@@ -46,7 +46,7 @@
         <item name="colorOnSurface">#1A1C1E</item>
         <item name="colorSurfaceVariant">#E0E2EC</item>
         <item name="colorOnSurfaceVariant">#43474E</item>
-        <item name="android:windowBackground">#FDFCFF</item>
+        <item name="android:windowBackground">@drawable/bg_grad_blue</item>
         <item name="colorOutline">#73777F</item>
         <item name="colorOutlineVariant">#C3C6CF</item>
         <item name="colorError">#BA1A1A</item>
@@ -75,7 +75,7 @@
         <item name="colorOnSurface">#1C1B1F</item>
         <item name="colorSurfaceVariant">#E7E0EC</item>
         <item name="colorOnSurfaceVariant">#49454F</item>
-        <item name="android:windowBackground">#FFFBFE</item>
+        <item name="android:windowBackground">@drawable/bg_grad_purple</item>
         <item name="colorOutline">#79747E</item>
         <item name="colorOutlineVariant">#CAC4D0</item>
         <item name="colorError">#BA1A1A</item>
@@ -104,7 +104,7 @@
         <item name="colorOnSurface">#201A19</item>
         <item name="colorSurfaceVariant">#F4DDDB</item>
         <item name="colorOnSurfaceVariant">#534341</item>
-        <item name="android:windowBackground">#FFFBFA</item>
+        <item name="android:windowBackground">@drawable/bg_grad_red</item>
         <item name="colorOutline">#857372</item>
         <item name="colorOutlineVariant">#D8C2BF</item>
         <item name="colorError">#BA1A1A</item>
@@ -133,7 +133,7 @@
         <item name="colorOnSurface">#E4E2E1</item>
         <item name="colorSurfaceVariant">#41474A</item>
         <item name="colorOnSurfaceVariant">#C1C7C5</item>
-        <item name="android:windowBackground">#121313</item>
+        <item name="android:windowBackground">@drawable/bg_grad_darkgold</item>
         <item name="colorOutline">#8B9193</item>
         <item name="colorOutlineVariant">#41474A</item>
         <item name="colorError">#FFB4AB</item>

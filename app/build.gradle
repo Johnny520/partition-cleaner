@@ -11,8 +11,8 @@ android {
         // Shizuku 13.x：provider 要求 ≥23、api 要求 ≥24，统一取 24（Android 7.0）
         minSdk 24
         targetSdk 34
-        versionCode 17
-        versionName "1.0.16"
+        versionCode 18
+        versionName "1.0.17"
     }
 
     signingConfigs {

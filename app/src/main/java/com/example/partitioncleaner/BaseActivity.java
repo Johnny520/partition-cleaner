@@ -8,6 +8,8 @@
 package com.example.partitioncleaner;
 
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,5 +20,20 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(ThemeManager.getThemeStyle(this));
         super.onCreate(savedInstanceState);
+    }
+
+    /** 让页面根布局透出窗口的渐变背景，实现「整个应用渐变背景」。 */
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        View content = findViewById(android.R.id.content);
+        if (content == null) return;
+        content.setBackgroundResource(android.R.color.transparent);
+        if (content instanceof ViewGroup) {
+            ViewGroup vg = (ViewGroup) content;
+            if (vg.getChildCount() > 0) {
+                vg.getChildAt(0).setBackgroundResource(android.R.color.transparent);
+            }
+        }
     }
 }
