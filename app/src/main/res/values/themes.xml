@@ -28,31 +28,31 @@
         <item name="android:windowLightStatusBar">?attr/isLightTheme</item>
     </style>
 
-    <!-- 深海蓝 -->
+    <!-- 科技白（文强网官网亮色同款白科技风） -->
     <style name="Theme.PartitionCleaner.Blue" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">#1565C0</item>
+        <item name="colorPrimary">#3a66ff</item>
         <item name="colorOnPrimary">#FFFFFF</item>
-        <item name="colorPrimaryContainer">#D3E3FF</item>
-        <item name="colorOnPrimaryContainer">#001D36</item>
-        <item name="colorSecondary">#535F70</item>
+        <item name="colorPrimaryContainer">#E0E8FF</item>
+        <item name="colorOnPrimaryContainer">#00206B</item>
+        <item name="colorSecondary">#5A6B8C</item>
         <item name="colorOnSecondary">#FFFFFF</item>
-        <item name="colorSecondaryContainer">#D9E2F3</item>
-        <item name="colorOnSecondaryContainer">#101C2B</item>
-        <item name="colorTertiary">#6B5777</item>
+        <item name="colorSecondaryContainer">#DCE4F7</item>
+        <item name="colorOnSecondaryContainer">#12203A</item>
+        <item name="colorTertiary">#6B5C8C</item>
         <item name="colorOnTertiary">#FFFFFF</item>
-        <item name="colorTertiaryContainer">#F3DCF6</item>
-        <item name="colorOnTertiaryContainer">#25162B</item>
+        <item name="colorTertiaryContainer">#ECE2FF</item>
+        <item name="colorOnTertiaryContainer">#25163F</item>
         <item name="colorSurface">#FDFCFF</item>
-        <item name="colorOnSurface">#1A1C1E</item>
-        <item name="colorSurfaceVariant">#E0E2EC</item>
-        <item name="colorOnSurfaceVariant">#43474E</item>
-        <item name="android:windowBackground">@drawable/bg_grad_blue</item>
-        <item name="colorOutline">#73777F</item>
-        <item name="colorOutlineVariant">#C3C6CF</item>
+        <item name="colorOnSurface">#16203A</item>
+        <item name="colorSurfaceVariant">#E6ECF7</item>
+        <item name="colorOnSurfaceVariant">#566389</item>
+        <item name="android:windowBackground">@drawable/bg_grad_tech</item>
+        <item name="colorOutline">#737AA3</item>
+        <item name="colorOutlineVariant">#C6CCE8</item>
         <item name="colorError">#BA1A1A</item>
         <item name="colorErrorContainer">#FFDAD6</item>
         <item name="colorOnErrorContainer">#410002</item>
-        <item name="android:statusBarColor">#1565C0</item>
+        <item name="android:statusBarColor">#eaf0ff</item>
         <item name="android:navigationBarColor">#FDFCFF</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
