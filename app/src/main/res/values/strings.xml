@@ -427,41 +427,33 @@
     <!-- 企业查询 -->
     <string name="feat_company">企业查询</string>
     <string name="feat_company_sub">工商信息 · 官网核验</string>
-    <string name="company_hint">输入企业名称或统一社会信用代码</string>
-    <string name="company_search">查询</string>
-    <string name="company_loading">查询中…</string>
-    <string name="company_no_result">未找到相关企业，换个关键词试试</string>
-    <string name="company_tip_default">数据来自鲸海数据（kqdaas）开放 API，实名认证后赠 1000 次免费调用，仅供参考，请以官方公示为准。</string>
-    <string name="company_verify">官网核验</string>
-    <string name="company_visit_site">访问官网</string>
-    <string name="company_open_fail">无法打开浏览器</string>
-    <string name="company_loading_site">正在加载国家企业信用信息公示系统…</string>
-    <string name="company_source">鲸海数据 kqdaas · 开放 API</string>
-    <string name="company_back_web">返回网页</string>
-    <string name="company_card_count">已提取 %1$d 家企业</string>
-
-    <!-- 企业查询（鲸海数据 kqdaas） -->
-    <string name="ent_settings">API 设置</string>
-    <string name="ent_help">申请指引</string>
-    <string name="ent_app_id_hint">App Id（鲸海控制台获取）</string>
-    <string name="ent_api_key_hint">Api Key（鲸海控制台获取）</string>
-    <string name="ent_save">保存</string>
-    <string name="ent_cancel">取消</string>
-    <string name="ent_ok">我知道了</string>
-    <string name="ent_key_saved">密钥已保存</string>
-    <string name="ent_use_builtin">当前使用内置默认密钥（开发者提供）。如需用自己的额度，点「API 设置」填入你的鲸海密钥。</string>
-    <string name="ent_auth_fail">密钥无效或无权限，请检查「API 设置」中的 App Id / Api Key。</string>
-    <string name="ent_http_fail">请求失败（HTTP %1$d），请稍后重试。</string>
-    <string name="ent_parse_fail">未解析到企业信息，请确认名称 / 信用代码是否正确。</string>
-    <string name="ent_network_fail">网络错误：%1$s</string>
-    <string name="ent_lbl_legal">法定代表人</string>
-    <string name="ent_lbl_capital">注册资本</string>
-    <string name="ent_lbl_establish">成立日期</string>
-    <string name="ent_lbl_status">经营状态</string>
-    <string name="ent_lbl_address">注册地址</string>
-    <string name="ent_lbl_credit">统一社会信用代码</string>
-    <string name="ent_apply_title">如何获取鲸海数据 API Key</string>
-    <string name="ent_apply_text">数据由「鲸海数据 kqdaas」免费提供（实名认证后赠 1000 次调用）。\n\n获取步骤：\n1. 打开 https://www.kqdaas.com 注册账号；\n2. 完成手机验证与实名认证（认证后赠送 1000 次额度）；\n3. 登录控制台，复制你的 App Id 与 Api Key；\n4. 回到本页点「API 设置」，把 App Id 与 Api Key 填进去并保存，即可使用你自己的额度。\n\n不想注册？本应用已内置开发者默认密钥，可直接查询（共用开发者额度）。</string>
+    <!-- 企业查询：多源免费爬虫聚合 -->
+    <string name="ent_title">企业查询（多源聚合）</string>
+    <string name="ent_hint">输入企业名称 / 统一社会信用代码</string>
+    <string name="ent_search">聚合查询</string>
+    <string name="ent_settings">源设置</string>
+    <string name="ent_help">说明</string>
+    <string name="ent_no_title">未命名企业</string>
+    <string name="ent_open_fail">无法打开浏览器</string>
+    <string name="ent_status_ready">点「聚合查询」即可从多个公开源免费爬取工商信息，无需密钥。</string>
+    <string name="ent_status_searching">⏳ 正在爬取：%1$s（第 %2$d/%3$d 个源）</string>
+    <string name="ent_status_found">✓ %1$s 找到 %2$d 条</string>
+    <string name="ent_status_skip">⚠ %1$s 无结果或被反爬拦截，已跳过</string>
+    <string name="ent_status_timeout">⚠ %1$s 加载超时，已跳过</string>
+    <string name="ent_status_done">完成：共 %1$d 条（来源：%2$s）</string>
+    <string name="ent_status_empty">所有启用源均无结果，可换关键词或到「源设置」调整。</string>
+    <string name="ent_status_no_source">未启用任何数据源，请点「源设置」开启。</string>
+    <string name="ent_status_err">查询出错：%1$s</string>
+    <string name="ent_src_aiqicha">爱企查</string>
+    <string name="ent_src_qcc">企查查</string>
+    <string name="ent_src_tyc">天眼查</string>
+    <string name="ent_src_gsxt">国家公示系统</string>
+    <string name="ent_settings_title">数据源设置</string>
+    <string name="ent_settings_summary">勾选要爬取的数据源（默认全部开启）。某源若频繁被拦截可取消勾选。</string>
+    <string name="ent_help_title">企业查询（多源聚合爬虫）</string>
+    <string name="ent_help_text">本功能通过应用内隐藏 WebView 依次爬取多家公开工商信息网站（爱企查、企查查、天眼查、国家公示系统），聚合并去重后展示。\n\n• 完全免费、无需任何 API Key；\n• 数据来自第三方公开页面，仅供参考，请以官方登记为准；\n• 部分站点有反爬（滑块/验证码），可能被拦截而跳过该源；\n• 某源长期不可用，可在「源设置」中关闭。\n\n信息准确性由数据源决定，本应用不承担责任。</string>
+    <string name="ent_open_web">在浏览器打开 %1$s</string>
+    <string name="ent_ok">知道了</string>
 
     <!-- 崩溃日志导出（关于页按钮） -->
     <string name="export_crash_log">导出崩溃日志</string>

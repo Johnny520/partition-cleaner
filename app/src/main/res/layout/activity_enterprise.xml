@@ -45,7 +45,7 @@
                     android:id="@+id/et_query"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/company_hint"
+                    android:hint="@string/ent_hint"
                     android:inputType="text"
                     android:imeOptions="actionSearch"
                     android:maxLines="1" />
@@ -55,7 +55,7 @@
                 android:id="@+id/btn_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/company_search" />
+                android:text="@string/ent_search" />
         </LinearLayout>
 
         <LinearLayout
@@ -113,6 +113,19 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:visibility="gone" />
+        </FrameLayout>
+
+        <!-- 隐藏 WebView 容器：用于多源爬虫抓取（1px 不可见，仅承载加载与 JS 抽取） -->
+        <FrameLayout
+            android:id="@+id/fl_web"
+            android:layout_width="1px"
+            android:layout_height="1px"
+            android:visibility="invisible">
+
+            <WebView
+                android:id="@+id/web"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
         </FrameLayout>
     </LinearLayout>
 

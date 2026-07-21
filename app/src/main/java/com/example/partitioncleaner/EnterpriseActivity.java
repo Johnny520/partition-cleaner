@@ -1,75 +1,160 @@
-/*
- * 分区清理大师 (Partition Cleaner)
- * 作者：文强哥 (Johnny520)
- * GitHub: https://github.com/Johnny520
- * 版权 © 2026 文强哥 (Johnny520). All rights reserved.
- */
-
 package com.example.partitioncleaner;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.textfield.TextInputEditText;
-
+import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 /**
- * 企业查询：调用鲸海数据（kqdaas）开放 API 查询工商信息。
- * 数据来源：https://www.kqdaas.com （实名认证后赠 1000 次免费调用）。
- * 鉴权：HTTP Header X-Jinghai-App-Id + X-Jinghai-Api-Key。
- * 密钥优先级：用户自填(SharedPreferences) > 内置(BuildConfig)。
+ * 企业查询：多源免费爬虫聚合。
+ * 通过应用内隐藏 WebView 依次加载多家公开工商信息网站的搜索结果页，
+ * 用 JS 抽取列表项文本，聚合并去重后展示，每张卡片标注数据来源。
+ * 无需任何 API Key。某源被反爬/超时则优雅跳过，其余源继续。
  */
 public class EnterpriseActivity extends BaseActivity {
 
-    private static final String BASE = "https://www.kqdaas.com";
-    private static final String API = "/DataService/api/v3/company/detail/";
-    private static final String PREFS = "kqdaas_prefs";
-    private static final String K_APP_ID = "app_id";
-    private static final String K_API_KEY = "api_key";
+    private static final String TAG = "Enterprise";
+    private static final String PREFS = "ent_src_prefs";
+    private static final long SOURCE_TIMEOUT_MS = 12000;
+    private static final long EXTRACT_DELAY_MS = 1800;
+    private static final String DESKTOP_UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
+            "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
 
-    private TextInputEditText etQuery;
-    private MaterialButton btnSearch, btnSettings, btnHelp;
+    /** 多源聚合：隐藏 WebView 依次爬取公开工商信息网站（按优先级顺序回退）。 */
+    private static final Source[] SOURCES = new Source[]{
+            new Source("aiqicha", R.string.ent_src_aiqicha,
+                    "https://aiqicha.baidu.com/s?q=%s",
+                    new String[]{"div.result-item", "div.list-item", "li[class*='item']", "div[class*='result']"},
+                    true),
+            new Source("qcc", R.string.ent_src_qcc,
+                    "https://www.qcc.com/web/search?key=%s",
+                    new String[]{"div.company-item", "div[class*='company']", "div.result-item", "li[class*='item']"},
+                    true),
+            new Source("tyc", R.string.ent_src_tyc,
+                    "https://www.tianyancha.com/search?key=%s",
+                    new String[]{"div.company-item", "div[class*='company']", "div.result-item", "li[class*='item']"},
+                    true),
+            new Source("gsxt", R.string.ent_src_gsxt,
+                    "https://www.gsxt.gov.cn/corp-query-search-1.html?key=%s",
+                    new String[]{"table.list-table tr", "tr", "div[class*='list']", "div[class*='item']"},
+                    true),
+    };
+
+    /** JS 抽取模板：%s 注入选择器数组字面量，返回结果对象数组 [{t:标题, x:正文}]。 */
+    private static final String JS_TPL =
+            "function(){var sels=%s;function clean(s){return (s||'').replace(/\\s+/g,' ').trim();}"
+                    + "var nodes=[];for(var i=0;i<sels.length;i++){var n=document.querySelectorAll(sels[i]);"
+                    + "if(n&&n.length){nodes=Array.prototype.slice.call(n);break;}}"
+                    + "var out=[];for(var j=0;j<nodes.length&&j<25;j++){var el=nodes[j];"
+                    + "var a=el.querySelector?el.querySelector('a'):null;"
+                    + "var title=clean(a?a.innerText:'')||clean(el.innerText).split(' ')[0];"
+                    + "var text=clean(el.innerText);if(text.length>4)out.push({t:title,x:text});}"
+                    + "return out;}";
+
+    static class Source {
+        final String key;
+        final int nameRes;
+        final String base;
+        final String[] selectors;
+        final boolean defaultEnabled;
+        final String selectorsLit;
+
+        Source(String k, int n, String b, String[] s, boolean d) {
+            key = k;
+            nameRes = n;
+            base = b;
+            selectors = s;
+            defaultEnabled = d;
+            StringBuilder sb = new StringBuilder("[");
+            for (int i = 0; i < s.length; i++) {
+                if (i > 0) sb.append(",");
+                sb.append("\"").append(s[i]).append("\"");
+            }
+            sb.append("]");
+            selectorsLit = sb.toString();
+        }
+
+        String searchUrl(String kw) throws Exception {
+            return String.format(Locale.US, base, URLEncoder.encode(kw, "UTF-8"));
+        }
+    }
+
+    static class EntResult {
+        final int nameRes;
+        final String title;
+        final String body;
+        final String url;
+
+        EntResult(int nr, String t, String b, String u) {
+            nameRes = nr;
+            title = t;
+            body = b;
+            url = u;
+        }
+    }
+
+    private WebView web;
+    private EditText etQuery;
     private TextView tvStatus;
-    private RecyclerView rvResult;
-    private ProgressBar progress;
+    private RecyclerView rv;
+    private android.widget.ProgressBar progressBar;
+    private View btnSearch, btnSettings, btnHelp;
 
-    private final Handler handler = new Handler(Looper.getMainLooper());
     private final List<EntResult> results = new ArrayList<>();
     private ResultAdapter adapter;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private final Set<String> usedSourceNames = new HashSet<>();
 
-    /** 单家企业查询结果（字段已解析为字符串）。 */
-    public static class EntResult {
-        public String name, legal, capital, establish, status, address, credit;
-    }
+    private long searchToken = 0;
+    private long currentLoadToken = -1;
+    private List<Source> queue = new ArrayList<>();
+    private int queueIdx = 0;
+    private Source currentSource;
+    private boolean awaitingExtract = false;
+    private String keyword = "";
+
+    private final Runnable extractRunnable = () -> extractCurrent(searchToken);
+
+    private final Runnable timeoutRunnable = () -> {
+        if (!awaitingExtract) return;
+        awaitingExtract = false;
+        if (currentSource != null) {
+            setStatus(getString(R.string.ent_status_timeout, srcName(currentSource)));
+        }
+        queueIdx++;
+        loadNext(searchToken);
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,200 +162,246 @@ public class EnterpriseActivity extends BaseActivity {
         setContentView(R.layout.activity_enterprise);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.feat_company);
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(R.string.ent_title);
+        }
 
         etQuery = findViewById(R.id.et_query);
         btnSearch = findViewById(R.id.btn_search);
         btnSettings = findViewById(R.id.btn_settings);
         btnHelp = findViewById(R.id.btn_help);
         tvStatus = findViewById(R.id.tv_status);
-        rvResult = findViewById(R.id.rv_result);
-        progress = findViewById(R.id.progress);
+        rv = findViewById(R.id.rv_result);
+        progressBar = findViewById(R.id.progress);
 
-        adapter = new ResultAdapter(results);
-        rvResult.setLayoutManager(new LinearLayoutManager(this));
-        rvResult.setAdapter(adapter);
+        adapter = new ResultAdapter();
+        rv.setLayoutManager(new LinearLayoutManager(this));
+        rv.setAdapter(adapter);
 
-        btnSearch.setOnClickListener(v -> doSearch());
+        setupWebView();
+
+        btnSearch.setOnClickListener(v -> startSearch());
+        btnSettings.setOnClickListener(v -> showSettings());
+        btnHelp.setOnClickListener(v -> showHelp());
         etQuery.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                doSearch();
+                startSearch();
                 return true;
             }
             return false;
         });
-        btnSettings.setOnClickListener(v -> showSettingsDialog());
-        btnHelp.setOnClickListener(v -> showGuideDialog());
+
+        setStatus(getString(R.string.ent_status_ready));
     }
 
-    /** 用户自填密钥优先，否则用内置开发者密钥。 */
-    private String getAppId() {
-        String u = getSharedPreferences(PREFS, MODE_PRIVATE).getString(K_APP_ID, "");
-        if (!TextUtils.isEmpty(u)) return u;
-        return BuildConfig.KQDAAS_APP_ID;
+    @SuppressLint("SetJavaScriptEnabled")
+    private void setupWebView() {
+        web = findViewById(R.id.web);
+        WebSettings ws = web.getSettings();
+        ws.setJavaScriptEnabled(true);
+        ws.setDomStorageEnabled(true);
+        ws.setDatabaseEnabled(true);
+        ws.setLoadWithOverviewMode(true);
+        ws.setUseWideViewPort(true);
+        ws.setUserAgentString(DESKTOP_UA);
+        ws.setCacheMode(WebSettings.LOAD_DEFAULT);
+        web.setWebViewClient(new ScrapeClient());
+        web.setBackgroundColor(Color.TRANSPARENT);
     }
 
-    private String getApiKey() {
-        String u = getSharedPreferences(PREFS, MODE_PRIVATE).getString(K_API_KEY, "");
-        if (!TextUtils.isEmpty(u)) return u;
-        return BuildConfig.KQDAAS_API_KEY;
-    }
-
-    private boolean hasUserKey() {
-        return !TextUtils.isEmpty(getSharedPreferences(PREFS, MODE_PRIVATE).getString(K_API_KEY, ""));
-    }
-
-    private void doSearch() {
-        String q = etQuery.getText().toString().trim();
-        if (TextUtils.isEmpty(q)) return;
-
-        tvStatus.setVisibility(View.GONE);
+    private void startSearch() {
+        keyword = etQuery.getText().toString().trim();
+        if (TextUtils.isEmpty(keyword)) {
+            etQuery.setError("请输入企业名称或信用代码");
+            return;
+        }
         results.clear();
+        usedSourceNames.clear();
         adapter.notifyDataSetChanged();
-        progress.setVisibility(View.VISIBLE);
 
-        String appId = getAppId();
-        String apiKey = getApiKey();
-        final boolean usingBuiltin = !hasUserKey();
+        List<Source> selected = getEnabledSources();
+        if (selected.isEmpty()) {
+            setSearching(false);
+            setStatus(getString(R.string.ent_status_no_source));
+            return;
+        }
 
-        new Thread(() -> {
-            try {
-                // 18 位信用代码按代码查，其余按名称查
-                int queryType = q.matches("[0-9A-Za-z]{18}") ? 2 : 1;
-                String kw = URLEncoder.encode(q, "UTF-8");
-                String urlStr = BASE + API + kw + "?queryType=" + queryType;
-
-                URL url = new URL(urlStr);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-                conn.setRequestProperty("X-Jinghai-App-Id", appId);
-                conn.setRequestProperty("X-Jinghai-Api-Key", apiKey);
-                conn.setRequestProperty("Accept", "application/json");
-                conn.setConnectTimeout(15000);
-                conn.setReadTimeout(15000);
-
-                int code = conn.getResponseCode();
-                if (code != 200) {
-                    conn.disconnect();
-                    final String emsg = (code == 401 || code == 403)
-                            ? getString(R.string.ent_auth_fail)
-                            : getString(R.string.ent_http_fail, code);
-                    handler.post(() -> showError(emsg + (usingBuiltin ? "\n" + getString(R.string.ent_use_builtin) : "")));
-                    return;
-                }
-
-                String body = readStream(conn.getInputStream());
-                conn.disconnect();
-
-                EntResult r = parse(body);
-                if (r == null) {
-                    handler.post(() -> showError(getString(R.string.ent_parse_fail)
-                            + (usingBuiltin ? "\n" + getString(R.string.ent_use_builtin) : "")));
-                    return;
-                }
-
-                handler.post(() -> {
-                    progress.setVisibility(View.GONE);
-                    results.add(r);
-                    adapter.notifyDataSetChanged();
-                    if (usingBuiltin) {
-                        tvStatus.setVisibility(View.VISIBLE);
-                        tvStatus.setText(R.string.ent_use_builtin);
-                    }
-                });
-            } catch (Exception e) {
-                handler.post(() -> showError(getString(R.string.ent_network_fail, e.getMessage())));
-            }
-        }).start();
+        queue = selected;
+        queueIdx = 0;
+        searchToken++;
+        long token = searchToken;
+        handler.removeCallbacks(extractRunnable);
+        handler.removeCallbacks(timeoutRunnable);
+        web.stopLoading();
+        setSearching(true);
+        loadNext(token);
     }
 
-    /** 解析返回 JSON（兼容 status / errcode 外层标识，兼容多候选字段名）。 */
-    private EntResult parse(String body) {
+    private void loadNext(long token) {
+        if (token != searchToken) return;
+        if (queueIdx >= queue.size()) {
+            finishSearch(token);
+            return;
+        }
+        currentSource = queue.get(queueIdx);
+        awaitingExtract = true;
+        currentLoadToken = token;
+        setStatus(getString(R.string.ent_status_searching,
+                srcName(currentSource), queueIdx + 1, queue.size()));
+        handler.removeCallbacks(timeoutRunnable);
+        handler.postDelayed(timeoutRunnable, SOURCE_TIMEOUT_MS);
         try {
-            JSONObject root = new JSONObject(body);
-            boolean ok = root.optInt("status", -1) == 200 || root.optInt("errcode", -1) == 200;
-            if (!ok && !root.has("data")) return null; // 明确失败且无解
-            JSONObject data = root.optJSONObject("data");
-            if (data == null) return null;
-
-            EntResult r = new EntResult();
-            r.name = opt(data, "companyName");
-            r.legal = opt(data, "juridicalPerson", "legalPerson", "legalRepresentative");
-            r.capital = opt(data, "registeredCapital", "regCapital", "capital");
-            r.establish = opt(data, "establishTime", "establishDate", "foundDate");
-            r.status = opt(data, "businessStatus", "operateStatus", "regStatus");
-            r.address = opt(data, "address", "regAddress", "regitAddress", "domicile");
-            r.credit = opt(data, "creditNumber", "creditCode", "unifiedSocialCreditCode", "usci");
-            return r;
+            web.loadUrl(currentSource.searchUrl(keyword));
         } catch (Exception e) {
-            return null;
+            awaitingExtract = false;
+            setStatus(getString(R.string.ent_status_err, e.getMessage()));
+            queueIdx++;
+            loadNext(token);
         }
     }
 
-    private String opt(JSONObject o, String... keys) {
-        for (String k : keys) {
-            String v = o.optString(k, null);
-            if (v != null && !v.isEmpty() && !"null".equals(v)) return v;
+    private class ScrapeClient extends WebViewClient {
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            if (currentLoadToken != searchToken) return;
+            handler.removeCallbacks(extractRunnable);
+            handler.postDelayed(extractRunnable, EXTRACT_DELAY_MS);
         }
-        return "";
     }
 
-    private String readStream(InputStream in) throws Exception {
-        if (in == null) return "";
-        BufferedReader r = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = r.readLine()) != null) sb.append(line);
-        r.close();
-        return sb.toString();
+    private void extractCurrent(long token) {
+        if (token != searchToken) return;
+        if (!awaitingExtract) return;
+        awaitingExtract = false;
+        handler.removeCallbacks(timeoutRunnable);
+
+        final Source src = currentSource;
+        final String js = String.format(Locale.US, JS_TPL, src.selectorsLit);
+        web.evaluateJavascript(js, value -> {
+            if (token != searchToken) return;
+            int added = mergeResults(src, value);
+            if (added > 0) {
+                usedSourceNames.add(srcName(src));
+                setStatus(getString(R.string.ent_status_found, srcName(src), added));
+            } else {
+                setStatus(getString(R.string.ent_status_skip, srcName(src)));
+            }
+            queueIdx++;
+            loadNext(token);
+        });
     }
 
-    private void showError(String msg) {
-        progress.setVisibility(View.GONE);
+    private int mergeResults(Source src, String value) {
+        int before = results.size();
+        try {
+            JSONArray arr = new JSONArray(value);
+            String url = src.searchUrl(keyword);
+            for (int i = 0; i < arr.length(); i++) {
+                JSONObject o = arr.getJSONObject(i);
+                String t = o.optString("t", "");
+                String x = o.optString("x", "");
+                if (TextUtils.isEmpty(x)) continue;
+                results.add(new EntResult(src.nameRes, t, x, url));
+            }
+        } catch (Exception e) {
+            Log.w(TAG, "parse fail: " + e.getMessage());
+        }
+        return results.size() - before;
+    }
+
+    private void finishSearch(long token) {
+        if (token != searchToken) return;
+        handler.removeCallbacks(extractRunnable);
+        handler.removeCallbacks(timeoutRunnable);
+        setSearching(false);
+        if (results.isEmpty()) {
+            setStatus(getString(R.string.ent_status_empty));
+        } else {
+            setStatus(getString(R.string.ent_status_done, results.size(),
+                    TextUtils.join("、", new ArrayList<>(usedSourceNames))));
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+    private void setSearching(boolean b) {
+        progressBar.setVisibility(b ? View.VISIBLE : View.GONE);
+        btnSearch.setEnabled(!b);
+    }
+
+    private void setStatus(String s) {
         tvStatus.setVisibility(View.VISIBLE);
-        tvStatus.setText(msg);
+        tvStatus.setText(s);
     }
 
-    /** 设置对话框：用户自行填入鲸海 App Id / Api Key（持久化到 SharedPreferences）。 */
-    private void showSettingsDialog() {
-        View v = LayoutInflater.from(this).inflate(R.layout.dialog_kqdaas_key, null);
-        EditText etId = v.findViewById(R.id.et_app_id);
-        EditText etKey = v.findViewById(R.id.et_api_key);
-        etId.setText(getSharedPreferences(PREFS, MODE_PRIVATE).getString(K_APP_ID, ""));
-        etKey.setText(getSharedPreferences(PREFS, MODE_PRIVATE).getString(K_API_KEY, ""));
+    private String srcName(Source s) {
+        return getString(s.nameRes);
+    }
 
+    private List<Source> getEnabledSources() {
+        List<Source> list = new ArrayList<>();
+        for (Source s : SOURCES) {
+            if (getSharedPreferences(PREFS, MODE_PRIVATE)
+                    .getBoolean("enabled_" + s.key, s.defaultEnabled)) {
+                list.add(s);
+            }
+        }
+        return list;
+    }
+
+    private void showSettings() {
+        final boolean[] checked = new boolean[SOURCES.length];
+        final String[] names = new String[SOURCES.length];
+        for (int i = 0; i < SOURCES.length; i++) {
+            checked[i] = getSharedPreferences(PREFS, MODE_PRIVATE)
+                    .getBoolean("enabled_" + SOURCES[i].key, SOURCES[i].defaultEnabled);
+            names[i] = getString(SOURCES[i].nameRes);
+        }
         new AlertDialog.Builder(this)
-                .setTitle(R.string.ent_settings)
-                .setView(v)
-                .setPositiveButton(R.string.ent_save, (d, w) -> {
-                    getSharedPreferences(PREFS, MODE_PRIVATE).edit()
-                            .putString(K_APP_ID, etId.getText().toString().trim())
-                            .putString(K_API_KEY, etKey.getText().toString().trim())
-                            .apply();
-                    Toast.makeText(this, R.string.ent_key_saved, Toast.LENGTH_SHORT).show();
+                .setTitle(R.string.ent_settings_title)
+                .setMessage(R.string.ent_settings_summary)
+                .setMultiChoiceItems(names, checked, (d, which, isChecked) -> checked[which] = isChecked)
+                .setPositiveButton(android.R.string.ok, (d, w) -> {
+                    android.content.SharedPreferences.Editor e =
+                            getSharedPreferences(PREFS, MODE_PRIVATE).edit();
+                    for (int i = 0; i < SOURCES.length; i++) {
+                        e.putBoolean("enabled_" + SOURCES[i].key, checked[i]);
+                    }
+                    e.apply();
+                    Toast.makeText(this, R.string.ent_ok, Toast.LENGTH_SHORT).show();
                 })
-                .setNegativeButton(R.string.ent_cancel, null)
+                .setNegativeButton(android.R.string.cancel, null)
                 .show();
     }
 
-    /** 申请指引：告诉用户如何注册并拿到 key。 */
-    private void showGuideDialog() {
+    private void showHelp() {
         new AlertDialog.Builder(this)
-                .setTitle(R.string.ent_apply_title)
-                .setMessage(R.string.ent_apply_text)
+                .setTitle(R.string.ent_help_title)
+                .setMessage(R.string.ent_help_text)
                 .setPositiveButton(R.string.ent_ok, null)
                 .show();
     }
 
-    static class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.VH> {
-        private final List<EntResult> list;
-
-        ResultAdapter(List<EntResult> l) {
-            this.list = l;
+    private void openUrl(String u) {
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(u)));
+        } catch (Exception e) {
+            Toast.makeText(this, R.string.ent_open_fail, Toast.LENGTH_SHORT).show();
         }
+    }
 
+    @Override
+    protected void onDestroy() {
+        if (web != null) {
+            web.stopLoading();
+            web.destroy();
+        }
+        super.onDestroy();
+    }
+
+    class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.VH> {
         @NonNull
         @Override
         public VH onCreateViewHolder(@NonNull ViewGroup p, int t) {
@@ -281,38 +412,28 @@ public class EnterpriseActivity extends BaseActivity {
 
         @Override
         public void onBindViewHolder(@NonNull VH h, int pos) {
-            EntResult r = list.get(pos);
-            Context ctx = h.itemView.getContext();
-            h.tvName.setText(or(r.name));
-            h.tvLegal.setText(ctx.getString(R.string.ent_lbl_legal) + "：" + or(r.legal));
-            h.tvCapital.setText(ctx.getString(R.string.ent_lbl_capital) + "：" + or(r.capital));
-            h.tvEstablish.setText(ctx.getString(R.string.ent_lbl_establish) + "：" + or(r.establish));
-            h.tvStatus.setText(ctx.getString(R.string.ent_lbl_status) + "：" + or(r.status));
-            h.tvAddress.setText(ctx.getString(R.string.ent_lbl_address) + "：" + or(r.address));
-            h.tvCredit.setText(ctx.getString(R.string.ent_lbl_credit) + "：" + or(r.credit));
-        }
-
-        private String or(String s) {
-            return TextUtils.isEmpty(s) ? "—" : s;
+            EntResult r = results.get(pos);
+            h.tvSource.setText(getString(r.nameRes));
+            h.tvName.setText(TextUtils.isEmpty(r.title) ? getString(R.string.ent_no_title) : r.title);
+            h.tvBody.setText(r.body);
+            h.tvLink.setText(getString(R.string.ent_open_web, getString(r.nameRes)));
+            h.tvLink.setOnClickListener(v -> openUrl(r.url));
         }
 
         @Override
         public int getItemCount() {
-            return list.size();
+            return results.size();
         }
 
-        static class VH extends RecyclerView.ViewHolder {
-            TextView tvName, tvLegal, tvCapital, tvEstablish, tvStatus, tvAddress, tvCredit;
+        class VH extends RecyclerView.ViewHolder {
+            TextView tvSource, tvName, tvBody, tvLink;
 
             VH(View v) {
                 super(v);
+                tvSource = v.findViewById(R.id.tv_source);
                 tvName = v.findViewById(R.id.tv_name);
-                tvLegal = v.findViewById(R.id.tv_legal);
-                tvCapital = v.findViewById(R.id.tv_capital);
-                tvEstablish = v.findViewById(R.id.tv_establish);
-                tvStatus = v.findViewById(R.id.tv_status);
-                tvAddress = v.findViewById(R.id.tv_address);
-                tvCredit = v.findViewById(R.id.tv_credit);
+                tvBody = v.findViewById(R.id.tv_body);
+                tvLink = v.findViewById(R.id.tv_link);
             }
         }
     }
