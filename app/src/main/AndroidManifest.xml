@@ -18,6 +18,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- 安装包提取/备份：需遍历全部已安装应用（含系统应用），绕过 Android 11+ 包可见性限制 -->
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+    <!-- 内存加速：结束后台进程需此权限（否则 killBackgroundProcesses 被系统拒绝，清理 0 个） -->
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
 
     <queries>
         <package android:name="moe.shizuku.manager" />

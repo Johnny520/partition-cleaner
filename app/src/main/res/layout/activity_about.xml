@@ -217,9 +217,23 @@
                 android:textColor="?attr/colorOnSurfaceVariant" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_home"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🌐 个人主页（Johnny520）" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_site"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_sm"
+                android:text="🏠 官网 · 文强网络科技" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_open_repo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_sm"
                 android:text="@string/about_open_repo" />
 
             <com.google.android.material.button.MaterialButton

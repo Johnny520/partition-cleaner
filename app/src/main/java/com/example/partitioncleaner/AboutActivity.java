@@ -21,6 +21,8 @@ public class AboutActivity extends BaseActivity {
 
     private static final String REPO_URL = "https://github.com/Johnny520/partition-cleaner";
     private static final String RELEASES_URL = "https://github.com/Johnny520/partition-cleaner/releases";
+    private static final String HOME_URL = "https://github.com/Johnny520";
+    private static final String SITE_URL = "https://johnny520.github.io/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,10 @@ public class AboutActivity extends BaseActivity {
 
         Button btn = findViewById(R.id.btn_open_repo);
         btn.setOnClickListener(v -> openUrl(RELEASES_URL));
+        Button btnHome = findViewById(R.id.btn_home);
+        if (btnHome != null) btnHome.setOnClickListener(v -> openUrl(HOME_URL));
+        Button btnSite = findViewById(R.id.btn_site);
+        if (btnSite != null) btnSite.setOnClickListener(v -> openUrl(SITE_URL));
         Button btnExport = findViewById(R.id.btn_export_log);
         if (btnExport != null) btnExport.setOnClickListener(v -> exportCrashLog());
     }

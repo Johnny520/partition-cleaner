@@ -60,6 +60,8 @@ public class ApkExtractActivity extends BaseActivity {
 
     private List<AppEntry> allApps = new ArrayList<>();
     private List<AppEntry> filteredApps = new ArrayList<>();
+    private String searchQuery = "";
+    private android.app.ProgressDialog loadingDlg;
 
     static class AppEntry {
         String label;
@@ -107,14 +109,40 @@ public class ApkExtractActivity extends BaseActivity {
             applyFilter();
         });
 
-        com.google.android.material.floatingactionbutton.FloatingActionButton fabTop =
-                findViewById(R.id.fab_top);
-        com.google.android.material.floatingactionbutton.FloatingActionButton fabBottom =
-                findViewById(R.id.fab_bottom);
-        fabTop.setOnClickListener(v -> rv.scrollToPosition(0));
-        fabBottom.setOnClickListener(v -> {
-            if (adapter.getItemCount() > 0) rv.scrollToPosition(adapter.getItemCount() - 1);
+        // 搜索框：按名称 / 包名实时过滤
+        com.google.android.material.textfield.TextInputEditText etSearch =
+                findViewById(R.id.et_search);
+        if (etSearch != null) {
+            etSearch.addTextChangedListener(new android.text.TextWatcher() {
+                @Override public void beforeTextChanged(CharSequence s, int a, int b, int c) {}
+                @Override public void onTextChanged(CharSequence s, int a, int b, int c) {
+                    searchQuery = s.toString().trim().toLowerCase();
+                    applyFilter();
+                }
+                @Override public void afterTextChanged(android.text.Editable s) {}
+            });
+        }
+
+        // 快速到顶/到底：合并为一个小按钮（⇕），点击弹出菜单
+        com.google.android.material.button.MaterialButton fabScroll = findViewById(R.id.fab_scroll);
+        fabScroll.setOnClickListener(v -> {
+            android.widget.PopupMenu pm = new android.widget.PopupMenu(ApkExtractActivity.this, v);
+            pm.getMenu().add(0, 1, 0, R.string.fab_to_top);
+            pm.getMenu().add(0, 2, 0, R.string.fab_to_bottom);
+            pm.setOnMenuItemClickListener(item -> {
+                if (item.getItemId() == 1) rv.scrollToPosition(0);
+                else if (item.getItemId() == 2 && adapter.getItemCount() > 0)
+                    rv.scrollToPosition(adapter.getItemCount() - 1);
+                return true;
+            });
+            pm.show();
         });
+
+        // 常驻加载弹窗：进入即显示，列表加载完成自动消失
+        loadingDlg = new android.app.ProgressDialog(this);
+        loadingDlg.setMessage("正在加载应用列表…");
+        loadingDlg.setCancelable(false);
+        loadingDlg.show();
 
         loadApps();
     }
@@ -158,6 +186,7 @@ public class ApkExtractActivity extends BaseActivity {
             allApps = list;
             runOnUiThread(() -> {
                 applyFilter();
+                if (loadingDlg != null && loadingDlg.isShowing()) loadingDlg.dismiss();
                 Toast.makeText(ApkExtractActivity.this,
                         getString(R.string.apk_loaded, allApps.size()), Toast.LENGTH_SHORT).show();
             });
@@ -166,9 +195,11 @@ public class ApkExtractActivity extends BaseActivity {
 
     private void applyFilter() {
         filteredApps.clear();
+        String q = searchQuery.toLowerCase();
         for (AppEntry e : allApps) {
             if (filterMode == FILTER_USER && e.isSystem) continue;
             if (filterMode == FILTER_SYSTEM && !e.isSystem) continue;
+            if (!q.isEmpty() && !(e.label.toLowerCase().contains(q) || e.pkg.toLowerCase().contains(q))) continue;
             filteredApps.add(e);
         }
         adapter.setItems(filteredApps);
