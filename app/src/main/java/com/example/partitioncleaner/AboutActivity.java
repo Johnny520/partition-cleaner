@@ -22,7 +22,7 @@ public class AboutActivity extends BaseActivity {
     private static final String REPO_URL = "https://github.com/Johnny520/partition-cleaner";
     private static final String RELEASES_URL = "https://github.com/Johnny520/partition-cleaner/releases";
     private static final String HOME_URL = "https://github.com/Johnny520";
-    private static final String SITE_URL = "https://johnny520.github.io/";
+    private static final String SITE_URL = "https://johnny520.github.io/Johnny/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
