@@ -58,6 +58,31 @@
                 android:text="@string/company_search" />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/space_md"
+            android:paddingEnd="@dimen/space_md"
+            android:paddingBottom="@dimen/space_sm">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_settings"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ent_settings" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_help"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_sm"
+                android:text="@string/ent_help" />
+        </LinearLayout>
+
         <TextView
             android:id="@+id/tv_status"
             android:layout_width="match_parent"
@@ -73,17 +98,11 @@
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            <WebView
-                android:id="@+id/web"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_cards"
+                android:id="@+id/rv_result"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"
-                android:padding="@dimen/space_md"
+                android:paddingTop="@dimen/space_md"
                 android:clipToPadding="false"
                 android:scrollbars="vertical" />
 
@@ -96,16 +115,5 @@
                 android:visibility="gone" />
         </FrameLayout>
     </LinearLayout>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/space_lg"
-        app:srcCompat="@android:drawable/ic_menu_view"
-        app:tint="?attr/colorOnPrimary"
-        app:backgroundTint="?attr/colorPrimary"
-        android:contentDescription="@string/company_back_web" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

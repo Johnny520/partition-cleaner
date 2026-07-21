@@ -11,8 +11,11 @@ android {
         // Shizuku 13.x：provider 要求 ≥23、api 要求 ≥24，统一取 24（Android 7.0）
         minSdk 24
         targetSdk 34
-        versionCode 15
-        versionName "1.0.14"
+        versionCode 16
+        versionName "1.0.15"
+        // 鲸海数据(kqdaas)密钥：开发者默认内置（留空，由用户在「API 设置」自填，或在此填入你的真实密钥）
+        buildConfigField "String", "KQDAAS_APP_ID", "\"\""
+        buildConfigField "String", "KQDAAS_API_KEY", "\"\""
     }
 
     signingConfigs {
