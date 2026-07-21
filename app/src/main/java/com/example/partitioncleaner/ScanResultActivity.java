@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.PopupMenu;
 
 import androidx.core.content.FileProvider;
 
@@ -51,8 +52,7 @@ public class ScanResultActivity extends BaseActivity {
     private Button btnSelectAll;
     private Button btnDeselectAll;
     private TextView tvSelectedSize;
-    private com.google.android.material.floatingactionbutton.FloatingActionButton fabTop;
-    private com.google.android.material.floatingactionbutton.FloatingActionButton fabBottom;
+    private com.google.android.material.button.MaterialButton fabScroll;
 
     private List<JunkItem> items = new ArrayList<>();        // 全量扫描结果
     private List<JunkItem> displayItems = new ArrayList<>(); // 当前筛选后显示
@@ -88,11 +88,18 @@ public class ScanResultActivity extends BaseActivity {
         adapter.setOnItemLongClick(this::openJunkFile);
         rv.setAdapter(adapter);
 
-        fabTop = findViewById(R.id.fab_top);
-        fabBottom = findViewById(R.id.fab_bottom);
-        fabTop.setOnClickListener(v -> rv.scrollToPosition(0));
-        fabBottom.setOnClickListener(v -> {
-            if (adapter.getItemCount() > 0) rv.scrollToPosition(adapter.getItemCount() - 1);
+        fabScroll = findViewById(R.id.fab_scroll);
+        fabScroll.setOnClickListener(v -> {
+            android.widget.PopupMenu pm = new android.widget.PopupMenu(ScanResultActivity.this, v);
+            pm.getMenu().add(0, 1, 0, R.string.fab_to_top);
+            pm.getMenu().add(0, 2, 0, R.string.fab_to_bottom);
+            pm.setOnMenuItemClickListener(item -> {
+                if (item.getItemId() == 1) rv.scrollToPosition(0);
+                else if (item.getItemId() == 2 && adapter.getItemCount() > 0)
+                    rv.scrollToPosition(adapter.getItemCount() - 1);
+                return true;
+            });
+            pm.show();
         });
 
         pb = findViewById(R.id.pb);

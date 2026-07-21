@@ -158,22 +158,24 @@
         </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_top"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/fab_scroll"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/space_lg"
-        android:contentDescription="@string/fab_to_top"
-        app:srcCompat="@android:drawable/arrow_up_float" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_bottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="@dimen/space_lg"
-        android:layout_marginBottom="88dp"
-        android:contentDescription="@string/fab_to_bottom"
-        app:srcCompat="@android:drawable/arrow_down_float" />
+        android:minWidth="0dp"
+        android:minHeight="0dp"
+        android:padding="0dp"
+        android:insetLeft="0dp"
+        android:insetTop="0dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        app:cornerRadius="24dp"
+        app:icon="@drawable/ic_scroll_updown"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:iconTint="?attr/colorOnPrimary"
+        android:backgroundTint="?attr/colorPrimary"
+        android:contentDescription="@string/fab_to_top" />
 </FrameLayout>
