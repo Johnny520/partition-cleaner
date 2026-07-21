@@ -464,7 +464,7 @@
     <string name="ent_custom_source">自定义 API 源</string>
     <string name="ent_custom_add">＋ 添加 / 修改自定义 API 源</string>
     <string name="ent_custom_title">自定义 API 源</string>
-    <string name="ent_custom_summary">填写你自己的接口或网站，支持用 %s 代替关键词（如 https://your-api.com/search?q=%s）。可附带 API Key。</string>
+    <string name="ent_custom_summary" formatted="false">填写你自己的接口或网站，支持用 %s 代替关键词（如 https://your-api.com/search?q=%s）。可附带 API Key。</string>
     <string name="ent_custom_name_hint">源名称（如：我的接口）</string>
     <string name="ent_custom_url_hint">搜索网址，用 %s 代替关键词</string>
     <string name="ent_custom_key_hint">API Key（可选，自动拼到网址）</string>
